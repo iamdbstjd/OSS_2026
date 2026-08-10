@@ -1,0 +1,117 @@
+name: ragplan
+
+services:
+  qdrant:
+    image: qdrant/qdrant:v1.18.2@sha256:75eab8c4ba42096724fdcfde8b4de0b5713d529dde32f285a1f86fdcb2c9e50c
+    init: true
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${QDRANT_HTTP_PORT:-6333}:6333"
+      - "127.0.0.1:${QDRANT_GRPC_PORT:-6334}:6334"
+    volumes:
+      - qdrant-data:/qdrant/storage
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          bash -ec 'exec 3<>/dev/tcp/127.0.0.1/6333;
+          printf "GET /healthz HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n" >&3;
+          read -r status <&3;
+          [[ "$$status" == *"200"* ]]'
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    security_opt:
+      - no-new-privileges:true
+
+  neo4j:
+    image: neo4j:5.26.28@sha256:ff32db30b2baff97971e441b46bfd9c832c1b62c970398ef579244c06b21d357
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${NEO4J_HTTP_PORT:-7474}:7474"
+      - "127.0.0.1:${NEO4J_BOLT_PORT:-7687}:7687"
+    environment:
+      NEO4J_AUTH: "${NEO4J_USER:-neo4j}/${NEO4J_PASSWORD:?Set NEO4J_PASSWORD in .env or the environment}"
+    volumes:
+      - neo4j-data:/data
+      - neo4j-logs:/logs
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          auth="$${NEO4J_AUTH}";
+          user="$${auth%%/*}";
+          password="$${auth#*/}";
+          cypher-shell -a neo4j://127.0.0.1:7687
+          -u "$${user}" -p "$${password}"
+          "RETURN 1;" >/dev/null 2>&1
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    security_opt:
+      - no-new-privileges:true
+
+  api:
+    image: ragplan-api:0.1.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    init: true
+    restart: unless-stopped
+    depends_on:
+      qdrant:
+        condition: service_healthy
+      neo4j:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${RAGPLAN_API_PORT:-8000}:8000"
+    environment:
+      RAGPLAN_SERVER__HOST: 0.0.0.0
+      RAGPLAN_SERVER__PORT: 8000
+      RAGPLAN_VECTOR__URL: http://qdrant:6333
+      # All four Stage 3 variables must be set to enable online vector search.
+      # Empty defaults retain the healthy, explicit NOT_READY API state.
+      RAGPLAN_STAGE3_MODEL_SNAPSHOT: "${RAGPLAN_STAGE3_MODEL_SNAPSHOT:-}"
+      RAGPLAN_STAGE3_VECTOR_STAGE_MANIFEST: "${RAGPLAN_STAGE3_VECTOR_STAGE_MANIFEST:-}"
+      RAGPLAN_STAGE3_QDRANT_URL: "${RAGPLAN_STAGE3_QDRANT_URL:-}"
+      RAGPLAN_STAGE3_QDRANT_COLLECTION_PREFIX: "${RAGPLAN_STAGE3_QDRANT_COLLECTION_PREFIX:-}"
+      RAGPLAN_GRAPH__URI: bolt://neo4j:7687
+      RAGPLAN_GRAPH__USER: "${NEO4J_USER:-neo4j}"
+      RAGPLAN_GRAPH__PASSWORD: "${NEO4J_PASSWORD:?Set NEO4J_PASSWORD in .env or the environment}"
+      RAGPLAN_LOGGING__MODE: redacted
+    healthcheck:
+      test:
+        - CMD
+        - .venv/bin/python
+        - -c
+        - >-
+          import urllib.request;
+          urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2)
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    read_only: true
+    volumes:
+      - type: bind
+        source: ${RAGPLAN_STAGE3_MODELS_HOST_DIR:-./models}
+        target: /opt/ragplan/models
+        read_only: true
+      - type: bind
+        source: ${RAGPLAN_STAGE3_ARTIFACTS_HOST_DIR:-./artifacts}
+        target: /opt/ragplan/artifacts
+        read_only: true
+    tmpfs:
+      - /tmp:size=64m
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  qdrant-data:
+    name: ragplan-qdrant-v1.18.2
+  neo4j-data:
+    name: ragplan-neo4j-v5.26.28-data
+  neo4j-logs:
+    name: ragplan-neo4j-v5.26.28-logs

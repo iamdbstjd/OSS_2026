@@ -1,0 +1,110 @@
+schema_version: v1
+plans:
+  - id: P0
+    name: VECTOR_FAST
+    vector_enabled: true
+    graph_enabled: false
+    vector_top_k: 10
+    graph_top_k: 0
+    graph_depth: 0
+    vector_weight: 1.0
+    graph_weight: 0.0
+    rerank_enabled: false
+    rerank_top_k: 0
+    enabled_in_p0: true
+  - id: P1
+    name: VECTOR_WIDE
+    vector_enabled: true
+    graph_enabled: false
+    vector_top_k: 30
+    graph_top_k: 0
+    graph_depth: 0
+    vector_weight: 1.0
+    graph_weight: 0.0
+    rerank_enabled: false
+    rerank_top_k: 0
+    enabled_in_p0: true
+  - id: P2
+    name: GRAPH_SHALLOW
+    vector_enabled: false
+    graph_enabled: true
+    vector_top_k: 0
+    graph_top_k: 20
+    graph_depth: 1
+    vector_weight: 0.0
+    graph_weight: 1.0
+    rerank_enabled: false
+    rerank_top_k: 0
+    enabled_in_p0: true
+  - id: P3
+    name: GRAPH_DEEP
+    vector_enabled: false
+    graph_enabled: true
+    vector_top_k: 0
+    graph_top_k: 30
+    graph_depth: 3
+    vector_weight: 0.0
+    graph_weight: 1.0
+    rerank_enabled: false
+    rerank_top_k: 0
+    enabled_in_p0: true
+  - id: P4
+    name: HYBRID_VECTOR_HEAVY
+    vector_enabled: true
+    graph_enabled: true
+    vector_top_k: 20
+    graph_top_k: 15
+    graph_depth: 1
+    vector_weight: 0.7
+    graph_weight: 0.3
+    rerank_enabled: false
+    rerank_top_k: 0
+    enabled_in_p0: true
+  - id: P5
+    name: HYBRID_BALANCED
+    vector_enabled: true
+    graph_enabled: true
+    vector_top_k: 20
+    graph_top_k: 20
+    graph_depth: 1
+    vector_weight: 0.5
+    graph_weight: 0.5
+    rerank_enabled: false
+    rerank_top_k: 0
+    enabled_in_p0: true
+  - id: P6
+    name: HYBRID_GRAPH_HEAVY
+    vector_enabled: true
+    graph_enabled: true
+    vector_top_k: 15
+    graph_top_k: 30
+    graph_depth: 2
+    vector_weight: 0.3
+    graph_weight: 0.7
+    rerank_enabled: false
+    rerank_top_k: 0
+    enabled_in_p0: true
+  - id: P7
+    name: HYBRID_RERANK
+    vector_enabled: true
+    graph_enabled: true
+    vector_top_k: 30
+    graph_top_k: 30
+    graph_depth: 2
+    vector_weight: 0.5
+    graph_weight: 0.5
+    rerank_enabled: true
+    rerank_top_k: 10
+    enabled_in_p0: false
+  - id: P8
+    name: HYBRID_GRAPH_DEEP
+    vector_enabled: true
+    graph_enabled: true
+    vector_top_k: 15
+    graph_top_k: 40
+    graph_depth: 3
+    vector_weight: 0.25
+    graph_weight: 0.75
+    rerank_enabled: false
+    rerank_top_k: 0
+    enabled_in_p0: true

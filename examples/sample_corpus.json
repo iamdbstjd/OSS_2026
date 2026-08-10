@@ -1,0 +1,18 @@
+{
+  "schema_version": "v1",
+  "source_dataset": "ragplan-stage3-sample",
+  "documents": [
+    {
+      "source_document_id": "ada-lovelace",
+      "text": "Ada Lovelace wrote extensive notes about Charles Babbage's Analytical Engine. Her notes included an algorithm for computing Bernoulli numbers, and she is often described as an early computer programmer."
+    },
+    {
+      "source_document_id": "qdrant",
+      "text": "Qdrant is a vector database and similarity search engine. It stores embedding vectors with payload metadata and supports filtered nearest-neighbor retrieval using cosine distance."
+    },
+    {
+      "source_document_id": "neo4j",
+      "text": "Neo4j is a graph database. It represents domain facts as nodes and directed relationships, enabling graph traversal queries across connected entities."
+    }
+  ]
+}
