@@ -31,7 +31,7 @@ jobs:
           cache-dependency-glob: uv.lock
 
       - name: Install locked dependencies
-        run: uv sync --frozen --group graph-extraction
+        run: uv sync --frozen --all-groups
 
       - name: Check formatting
         run: uv run ruff format --check .
