@@ -1,0 +1,35 @@
+[
+  {
+    "name": "perfect_graded_ranking",
+    "ranked": ["a", "b", "x"],
+    "relevance": {"a": 2, "b": 1},
+    "expected": {
+      "recall_at_5": 1.0,
+      "recall_at_10": 1.0,
+      "mrr_at_10": 1.0,
+      "ndcg_at_10": 1.0
+    }
+  },
+  {
+    "name": "delayed_and_reversed_relevance",
+    "ranked": ["x", "b", "a"],
+    "relevance": {"a": 2, "b": 1},
+    "expected": {
+      "recall_at_5": 1.0,
+      "recall_at_10": 1.0,
+      "mrr_at_10": 0.5,
+      "ndcg_at_10": 0.58688267143572
+    }
+  },
+  {
+    "name": "one_of_two_relevant",
+    "ranked": ["b", "x"],
+    "relevance": {"a": 2, "b": 1},
+    "expected": {
+      "recall_at_5": 0.5,
+      "recall_at_10": 0.5,
+      "mrr_at_10": 1.0,
+      "ndcg_at_10": 0.27541155237618664
+    }
+  }
+]

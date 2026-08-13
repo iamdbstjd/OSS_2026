@@ -1,0 +1,23 @@
+{
+  "schema_version": "rule_v1",
+  "feature_schema_version": "qf_v1",
+  "threshold_tuning_split": "validation",
+  "low_budget_threshold_ms": 50.0,
+  "relation_threshold": 0.5,
+  "multi_hop_threshold": 0.5,
+  "comparison_threshold": 0.5,
+  "aggregation_threshold": 0.5,
+  "global_threshold": 0.5,
+  "candidate_profiles": [
+    {"plan_id": "P0", "predicted_p95_latency_ms": 15.0},
+    {"plan_id": "P1", "predicted_p95_latency_ms": 35.0},
+    {"plan_id": "P4", "predicted_p95_latency_ms": 70.0},
+    {"plan_id": "P5", "predicted_p95_latency_ms": 105.0},
+    {"plan_id": "P6", "predicted_p95_latency_ms": 180.0},
+    {"plan_id": "P8", "predicted_p95_latency_ms": 300.0}
+  ],
+  "simple_plan_order": ["P1", "P0"],
+  "relation_plan_order": ["P6", "P5", "P4", "P0"],
+  "multi_hop_plan_order": ["P8", "P6", "P5", "P4", "P0"],
+  "top_k_surcharge_ms": 0.5
+}

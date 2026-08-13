@@ -1,0 +1,63 @@
+schema_version: v1
+audit_date: "2026-08-13"
+raw_artifacts_redistributed: false
+sources:
+  dpr_natural_questions_train:
+    source_dataset: nq
+    upstream_name: DPR-formatted Natural Questions train
+    upstream_version: "DPR artifact last-modified 2020-03-18"
+    official_page: https://ai.google.com/research/NaturalQuestions/download
+    official_download_url: https://dl.fbaipublicfiles.com/dpr/data/retriever/biencoder-nq-train.json.gz
+    actual_download_urls:
+      - https://dl.fbaipublicfiles.com/dpr/data/retriever/biencoder-nq-train.json.gz
+    license: CC BY-SA 3.0
+    license_urls:
+      - https://dl.fbaipublicfiles.com/dpr/nq_license/LICENSE
+      - https://dl.fbaipublicfiles.com/dpr/nq_license/README
+    redistribution: permitted with attribution and ShareAlike obligations
+    required_attribution: Natural Questions authors and DPR preprocessing authors
+    artifacts:
+      - filename: biencoder-nq-train.json.gz
+        size_bytes: 2314892908
+        sha256: 3249231587e8140e3794c060b0233afc61f4fa5e40b6a172d59519af5fe40c73
+  hotpotqa_distractor_train_v1_1:
+    source_dataset: hotpot_bridge_and_comparison
+    upstream_name: HotpotQA distractor train v1.1
+    upstream_version: "v1.1; official repository commit 3635853403a8735609ee997664e1528f4480762a"
+    official_page: https://hotpotqa.github.io/
+    official_download_url: http://curtis.ml.cmu.edu/datasets/hotpot/hotpot_train_v1.1.json
+    actual_download_urls:
+      - https://huggingface.co/datasets/hotpotqa/hotpot_qa/resolve/1908d6afbbead072334abe2965f91bd2709910ab/distractor/train-00000-of-00002.parquet?download=true
+      - https://huggingface.co/datasets/hotpotqa/hotpot_qa/resolve/1908d6afbbead072334abe2965f91bd2709910ab/distractor/train-00001-of-00002.parquet?download=true
+    mirror_revision: 1908d6afbbead072334abe2965f91bd2709910ab
+    license: CC BY-SA 4.0
+    license_urls:
+      - https://creativecommons.org/licenses/by-sa/4.0/
+      - https://hotpotqa.github.io/
+    redistribution: permitted with attribution and ShareAlike obligations
+    required_attribution: Yang et al., HotpotQA, EMNLP 2018
+    artifacts:
+      - filename: hotpot_train_00000.parquet
+        size_bytes: 165624177
+        sha256: 76d3bb3048a7cc73c1958107c0c5872a00d7e7d00c105b81e92f6769e7822e68
+      - filename: hotpot_train_00001.parquet
+        size_bytes: 166162479
+        sha256: 713661628434fbb19fff7392e2e321e4ed107e3c7c7784d0690946e5f722763f
+  musique_ans_train_v1_0:
+    source_dataset: musique
+    upstream_name: MuSiQue-Ans train v1.0
+    upstream_version: "v1.0 archive; repository commit 922ac98f19a201998dbdae6d7f2887a5258dbdeb"
+    official_page: https://github.com/StonyBrookNLP/musique
+    official_download_url: https://drive.google.com/file/d/1tGdADlNjWFaHLeZZGShh2IRcpO6Lv24h/view
+    actual_download_urls:
+      - https://drive.usercontent.google.com/download?id=1tGdADlNjWFaHLeZZGShh2IRcpO6Lv24h&export=download&confirm=t
+    license: CC BY 4.0
+    license_urls:
+      - https://github.com/StonyBrookNLP/musique/blob/main/LICENSE
+      - https://creativecommons.org/licenses/by/4.0/
+    redistribution: permitted with attribution
+    required_attribution: Trivedi et al., MuSiQue, TACL 2022
+    artifacts:
+      - filename: musique_v1.0.zip
+        size_bytes: 272049578
+        sha256: 98f839bf2fd5319f5c688aed77901a6d5c30b3b9f9f691ab9a8ecafb045ee0cd

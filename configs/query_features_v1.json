@@ -1,0 +1,34 @@
+{
+  "schema_version": "qf_v1",
+  "supported_language": "en",
+  "embedding_feature_enabled": false,
+  "relation_patterns": [
+    "\\b(?:relationship|related|connected|association)\\b",
+    "\\b(?:founded|created|acquired|owned|employed|worked)\\b",
+    "\\b(?:founded|created|acquired|owned|employed|worked)\\s+by\\b",
+    "\\b(?:works?|worked)\\s+(?:at|for)\\b",
+    "\\bbetween\\b",
+    "\\b(?:parent|subsidiary|spouse|founder|creator|employer)\\b"
+  ],
+  "multi_hop_patterns": [
+    "\\b(?:who|that|which|whose)\\b[^?]{0,160}\\b(?:who|that|which|whose)\\b",
+    "\\b(?:founder|creator|author|director|owner)\\s+of\\b[^?]{1,100}\\b(?:that|which|who|whose)\\b",
+    "\\b(?:where|when)\\b[^?]{0,100}\\b(?:founder|creator|author|director|owner)\\s+of\\b",
+    "\\b(?:before|after)\\b[^?]{0,160}\\b(?:founded|created|born|died)\\b"
+  ],
+  "comparison_patterns": [
+    "\\b(?:compare|comparison|difference|versus|vs\\.?|both)\\b",
+    "\\b(?:older|younger|larger|smaller|earlier|later|higher|lower)\\b",
+    "\\bwhich\\b[^?]{0,120}\\b(?:more|less|first|last)\\b"
+  ],
+  "aggregation_patterns": [
+    "\\b(?:how many|count|total|average|sum|number of)\\b",
+    "\\b(?:list|all|every)\\b"
+  ],
+  "global_patterns": [
+    "\\b(?:overview|summary|history|timeline|landscape)\\b",
+    "\\b(?:generally|overall|in general)\\b"
+  ],
+  "per_pattern_increment": 0.5,
+  "two_entity_relation_bonus": 0.25
+}

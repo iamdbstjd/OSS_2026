@@ -1,0 +1,59 @@
+{
+  "benchmark_manifest_sha256": "c5d959ca1da8c5b5e977af948c96012efc3a0754599e34edcefff30755e1ef76",
+  "duplicate_policy": "retain the first occurrence in each checksum-pinned upstream train artifact for duplicate source IDs or normalized questions",
+  "nq_musique_singlehop_normalized_question_hash_overlap": 0,
+  "reports": [
+    {
+      "duplicate_questions": 0,
+      "duplicate_source_ids": 30,
+      "eligible_records": 51322,
+      "exclusions": {
+        "answer_not_found_in_positive_context": 6697,
+        "musique_singlehop_question_overlap": 831
+      },
+      "seen_records": 58880,
+      "selected_records": 200,
+      "source_dataset": "nq"
+    },
+    {
+      "duplicate_questions": 12,
+      "duplicate_source_ids": 0,
+      "eligible_records": 72959,
+      "exclusions": {
+        "invalid_supporting_sentence": 22
+      },
+      "seen_records": 90447,
+      "selected_records": 200,
+      "source_dataset": "hotpot_bridge"
+    },
+    {
+      "duplicate_questions": 1,
+      "duplicate_source_ids": 0,
+      "eligible_records": 17453,
+      "exclusions": {
+        "invalid_supporting_sentence": 22
+      },
+      "seen_records": 90447,
+      "selected_records": 100,
+      "source_dataset": "hotpot_comparison"
+    },
+    {
+      "duplicate_questions": 7,
+      "duplicate_source_ids": 0,
+      "eligible_records": 4287,
+      "exclusions": {
+        "decomposition_answer_not_in_paragraph": 93,
+        "not_exactly_three_hop": 15551
+      },
+      "seen_records": 19938,
+      "selected_records": 100,
+      "source_dataset": "musique"
+    }
+  ],
+  "source_id_policy": {
+    "hotpot_bridge": "upstream HotpotQA id",
+    "hotpot_comparison": "upstream HotpotQA id",
+    "musique": "upstream MuSiQue id",
+    "nq": "SHA256(normalized question) because DPR NQ records expose no source ID"
+  }
+}

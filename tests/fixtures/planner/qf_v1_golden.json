@@ -1,0 +1,60 @@
+{
+  "feature_schema_version": "qf_v1",
+  "feature_config_sha256": "8432e9c5fc80da61919cd1d8a3f5fc8020903496b9e57b9fe9d8f7b85e04910d",
+  "cases": [
+    {
+      "name": "simple_definition",
+      "query": "What is photosynthesis?",
+      "token_count": 4,
+      "entity_count": 0,
+      "features": {"token_count": 4, "entity_count": 0, "entity_density": 0.0, "relation_signal": 0.0, "multi_hop_signal": 0.0, "comparison_signal": 0.0, "aggregation_signal": 0.0, "global_signal": 0.0, "final_top_k": 10},
+      "budget_ms": 200,
+      "selected_plan": "P1"
+    },
+    {
+      "name": "relationship",
+      "query": "How is Ada related to Acme?",
+      "token_count": 7,
+      "entity_count": 2,
+      "features": {"token_count": 7, "entity_count": 2, "entity_density": 0.2857142857142857, "relation_signal": 0.75, "multi_hop_signal": 0.0, "comparison_signal": 0.0, "aggregation_signal": 0.0, "global_signal": 0.0, "final_top_k": 10},
+      "budget_ms": 100,
+      "selected_plan": "P4"
+    },
+    {
+      "name": "comparison",
+      "query": "Which is older, Ada or Grace?",
+      "token_count": 7,
+      "entity_count": 2,
+      "features": {"token_count": 7, "entity_count": 2, "entity_density": 0.2857142857142857, "relation_signal": 0.25, "multi_hop_signal": 0.0, "comparison_signal": 0.5, "aggregation_signal": 0.0, "global_signal": 0.0, "final_top_k": 10},
+      "budget_ms": 100,
+      "selected_plan": "P4"
+    },
+    {
+      "name": "two_hop",
+      "query": "Who founded the company that acquired Acme?",
+      "token_count": 8,
+      "entity_count": 2,
+      "features": {"token_count": 8, "entity_count": 2, "entity_density": 0.25, "relation_signal": 0.75, "multi_hop_signal": 0.5, "comparison_signal": 0.0, "aggregation_signal": 0.0, "global_signal": 0.0, "final_top_k": 10},
+      "budget_ms": 500,
+      "selected_plan": "P8"
+    },
+    {
+      "name": "three_hop",
+      "query": "Who founded the company that acquired the studio which produced Solaris?",
+      "token_count": 11,
+      "entity_count": 3,
+      "features": {"token_count": 11, "entity_count": 3, "entity_density": 0.2727272727272727, "relation_signal": 0.75, "multi_hop_signal": 0.5, "comparison_signal": 0.0, "aggregation_signal": 0.0, "global_signal": 0.0, "final_top_k": 10},
+      "budget_ms": 500,
+      "selected_plan": "P8"
+    },
+    {
+      "name": "entity_less",
+      "query": "Explain recursion.",
+      "token_count": 2,
+      "entity_count": 0,
+      "features": {"token_count": 2, "entity_count": 0, "entity_density": 0.0, "relation_signal": 0.0, "multi_hop_signal": 0.0, "comparison_signal": 0.0, "aggregation_signal": 0.0, "global_signal": 0.0, "final_top_k": 10},
+      "budget_ms": 200,
+      "selected_plan": "P1"
+    }
+  ]
+}

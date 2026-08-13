@@ -1,0 +1,12 @@
+{
+  "chunk_count": 8604,
+  "chunk_index_sha256": "62d174ef0b0533db5e30a625e718878fd13c1e44376e8fb447168eea410cba1e",
+  "chunker": {
+    "overlap": 40,
+    "window_size": 220
+  },
+  "corpus_version": "adaptive_rag_bench_v1-corpus-v1",
+  "document_count": 8310,
+  "document_index_sha256": "1f9899d494603e693a3c46ba426b28c2871fd4d97176dbd5c8fab78ba10189b2",
+  "embedding_artifact_manifest_sha256": "f0635a959113bf3817d63ecd3a02b9c840795cbd17afeab9af596c9226771574"
+}

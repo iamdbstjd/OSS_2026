@@ -12,6 +12,8 @@ ID_VERSION: Final = "v1"
 CONTENT_HASH_PREFIX_LENGTH: Final = 16
 ENTITY_NAMESPACE: Final = uuid.UUID("7c630d62-2a54-5e68-b828-b3d2370ed232")
 QDRANT_NAMESPACE: Final = uuid.UUID("5947f0b1-6553-5713-83e0-f334f8aa2139")
+MENTION_NAMESPACE: Final = uuid.UUID("e907af56-b387-56a4-9aba-09a70b80a312")
+RELATION_NAMESPACE: Final = uuid.UUID("e7cd41ad-dbd1-5de3-bb72-f0a28e9889d4")
 ALLOWED_ENTITY_TYPES: Final = frozenset(
     {"PERSON", "ORG", "GPE", "LOC", "FAC", "PRODUCT", "EVENT", "WORK_OF_ART"}
 )
@@ -56,13 +58,17 @@ def normalize_entity_name(name: str) -> str:
     if not isinstance(name, str):
         raise TypeError("entity name must be a string")
     normalized = " ".join(unicodedata.normalize("NFKC", name).strip().split()).casefold()
-    start = 0
-    end = len(normalized)
-    while start < end and unicodedata.category(normalized[start]).startswith("P"):
-        start += 1
-    while end > start and unicodedata.category(normalized[end - 1]).startswith("P"):
-        end -= 1
-    normalized = normalized[start:end].strip()
+    previous = None
+    while normalized != previous:
+        previous = normalized
+        normalized = normalized.strip()
+        start = 0
+        end = len(normalized)
+        while start < end and unicodedata.category(normalized[start]).startswith("P"):
+            start += 1
+        while end > start and unicodedata.category(normalized[end - 1]).startswith("P"):
+            end -= 1
+        normalized = normalized[start:end]
     if not normalized:
         raise ValueError("normalized entity name must not be empty")
     return normalized
@@ -86,3 +92,56 @@ def qdrant_point_id(canonical_chunk_id: str) -> uuid.UUID:
     if not canonical_chunk_id.startswith(f"{ID_VERSION}:chunk:"):
         raise ValueError("canonical_chunk_id must be a canonical versioned chunk ID")
     return uuid.uuid5(QDRANT_NAMESPACE, canonical_chunk_id)
+
+
+def entity_mention_id(
+    canonical_chunk_id: str,
+    entity_uuid: str,
+    start_char: int,
+    end_char: int,
+) -> uuid.UUID:
+    """Return a stable UUIDv5 for one entity span in one canonical chunk."""
+
+    if not canonical_chunk_id.startswith(f"{ID_VERSION}:chunk:"):
+        raise ValueError("canonical_chunk_id must be a canonical versioned chunk ID")
+    try:
+        canonical_entity_uuid = str(uuid.UUID(entity_uuid))
+    except (AttributeError, TypeError, ValueError) as exc:
+        raise ValueError("entity_uuid must be a UUID string") from exc
+    if (
+        isinstance(start_char, bool)
+        or isinstance(end_char, bool)
+        or not isinstance(start_char, int)
+        or not isinstance(end_char, int)
+        or start_char < 0
+        or end_char <= start_char
+    ):
+        raise ValueError("mention character offsets must form a non-empty span")
+    key = f"{canonical_chunk_id}:{canonical_entity_uuid}:{start_char}:{end_char}"
+    return uuid.uuid5(MENTION_NAMESPACE, key)
+
+
+def relation_id(
+    source_entity_uuid: str,
+    target_entity_uuid: str,
+    predicate: str,
+    canonical_chunk_id: str,
+    extraction_rule: str,
+) -> uuid.UUID:
+    """Return a stable UUIDv5 for one directed, provenance-bound relation."""
+
+    try:
+        source = str(uuid.UUID(source_entity_uuid))
+        target = str(uuid.UUID(target_entity_uuid))
+    except (AttributeError, TypeError, ValueError) as exc:
+        raise ValueError("relation endpoints must be UUID strings") from exc
+    if source == target:
+        raise ValueError("relation endpoints must be distinct")
+    if not canonical_chunk_id.startswith(f"{ID_VERSION}:chunk:"):
+        raise ValueError("canonical_chunk_id must be a canonical versioned chunk ID")
+    normalized_predicate = " ".join(unicodedata.normalize("NFKC", predicate).casefold().split())
+    normalized_rule = " ".join(unicodedata.normalize("NFKC", extraction_rule).casefold().split())
+    if not normalized_predicate or not normalized_rule:
+        raise ValueError("predicate and extraction_rule must be non-empty")
+    key = f"{source}:{target}:{normalized_predicate}:{canonical_chunk_id}:{normalized_rule}"
+    return uuid.uuid5(RELATION_NAMESPACE, key)

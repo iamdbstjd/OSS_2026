@@ -1210,12 +1210,12 @@ tests/unit/planner/test_rule.py
 
 ## Exit Criteria
 
-- [ ] `feature_schema_version=qf_v1` freeze
-- [ ] representative fixture의 feature와 selected plan이 deterministic
-- [ ] unsupported language가 safe vector plan 사용
-- [ ] graph audit/dependency disable 상태에서 graph plan을 선택하지 않음
-- [ ] model 없이 rule adaptive end-to-end 동작
-- [ ] 모든 decision에 선택 이유가 존재
+- [x] `feature_schema_version=qf_v1` freeze
+- [x] representative fixture의 feature와 selected plan이 deterministic
+- [x] unsupported language가 safe vector plan 사용
+- [x] graph audit/dependency disable 상태에서 graph plan을 선택하지 않음
+- [x] model 없이 rule adaptive end-to-end 동작
+- [x] 모든 decision에 선택 이유가 존재
 
 ---
 

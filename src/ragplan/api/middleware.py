@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterator
 from uuid import uuid4
 
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
@@ -57,16 +56,15 @@ class RequestBodyLimitMiddleware:
         replay = iter(messages)
 
         async def replay_receive() -> Message:
-            return _next_message(replay)
+            try:
+                return next(replay)
+            except StopIteration:
+                # Once FastAPI has consumed the buffered request body, retain
+                # the live ASGI receive channel so client disconnect can cancel
+                # the shared retrieval scheduler and all backend children.
+                return await receive()
 
         await self.app(scope, replay_receive, send)
-
-
-def _next_message(messages: Iterator[Message]) -> Message:
-    try:
-        return next(messages)
-    except StopIteration:
-        return {"type": "http.request", "body": b"", "more_body": False}
 
 
 def _content_length(scope: Scope) -> int | None:

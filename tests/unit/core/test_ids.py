@@ -48,3 +48,10 @@ def test_entity_normalization_and_uuid_are_canonical() -> None:
     assert entity_id("PERSON", "Alice") == entity_id("person", "alice")
     with pytest.raises(ValueError, match="unsupported"):
         entity_id("DATE", "2026")
+
+
+def test_entity_normalization_is_idempotent_with_spaced_surrounding_punctuation() -> None:
+    normalized = normalize_entity_name(" ( P. O. W. ) ")
+
+    assert normalized == "p. o. w"
+    assert normalize_entity_name(normalized) == normalized

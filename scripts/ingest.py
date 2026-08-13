@@ -102,6 +102,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Destination for the atomically written vector_staged manifest.",
     )
     parser.add_argument(
+        "--chunks-output",
+        type=Path,
+        help="Optional canonical Chunk JSONL for the Stage 4 graph writer.",
+    )
+    parser.add_argument(
         "--model-manifest",
         type=Path,
         help="Optional artifact manifest; defaults to the packaged immutable manifest.",
@@ -221,6 +226,7 @@ async def ingest_corpus(
     embedder: Embedder,
     writer: VectorStageWriter,
     artifact_manifest_sha256: str,
+    chunks_output: Path | None = None,
 ) -> VectorStageManifest:
     """Use the canonical chunker, one batched embed call, and the verified stage writer."""
 
@@ -243,12 +249,51 @@ async def ingest_corpus(
             retryable=False,
         )
     embeddings = await embedder.embed_documents(tuple(chunk.text for chunk in chunks))
-    return await writer.stage_chunks(
+    manifest = await writer.stage_chunks(
         chunks,
         embeddings,
         corpus_version,
         embedding_artifact_manifest_sha256=artifact_manifest_sha256,
     )
+    if chunks_output is not None:
+        write_chunks_jsonl(chunks_output, chunks)
+    return manifest
+
+
+def write_chunks_jsonl(path: Path, chunks: Sequence[Chunk]) -> None:
+    """Atomically persist the exact chunks accepted by the vector stage."""
+
+    payload = "".join(
+        f"{chunk.model_dump_json()}\n" for chunk in sorted(chunks, key=lambda item: item.id)
+    ).encode("utf-8")
+    temporary_path: Path | None = None
+    descriptor: int | None = None
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        descriptor, temporary_name = tempfile.mkstemp(
+            dir=path.parent,
+            prefix=f".{path.name}.",
+            suffix=".tmp",
+        )
+        temporary_path = Path(temporary_name)
+        with os.fdopen(descriptor, "wb") as output:
+            descriptor = None
+            output.write(payload)
+            output.flush()
+            os.fsync(output.fileno())
+        os.replace(temporary_path, path)
+        temporary_path = None
+    except OSError as exc:
+        raise RAGPlanError(
+            ErrorCode.INVALID_REQUEST,
+            "canonical chunk JSONL could not be written",
+            retryable=False,
+        ) from exc
+    finally:
+        if descriptor is not None:
+            os.close(descriptor)
+        if temporary_path is not None:
+            temporary_path.unlink(missing_ok=True)
 
 
 def write_stage_manifest(path: Path, manifest: VectorStageManifest) -> None:
@@ -316,6 +361,7 @@ async def _execute(args: argparse.Namespace) -> VectorStageManifest:
             embedder=embedder,
             writer=writer,
             artifact_manifest_sha256=manifest.sha256,
+            chunks_output=args.chunks_output,
         )
         write_stage_manifest(args.stage_manifest, stage)
         return stage

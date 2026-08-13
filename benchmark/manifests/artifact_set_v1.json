@@ -1,0 +1,70 @@
+{
+  "benchmark_manifest_sha256": "c5d959ca1da8c5b5e977af948c96012efc3a0754599e34edcefff30755e1ef76",
+  "files": {
+    "NOTICE.md": {
+      "sha256": "df75818df50968ed653e4a7492d221c7b9301ac80074bee017dede34deb34b6d",
+      "size_bytes": 1076
+    },
+    "configs/splits_v1.json": {
+      "sha256": "8f6ae307abbd9a2a06f55d9a1b0a54c6011ea780e62c0dd3c91d466aed8f5649",
+      "size_bytes": 77339
+    },
+    "manifests/adaptive_rag_bench_v1.yaml": {
+      "sha256": "32cd575a1319868e1aef936f3c80c73e8e77a00d8ddcb23980d4f7ca1969e59f",
+      "size_bytes": 1114452
+    },
+    "manifests/build_report_v1.json": {
+      "sha256": "4b3bfe14c390ed50dd19e22be7c08cf98b99080cfe4eeb977ac152ae864eed21",
+      "size_bytes": 1184
+    },
+    "manifests/chunk_index_v1.jsonl": {
+      "sha256": "0073323a2135adeccdeff8d88cf72b011800f6fc01f6295519097141f4d5e15b",
+      "size_bytes": 2537991
+    },
+    "manifests/corpus_index_v1.jsonl": {
+      "sha256": "20d11c9f0a3b039d905e8766bc110c2543722c0f5e84bd058dbcba3ce28f3732",
+      "size_bytes": 3326430
+    },
+    "manifests/corpus_manifest_v1.json": {
+      "sha256": "ac6a23df952e67026513b92c50948b569dd93b6d2fbd0d724965a463322fa374",
+      "size_bytes": 464
+    },
+    "manifests/corpus_policy_v1.json": {
+      "sha256": "02b76fd95b8bcfeccbd45e2e68874d075fab75957cc92b0da114ba32e9938211",
+      "size_bytes": 514
+    },
+    "manifests/duplicate_report_v1.json": {
+      "sha256": "c3571a7a92f96af22f49c2c04c2a5559e0cefdc7c6fb4a04c5341acf5977084b",
+      "size_bytes": 8028
+    },
+    "manifests/licenses.yaml": {
+      "sha256": "8106cbe4b22ada13be16123b2fb1a3e8789cbc2e360ee416fc46acdd3a392d92",
+      "size_bytes": 3349
+    },
+    "manifests/selection_report_v1.json": {
+      "sha256": "3ce28b0c10f20428a569b3541d49b3976d7df3d520ef311c818c4142b4692a41",
+      "size_bytes": 1813
+    },
+    "manifests/synthetic_graph_v1.json": {
+      "sha256": "65d641f6ea747436b2ae597f45ca4e1183684660fe9b79020c26a72332218f87",
+      "size_bytes": 126769
+    },
+    "manifests/test_ids_v1.json": {
+      "sha256": "2073d88ad78acbdb77115224988d67ff418d48b853d0b2243d94a68c4ac6ca87",
+      "size_bytes": 9567
+    },
+    "qrels/qrels_v1.jsonl": {
+      "sha256": "8b2fe3270cd64a6d488f24793bd61e38acd741707ba0da8aeffd0f7f387e3326",
+      "size_bytes": 1115870
+    },
+    "qrels/synthetic_graph_qrels_v1.jsonl": {
+      "sha256": "e3d88657ff2ac5194d344ec5be2dbfe7967cae810dd7bd03e4ad0ba4174f427d",
+      "size_bytes": 30845
+    }
+  },
+  "qrels_logical_sha256": "7f287320d8014344d12c770af159cce07457bdd8d092a7ece51c7eae67c6b505",
+  "ready": true,
+  "schema_version": "v1",
+  "split_hash": "b01deb380f039447d626bb7b9d74ca344d3a55dc22cf9fea725d90049a5e1a31",
+  "test_ids_sha256": "2fa161f8517900f723426c4f896f6b2c8b6308decac23c31cb15883347833fcc"
+}

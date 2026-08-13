@@ -15,11 +15,15 @@ RUN python -m pip install --no-cache-dir "uv==${UV_VERSION}" \
     && groupadd --system ragplan \
     && useradd --system --gid ragplan --home-dir /app ragplan
 
-COPY pyproject.toml uv.lock README.md LICENSE ./
+COPY pyproject.toml uv.lock README.md LICENSE docker-compose.yml ./
 COPY src ./src
 COPY configs ./configs
+COPY benchmark/configs ./benchmark/configs
+COPY benchmark/manifests ./benchmark/manifests
+COPY benchmark/qrels ./benchmark/qrels
+COPY benchmark/NOTICE.md ./benchmark/NOTICE.md
 
-RUN uv sync --frozen --no-dev \
+RUN uv sync --frozen --no-dev --group graph-extraction \
     && chown -R ragplan:ragplan /app
 
 USER ragplan

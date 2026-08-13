@@ -24,6 +24,13 @@ class ErrorCode(StrEnum):
     INTERNAL_ERROR = "INTERNAL_ERROR"
 
 
+class TimeoutOrigin(StrEnum):
+    """Distinguish scheduler deadlines from backend-client-native timeouts."""
+
+    APPLICATION_DEADLINE = "application_deadline"
+    BACKEND_CLIENT = "backend_client"
+
+
 HTTP_STATUS_BY_ERROR: Final = MappingProxyType(
     {
         ErrorCode.INVALID_REQUEST: 422,
@@ -70,10 +77,18 @@ class ErrorResponse(BaseModel):
 class RAGPlanError(Exception):
     """Exception carrying an intentionally stable public error code."""
 
-    def __init__(self, code: ErrorCode, message: str, *, retryable: bool | None = None) -> None:
+    def __init__(
+        self,
+        code: ErrorCode,
+        message: str,
+        *,
+        retryable: bool | None = None,
+        timeout_origin: TimeoutOrigin | None = None,
+    ) -> None:
         self.code = code
         self.message = message
         self.retryable = RETRYABLE_BY_ERROR[code] if retryable is None else retryable
+        self.timeout_origin = timeout_origin
         super().__init__(message)
 
     @property

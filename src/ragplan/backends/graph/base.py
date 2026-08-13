@@ -7,7 +7,16 @@ from typing import Protocol, runtime_checkable
 
 from ragplan.backends.base import BackendHealth, BackendWriteResult
 from ragplan.core.deadline import Deadline
-from ragplan.core.models import Chunk, Entity, PlanDefinition, QueryAnalysis, Relation, RetrievalHit
+from ragplan.core.models import (
+    Chunk,
+    Entity,
+    EntityMention,
+    GraphStageManifest,
+    PlanDefinition,
+    QueryAnalysis,
+    Relation,
+)
+from ragplan.retrieval.graph import GraphBackendExecution
 
 
 @runtime_checkable
@@ -20,7 +29,7 @@ class GraphBackend(Protocol):
         plan: PlanDefinition,
         corpus_version: str,
         deadline: Deadline,
-    ) -> Sequence[RetrievalHit]: ...
+    ) -> GraphBackendExecution: ...
 
     async def health(self) -> BackendHealth: ...
 
@@ -35,8 +44,22 @@ class GraphIngestionWriter(Protocol):
         self,
         chunks: Sequence[Chunk],
         entities: Sequence[Entity],
+        mentions: Sequence[EntityMention],
         relations: Sequence[Relation],
         corpus_version: str,
+        *,
+        extractor_version: str,
     ) -> BackendWriteResult: ...
+
+    async def stage_graph(
+        self,
+        chunks: Sequence[Chunk],
+        entities: Sequence[Entity],
+        mentions: Sequence[EntityMention],
+        relations: Sequence[Relation],
+        corpus_version: str,
+        *,
+        extractor_version: str,
+    ) -> GraphStageManifest: ...
 
     async def close(self) -> None: ...

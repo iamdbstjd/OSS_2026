@@ -7,7 +7,7 @@ from dataclasses import dataclass
 
 from ragplan.backends.vector.base import VectorBackend
 from ragplan.core.deadline import NANOSECONDS_PER_MILLISECOND, Deadline
-from ragplan.core.errors import ErrorCode, RAGPlanError
+from ragplan.core.errors import ErrorCode, RAGPlanError, TimeoutOrigin
 from ragplan.core.models import RetrievalHit
 
 
@@ -30,7 +30,11 @@ async def execute_vector_search(
     """Execute one vector call without refreshing the absolute deadline."""
 
     if deadline.remaining_seconds(reserve_finalization=True) <= 0:
-        raise RAGPlanError(ErrorCode.DEADLINE_EXCEEDED, "retrieval deadline exceeded")
+        raise RAGPlanError(
+            ErrorCode.DEADLINE_EXCEEDED,
+            "retrieval deadline exceeded",
+            timeout_origin=TimeoutOrigin.APPLICATION_DEADLINE,
+        )
 
     started_ns = deadline.clock.now_ns()
     hits = await backend.search(embedding, top_k, corpus_version, deadline)
@@ -38,5 +42,9 @@ async def execute_vector_search(
     latency_ms = max(0, finished_ns - started_ns) / NANOSECONDS_PER_MILLISECOND
 
     if finished_ns >= deadline.branch_cutoff_ns:
-        raise RAGPlanError(ErrorCode.DEADLINE_EXCEEDED, "retrieval deadline exceeded")
+        raise RAGPlanError(
+            ErrorCode.DEADLINE_EXCEEDED,
+            "retrieval deadline exceeded",
+            timeout_origin=TimeoutOrigin.APPLICATION_DEADLINE,
+        )
     return VectorExecution(hits=tuple(hits), latency_ms=latency_ms)

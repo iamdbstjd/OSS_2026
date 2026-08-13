@@ -1,0 +1,51 @@
+schema_version: baseline_v1
+benchmark_id: adaptive_rag_bench_v1
+dataset_version: adaptive_rag_bench_v1
+split_version: splits_v1
+qrels_version: qrels_v1
+corpus_version: adaptive_rag_bench_v1-corpus-v1
+corpus_chunk_count: 8604
+corpus_chunk_ids_sha256: 5c9548e377d67601e5648f007adf28bc873aebcaae98fe1626886ec2cd2ed47b
+benchmark_manifest_sha256: c5d959ca1da8c5b5e977af948c96012efc3a0754599e34edcefff30755e1ef76
+split_hash: b01deb380f039447d626bb7b9d74ca344d3a55dc22cf9fea725d90049a5e1a31
+qrels_sha256: 7f287320d8014344d12c770af159cce07457bdd8d092a7ece51c7eae67c6b505
+embedding_model_revision: b8903db39f65d93ae28d49a37c4f3fa90c5f94e0
+extractor_version: graph-extractor-v1-2a20f0128558a5117da1cc9dc264cc16290bc6f28b8f21e0bd6cf8417a0b5322
+plan_catalog_sha256: 8abde227cfe940a3c1467e22e5421355597e53116782f23f6f9e07d464e155d2
+planner_config_sha256: ed5ab309f77b3f43f8550e06e1371d27d0e82f9e4e203a104bdd10346061a6f1
+query_feature_config_sha256: 8432e9c5fc80da61919cd1d8a3f5fc8020903496b9e57b9fe9d8f7b85e04910d
+graph_tier_policy_sha256: 1c752f4f929397da5f1e545fac2cfd172eade24a31b896f3eac702572dd74afa
+rule_runtime_config_version: bffd3f1c855df583ed6b3925f694ab6c864f6fbb12b5f62d04706395ad521d84
+stage2_artifact_set_sha256: 23f79c3306ff4f029a562073fa680e930f99fd42ef965fcd600e24361361dda5
+runtime_semantics_version: v1
+latency_budgets_ms: [50, 100, 200, 500]
+final_top_k: 10
+cold_runs: 1
+warmup_runs: 2
+measured_runs: 10
+concurrency: 1
+random_seed: 20260809
+bootstrap_samples: 10000
+primary_splits: [train, validation]
+methods:
+  - {method: vector, planner: vector, plan_id: null, graph_depth: null}
+  - {method: graph_depth_1, planner: graph, plan_id: null, graph_depth: 1}
+  - {method: graph_depth_2, planner: graph, plan_id: null, graph_depth: 2}
+  - {method: graph_depth_3, planner: graph, plan_id: null, graph_depth: 3}
+  - {method: fixed_p4, planner: fixed_hybrid, plan_id: P4, graph_depth: null}
+  - {method: fixed_p5, planner: fixed_hybrid, plan_id: P5, graph_depth: null}
+  - {method: fixed_p6, planner: fixed_hybrid, plan_id: P6, graph_depth: null}
+  - {method: fixed_p8, planner: fixed_hybrid, plan_id: P8, graph_depth: null}
+  - {method: rule, planner: rule, plan_id: null, graph_depth: null}
+derive_best_fixed_on_validation: true
+percentile_method: hyndman_fan_type_7_linear
+timeout_error_quality: zero
+outlier_policy: retain_all
+runtime_requirements:
+  cpu_only: true
+  single_host: true
+  local_docker_network: true
+  concurrency: 1
+  competing_workload_allowed: false
+  cpu_governor_must_be_recorded: true
+  container_limits_must_be_recorded: true

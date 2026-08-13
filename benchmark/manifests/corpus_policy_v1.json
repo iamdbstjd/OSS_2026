@@ -1,0 +1,8 @@
+{
+  "exact_duplicate_groups_after_canonicalization": 0,
+  "exact_duplicate_groups_before_canonicalization": 8,
+  "exact_duplicate_policy": "merge normalized byte-identical text within each source namespace; choose the lexicographically smallest source_document_id",
+  "near_duplicate_pairs_after_canonicalization": 55,
+  "near_duplicate_policy": "retain and audit same-title token-Jaccard pairs in [0.90, 1.00); do not merge because doing so can remove upstream gold evidence",
+  "near_duplicate_threshold": 0.9
+}
