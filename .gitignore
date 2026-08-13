@@ -44,6 +44,7 @@ benchmark/datasets/*
 !benchmark/datasets/.gitkeep
 benchmark/results/*
 !benchmark/results/.gitkeep
+!benchmark/results/stage5_graph_query_plan_v1.json
 /artifacts/*
 !/artifacts/.gitkeep
 /models/*

@@ -1,0 +1,122 @@
+{
+  "artifact_schema_version": "v1",
+  "captured_on": "2026-08-13",
+  "fixture": {
+    "chunks": 3,
+    "documents": 3,
+    "entities": 4,
+    "mentions": 6,
+    "name": "stage5_deterministic_three_hop_v1",
+    "relations": 3
+  },
+  "neo4j": {
+    "database": "neo4j",
+    "image": "neo4j:5.26.28@sha256:ff32db30b2baff97971e441b46bfd9c832c1b62c970398ef579244c06b21d357",
+    "planner": "COST",
+    "runtime": "SLOTTED",
+    "version": "5.26.28"
+  },
+  "queries": [
+    {
+      "explain_operators": [
+        "ProduceResults",
+        "Projection",
+        "Sort",
+        "Projection",
+        "Apply",
+        "Unwind",
+        "Optional",
+        "Filter",
+        "SemiApply",
+        "NodeUniqueIndexSeek",
+        "Filter",
+        "Expand(Into)",
+        "NodeIndexSeek"
+      ],
+      "id": "seed_lookup",
+      "profile": {
+        "page_cache_hits": 0,
+        "page_cache_misses": 0,
+        "returned_records": 1,
+        "total_db_hits": 10
+      },
+      "review": {
+        "active_corpus_filter": true,
+        "exact_entity_id_seek": true,
+        "exact_normalized_alias_filter": true,
+        "parameterized": true
+      },
+      "statement_sha256": "b214f6637a453e6cc99b7878cf9fd6510709938d928e6959a23916b2b4cc7489"
+    },
+    {
+      "explain_operators": [
+        "ProduceResults",
+        "Projection",
+        "Top",
+        "Projection",
+        "CacheProperties",
+        "Filter",
+        "Expand(All)",
+        "Apply",
+        "Unwind",
+        "NodeUniqueIndexSeek"
+      ],
+      "id": "adjacent_relates_to",
+      "profile": {
+        "page_cache_hits": 0,
+        "page_cache_misses": 0,
+        "returned_records": 1,
+        "total_db_hits": 15
+      },
+      "review": {
+        "direction_preserved_in_projection": true,
+        "edge_limit_parameter": true,
+        "parameterized": true,
+        "relationship_allow_list": [
+          "RELATES_TO"
+        ],
+        "variable_length_pattern": false
+      },
+      "statement_sha256": "10a4665a92283432f8b6ee4323524617a363af9a60658e2bb8ef5d805f77b05d"
+    },
+    {
+      "explain_operators": [
+        "ProduceResults",
+        "Projection",
+        "CacheProperties",
+        "Top",
+        "Projection",
+        "EagerAggregation",
+        "Filter",
+        "Expand(All)",
+        "Apply",
+        "Unwind",
+        "NodeUniqueIndexSeek"
+      ],
+      "id": "chunk_recovery",
+      "profile": {
+        "page_cache_hits": 0,
+        "page_cache_misses": 0,
+        "returned_records": 2,
+        "total_db_hits": 19
+      },
+      "review": {
+        "active_corpus_filter": true,
+        "candidate_limit_parameter": true,
+        "parameterized": true,
+        "relationship_allow_list": [
+          "MENTIONS"
+        ]
+      },
+      "statement_sha256": "ab8a8daea4decf4fcfc494526dbc3c375c9f858ec4845467762a8f5103c94346"
+    }
+  ],
+  "review_outcome": {
+    "all_queries_bounded": true,
+    "all_queries_parameterized": true,
+    "all_three_profiles_executed": true,
+    "all_nodes_scan_present": false,
+    "performance_claim": "none; deterministic micro-fixture development review only",
+    "unbounded_variable_length_pattern_present": false
+  }
+}
