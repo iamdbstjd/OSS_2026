@@ -14,10 +14,16 @@ from uuid import UUID
 
 from qdrant_client import AsyncQdrantClient
 from qdrant_client.http import models
+from qdrant_client.http.exceptions import ResponseHandlingException
 
-from ragplan.backends.base import BackendHealth, BackendHealthStatus, BackendWriteResult
+from ragplan.backends.base import (
+    BackendHealth,
+    BackendHealthStatus,
+    BackendWriteResult,
+    canonical_id_checksum,
+)
 from ragplan.core.deadline import Deadline
-from ragplan.core.errors import ErrorCode, RAGPlanError
+from ragplan.core.errors import ErrorCode, RAGPlanError, TimeoutOrigin
 from ragplan.core.ids import qdrant_point_id
 from ragplan.core.models import Chunk, RetrievalHit, VectorStageManifest
 
@@ -79,15 +85,6 @@ def collection_name_for_version(collection_prefix: str, corpus_version: str) -> 
     _validate_corpus_version(corpus_version)
     version_digest = hashlib.sha256(corpus_version.encode("utf-8")).hexdigest()
     return f"{collection_prefix}_{version_digest}"
-
-
-def canonical_id_checksum(canonical_chunk_ids: Sequence[str]) -> str:
-    """Hash an order-independent canonical ID set for ingestion reconciliation."""
-
-    if any(not isinstance(value, str) or not value for value in canonical_chunk_ids):
-        raise ValueError("canonical chunk IDs must be non-empty strings")
-    canonical_bytes = "\n".join(sorted(canonical_chunk_ids)).encode("utf-8")
-    return hashlib.sha256(canonical_bytes).hexdigest()
 
 
 def embedding_set_checksum(vector_checksums: Mapping[str, str]) -> str:
@@ -175,6 +172,12 @@ class QdrantCollectionManager:
         except RAGPlanError:
             raise
         except Exception as exc:
+            if _is_qdrant_client_timeout(exc):
+                raise RAGPlanError(
+                    ErrorCode.DEADLINE_EXCEEDED,
+                    _DEADLINE_MESSAGE,
+                    timeout_origin=TimeoutOrigin.BACKEND_CLIENT,
+                ) from exc
             raise RAGPlanError(
                 ErrorCode.DEPENDENCY_UNAVAILABLE,
                 _DEPENDENCY_MESSAGE,
@@ -197,6 +200,12 @@ class QdrantCollectionManager:
         except RAGPlanError:
             raise
         except Exception as exc:
+            if _is_qdrant_client_timeout(exc):
+                raise RAGPlanError(
+                    ErrorCode.DEADLINE_EXCEEDED,
+                    _DEADLINE_MESSAGE,
+                    timeout_origin=TimeoutOrigin.BACKEND_CLIENT,
+                ) from exc
             raise RAGPlanError(
                 ErrorCode.DEPENDENCY_UNAVAILABLE,
                 _DEPENDENCY_MESSAGE,
@@ -224,6 +233,12 @@ class QdrantCollectionManager:
         except RAGPlanError:
             raise
         except Exception as exc:
+            if _is_qdrant_client_timeout(exc):
+                raise RAGPlanError(
+                    ErrorCode.DEADLINE_EXCEEDED,
+                    _DEADLINE_MESSAGE,
+                    timeout_origin=TimeoutOrigin.BACKEND_CLIENT,
+                ) from exc
             raise RAGPlanError(
                 ErrorCode.DEPENDENCY_UNAVAILABLE,
                 _DEPENDENCY_MESSAGE,
@@ -247,6 +262,26 @@ class QdrantCollectionManager:
         ):
             raise RAGPlanError(ErrorCode.CORPUS_INCONSISTENT, _CORPUS_DATA_MESSAGE)
         return manifest
+
+    async def discard_version(self, corpus_version: str) -> None:
+        """Delete one explicit immutable collection; never called implicitly."""
+
+        collection_name = self.collection_name(corpus_version)
+        try:
+            if await self._client.collection_exists(collection_name):
+                deleted = await self._client.delete_collection(collection_name)
+                if not deleted:
+                    raise RAGPlanError(
+                        ErrorCode.DEPENDENCY_UNAVAILABLE,
+                        _DEPENDENCY_MESSAGE,
+                    )
+        except RAGPlanError:
+            raise
+        except Exception as exc:
+            raise RAGPlanError(
+                ErrorCode.DEPENDENCY_UNAVAILABLE,
+                _DEPENDENCY_MESSAGE,
+            ) from exc
 
     def _validate_collection_info(
         self,
@@ -568,6 +603,12 @@ class QdrantVectorBackend:
         except RAGPlanError:
             raise
         except Exception as exc:
+            if _is_qdrant_client_timeout(exc):
+                raise RAGPlanError(
+                    ErrorCode.DEADLINE_EXCEEDED,
+                    _DEADLINE_MESSAGE,
+                    timeout_origin=TimeoutOrigin.BACKEND_CLIENT,
+                ) from exc
             raise RAGPlanError(
                 ErrorCode.DEPENDENCY_UNAVAILABLE,
                 _DEPENDENCY_MESSAGE,
@@ -595,12 +636,31 @@ async def _within_deadline[T](
 ) -> T:
     remaining_seconds = deadline.remaining_seconds(reserve_finalization=True)
     if remaining_seconds <= 0:
-        raise RAGPlanError(ErrorCode.DEADLINE_EXCEEDED, _DEADLINE_MESSAGE)
+        raise RAGPlanError(
+            ErrorCode.DEADLINE_EXCEEDED,
+            _DEADLINE_MESSAGE,
+            timeout_origin=TimeoutOrigin.APPLICATION_DEADLINE,
+        )
     try:
         async with asyncio.timeout(remaining_seconds):
             return await operation()
     except TimeoutError as exc:
-        raise RAGPlanError(ErrorCode.DEADLINE_EXCEEDED, _DEADLINE_MESSAGE) from exc
+        raise RAGPlanError(
+            ErrorCode.DEADLINE_EXCEEDED,
+            _DEADLINE_MESSAGE,
+            timeout_origin=TimeoutOrigin.APPLICATION_DEADLINE,
+        ) from exc
+
+
+def _is_qdrant_client_timeout(error: Exception) -> bool:
+    source = error.source if isinstance(error, ResponseHandlingException) else error
+    if isinstance(source, TimeoutError):
+        return True
+    return any(
+        candidate.__module__.split(".", 1)[0] == "httpx"
+        and candidate.__name__ == "TimeoutException"
+        for candidate in type(source).__mro__
+    )
 
 
 def _retrieval_hit(

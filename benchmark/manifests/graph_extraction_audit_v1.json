@@ -1,0 +1,10 @@
+{
+  "audit_manifest": "benchmark/audits/graph_extraction_v1/manifest_v1.json",
+  "audit_sample_checksum": "8bd87ecb38c2aed436a4f67f1706ac2227fdabb13dceb9fcd4012144099abedb",
+  "audit_version": "graph_extraction_v1",
+  "benchmark_manifest_sha256": "c5d959ca1da8c5b5e977af948c96012efc3a0754599e34edcefff30755e1ef76",
+  "rule_graph_tier_enabled": false,
+  "schema_version": "v1",
+  "split_hash": "b01deb380f039447d626bb7b9d74ca344d3a55dc22cf9fea725d90049a5e1a31",
+  "status": "pending_human_review"
+}

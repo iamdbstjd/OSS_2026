@@ -1,4 +1,4 @@
-"""FastAPI bootstrap for the shared contracts and optional Stage 3 vector runtime."""
+"""FastAPI bootstrap for shared contracts and optional verified retrieval runtimes."""
 
 from __future__ import annotations
 
@@ -20,6 +20,7 @@ from ragplan.core.engine import SearchEngine
 from ragplan.core.errors import ErrorCode, ErrorResponse, RAGPlanError
 from ragplan.core.models import SearchRequest, SearchResponse
 from ragplan.planner.catalog import load_default_plan_catalog, load_plan_catalog
+from ragplan.scheduler.cancellation import run_until_disconnect
 
 logger = logging.getLogger(__name__)
 
@@ -36,6 +37,15 @@ def _error_response(error: RAGPlanError, request: Request) -> JSONResponse:
         status_code=error.http_status,
         content=error.response(request_id).model_dump(mode="json"),
     )
+
+
+async def _wait_for_http_disconnect(request: Request) -> None:
+    """Consume only post-body ASGI events until the peer disconnects."""
+
+    while True:
+        message = await request.receive()
+        if message["type"] == "http.disconnect":
+            return
 
 
 def create_app(
@@ -124,9 +134,12 @@ def create_app(
         engine = cast(SearchEngine | None, api.state.search_engine)
         if engine is None:
             raise RAGPlanError(ErrorCode.NOT_READY, "search engine is not initialized")
-        return await engine.search(
-            search_request,
-            request_id=request_id_from_scope(request.scope),
+        return await run_until_disconnect(
+            engine.search(
+                search_request,
+                request_id=request_id_from_scope(request.scope),
+            ),
+            wait_for_disconnect=lambda: _wait_for_http_disconnect(request),
         )
 
     return api

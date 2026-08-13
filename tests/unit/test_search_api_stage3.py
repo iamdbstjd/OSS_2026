@@ -92,6 +92,11 @@ async def test_injected_engine_serves_vector_search_and_lifespan_closes_it() -> 
                 json={"query": "find evidence", "planner": "vector", "top_k": 1},
                 headers={"x-request-id": "stage3-http-request"},
             )
+            rule_response = await http.post(
+                "/v1/search",
+                json={"query": "find evidence", "top_k": 1},
+                headers={"x-request-id": "stage8-default-rule-request"},
+            )
 
         assert response.status_code == 200
         body = response.json()
@@ -99,7 +104,10 @@ async def test_injected_engine_serves_vector_search_and_lifespan_closes_it() -> 
         assert body["results"][0]["text"] == "executable evidence"
         assert body["trace"]["embedding_latency_ms"] >= 0
         assert body["trace"]["vector_latency_ms"] >= 0
-        assert embedder.calls == 1
+        assert rule_response.status_code == 200
+        assert rule_response.json()["planner_decision"]["mode"] == "rule"
+        assert rule_response.json()["planner_decision"]["effective_mode"] == "vector"
+        assert embedder.calls == 2
 
     health_after_shutdown = await backend.health()
     assert health_after_shutdown.available is False

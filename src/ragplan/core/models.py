@@ -35,7 +35,7 @@ from ragplan.core.config import (
     MIN_QUERY_CODEPOINTS,
     MIN_TOP_K,
 )
-from ragplan.core.errors import ErrorCode
+from ragplan.core.errors import ErrorCode, TimeoutOrigin
 from ragplan.core.ids import entity_id, normalize_entity_name
 
 NonEmptyString = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
@@ -159,6 +159,43 @@ class BranchStatus(StrEnum):
     CANCELLED = "cancelled"
 
 
+class RequestState(StrEnum):
+    RECEIVED = "received"
+    ANALYZING = "analyzing"
+    PLANNING = "planning"
+    EXECUTING = "executing"
+    FUSING = "fusing"
+    RERANKING = "reranking"
+    COMPLETE = "complete"
+    PARTIAL = "partial"
+    FAILED = "failed"
+
+
+class CancellationReason(StrEnum):
+    APPLICATION_DEADLINE = "application_deadline"
+    CLIENT_DISCONNECT = "client_disconnect"
+    PARENT_CANCELLED = "parent_cancelled"
+    ENGINE_SHUTDOWN = "engine_shutdown"
+
+
+class FailureOrigin(StrEnum):
+    APPLICATION = "application"
+    BACKEND_NATIVE = "backend_native"
+    CIRCUIT_OPEN = "circuit_open"
+    CLIENT = "client"
+
+
+class CircuitState(StrEnum):
+    CLOSED = "closed"
+    OPEN = "open"
+    HALF_OPEN = "half_open"
+
+
+class KillSwitch(StrEnum):
+    FORCE_VECTOR_ONLY = "force_vector_only"
+    DISABLE_COST_AWARE = "disable_cost_aware"
+
+
 class EntityType(StrEnum):
     PERSON = "PERSON"
     ORG = "ORG"
@@ -168,6 +205,14 @@ class EntityType(StrEnum):
     PRODUCT = "PRODUCT"
     EVENT = "EVENT"
     WORK_OF_ART = "WORK_OF_ART"
+
+
+class RelationExtractionRule(StrEnum):
+    DIRECT_SVO = "direct_svo"
+    PASSIVE = "passive"
+    PREPOSITIONAL = "prepositional"
+    COPULAR = "copular"
+    APPOSITIONAL = "appositional"
 
 
 class IngestionStoreStatus(StrEnum):
@@ -242,6 +287,60 @@ class Entity(FrozenModel):
         return self
 
 
+class EntityMention(FrozenModel):
+    """One NER span with exact source and sentence provenance."""
+
+    id: NonEmptyString
+    entity_id: NonEmptyString
+    entity_type: EntityType
+    raw_text: NonEmptyString
+    normalized_name: NonEmptyString
+    source_chunk_id: NonEmptyString
+    start_char: Annotated[int, Field(ge=0)]
+    end_char: Annotated[int, Field(ge=1)]
+    sentence_start_char: Annotated[int, Field(ge=0)]
+    sentence_end_char: Annotated[int, Field(ge=1)]
+    token_start: Annotated[int, Field(ge=0)]
+    token_end: Annotated[int, Field(ge=1)]
+    root_token: Annotated[int, Field(ge=0)]
+
+    @field_validator("normalized_name")
+    @classmethod
+    def _require_normalized_name(cls, value: str) -> str:
+        if value != normalize_entity_name(value):
+            raise ValueError("normalized_name must use the ADR-008 normalization pipeline")
+        return value
+
+    @model_validator(mode="after")
+    def _check_span(self) -> EntityMention:
+        if self.end_char <= self.start_char:
+            raise ValueError("mention character span must be non-empty")
+        if self.token_end <= self.token_start or not (
+            self.token_start <= self.root_token < self.token_end
+        ):
+            raise ValueError("mention token span must contain its root token")
+        if not (
+            self.sentence_start_char <= self.start_char and self.end_char <= self.sentence_end_char
+        ):
+            raise ValueError("mention span must be contained by its sentence span")
+        expected_entity_id = str(entity_id(self.entity_type.value, self.normalized_name))
+        if self.entity_id != expected_entity_id:
+            raise ValueError("mention entity ID must match its type and normalized name")
+        from ragplan.core.ids import entity_mention_id
+
+        expected_mention_id = str(
+            entity_mention_id(
+                self.source_chunk_id,
+                self.entity_id,
+                self.start_char,
+                self.end_char,
+            )
+        )
+        if self.id != expected_mention_id:
+            raise ValueError("mention ID must match its source span")
+        return self
+
+
 class Relation(FrozenModel):
     """A directed, provenance-preserving RELATES_TO edge."""
 
@@ -252,12 +351,30 @@ class Relation(FrozenModel):
     confidence: Annotated[float, Field(ge=0.70, le=1.0)]
     source_chunk_id: NonEmptyString
     extractor_version: NonEmptyString
+    extraction_rule: RelationExtractionRule = RelationExtractionRule.DIRECT_SVO
 
     @model_validator(mode="after")
     def _reject_self_relation(self) -> Relation:
         if self.source_entity_id == self.target_entity_id:
             raise ValueError("a relation must connect two distinct entities")
         return self
+
+
+class GraphStageManifest(FrozenModel):
+    """Verified Neo4j-only staging evidence; it is never an active pointer."""
+
+    stage_schema_version: Literal["v1"] = "v1"
+    status: Literal["graph_staged"] = "graph_staged"
+    corpus_version: NonEmptyString
+    database: NonEmptyString
+    document_count: Annotated[int, Field(ge=0)]
+    chunk_count: Annotated[int, Field(ge=0)]
+    entity_count: Annotated[int, Field(ge=0)]
+    mention_count: Annotated[int, Field(ge=0)]
+    relation_count: Annotated[int, Field(ge=0)]
+    canonical_id_checksum: Sha256Hex
+    graph_content_checksum: Sha256Hex
+    extractor_version: NonEmptyString
 
 
 class GraphPath(FrozenModel):
@@ -280,9 +397,104 @@ class GraphPath(FrozenModel):
                 raise ValueError("each relation must connect its adjacent path entities")
         return self
 
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def hop_count(self) -> int:
         return len(self.relations)
+
+
+class GraphLimit(StrEnum):
+    """Hard Stage 5 limits that may truncate graph work deterministically."""
+
+    SEEDS = "seeds"
+    PATHS = "paths"
+    VISITED_ENTITIES = "visited_entities"
+    RECOVERED_CHUNKS = "recovered_chunks"
+
+
+class GraphSeedMatch(FrozenModel):
+    """Privacy-safe evidence for one exact normalized query-seed lookup."""
+
+    mention_sha256: Sha256Hex
+    requested_entity_id: NonEmptyString
+    matched_entity_id: NonEmptyString | None = None
+    lookup_score: UnitFloat
+
+    @model_validator(mode="after")
+    def _check_match_score(self) -> GraphSeedMatch:
+        matched = self.matched_entity_id is not None
+        expected_score = 1.0 if matched else 0.0
+        if not math.isclose(self.lookup_score, expected_score, rel_tol=0.0, abs_tol=0.0):
+            raise ValueError("exact seed lookup score must be 1 for a match and 0 otherwise")
+        if matched and self.matched_entity_id != self.requested_entity_id:
+            raise ValueError("exact seed lookup cannot substitute a different entity")
+        return self
+
+
+class GraphTrace(FrozenModel):
+    """Bounded graph phases without raw query text or normalized entity aliases."""
+
+    score_version: Literal["graph_score_v0"] = "graph_score_v0"
+    seed_matches: tuple[GraphSeedMatch, ...] = Field(max_length=5)
+    requested_depth: Annotated[int, Field(ge=1, le=3)]
+    actual_depth: Annotated[int, Field(ge=0, le=3)]
+    visited_entity_count: Annotated[int, Field(ge=0, le=500)]
+    path_count: Annotated[int, Field(ge=0, le=250)]
+    recovered_chunk_count: Annotated[int, Field(ge=0, le=100)]
+    limit_hits: tuple[GraphLimit, ...] = ()
+    seed_lookup_latency_ms: NonNegativeFloat
+    traversal_latency_ms: NonNegativeFloat
+    recovery_latency_ms: NonNegativeFloat
+    ranking_latency_ms: NonNegativeFloat
+
+    @model_validator(mode="after")
+    def _check_graph_trace(self) -> GraphTrace:
+        if self.actual_depth > self.requested_depth:
+            raise ValueError("actual graph depth cannot exceed requested depth")
+        if len(set(self.limit_hits)) != len(self.limit_hits):
+            raise ValueError("graph limit hits must be unique")
+        if not self.seed_matches and (
+            self.actual_depth
+            or self.visited_entity_count
+            or self.path_count
+            or self.recovered_chunk_count
+        ):
+            raise ValueError("graph work requires at least one seed lookup")
+        matched_count = sum(item.matched_entity_id is not None for item in self.seed_matches)
+        if matched_count == 0 and (
+            self.actual_depth or self.visited_entity_count or self.path_count
+        ):
+            raise ValueError("traversal work requires at least one matched seed")
+        if matched_count > self.visited_entity_count:
+            raise ValueError("visited entities must include every matched seed")
+        if (self.actual_depth == 0) is not (self.path_count == 0):
+            raise ValueError("actual graph depth and retained paths must be jointly empty")
+        if self.recovered_chunk_count and self.path_count == 0:
+            raise ValueError("chunk recovery requires at least one retained path")
+        return self
+
+
+class RetrievalContribution(FrozenModel):
+    """One branch's auditable contribution to a final retrieval hit."""
+
+    source: BranchKind
+    original_rank: Annotated[int, Field(ge=1)]
+    original_score: float
+    weight: UnitFloat
+    rrf_contribution: NonNegativeFloat
+    metadata: FrozenJsonMapping = Field(default_factory=dict)
+
+    @model_validator(mode="after")
+    def _check_weighted_rrf(self) -> RetrievalContribution:
+        expected = self.weight / (60 + self.original_rank)
+        if not math.isclose(
+            self.rrf_contribution,
+            expected,
+            rel_tol=0.0,
+            abs_tol=1e-15,
+        ):
+            raise ValueError("source contribution must use weighted_rrf_v1")
+        return self
 
 
 class RetrievalHit(FrozenModel):
@@ -297,6 +509,35 @@ class RetrievalHit(FrozenModel):
     metadata: FrozenJsonMapping = Field(default_factory=dict)
     rank: Annotated[int, Field(ge=1)] | None = None
     paths: tuple[GraphPath, ...] = ()
+    sources: tuple[BranchKind, ...] = ()
+    source_contributions: tuple[RetrievalContribution, ...] = ()
+
+    @model_validator(mode="after")
+    def _check_provenance(self) -> RetrievalHit:
+        contribution_sources = tuple(item.source for item in self.source_contributions)
+        if len(set(contribution_sources)) != len(contribution_sources):
+            raise ValueError("retrieval source contributions must be unique")
+        canonical_source_order = tuple(
+            branch
+            for branch in (BranchKind.VECTOR, BranchKind.GRAPH)
+            if branch in contribution_sources
+        )
+        if contribution_sources != canonical_source_order:
+            raise ValueError("retrieval source contributions must use canonical branch order")
+        if self.sources != contribution_sources:
+            raise ValueError("retrieval sources must match contribution order")
+        if self.source == "fusion" and not self.source_contributions:
+            raise ValueError("a fused retrieval hit requires source contributions")
+        if self.source == "fusion" and not math.isclose(
+            self.score,
+            sum(item.rrf_contribution for item in self.source_contributions),
+            rel_tol=0.0,
+            abs_tol=1e-15,
+        ):
+            raise ValueError("a fused retrieval score must equal its source contributions")
+        if self.source == "fusion" and self.paths and BranchKind.GRAPH not in contribution_sources:
+            raise ValueError("fused graph paths require a graph source contribution")
+        return self
 
     @property
     def id(self) -> str:
@@ -326,9 +567,22 @@ class QueryAnalysis(FrozenModel):
     query_embedding: tuple[float, ...] = Field(exclude=True, repr=False)
     seed_entity_mentions: tuple[str, ...] = ()
     seed_entity_ids: tuple[str, ...] = ()
+    seed_limit_hit: bool = False
     features: QueryFeatures
     analyzer_version: NonEmptyString
     analysis_latency_ms: NonNegativeFloat
+
+    @model_validator(mode="after")
+    def _check_seed_contract(self) -> QueryAnalysis:
+        if len(self.seed_entity_mentions) != len(self.seed_entity_ids):
+            raise ValueError("seed mentions and IDs must have the same length")
+        if len(self.seed_entity_ids) > 5:
+            raise ValueError("query analysis cannot expose more than five graph seeds")
+        if len(set(zip(self.seed_entity_mentions, self.seed_entity_ids, strict=True))) != len(
+            self.seed_entity_ids
+        ):
+            raise ValueError("query analysis graph seeds must be unique")
+        return self
 
 
 class PlanDefinition(FrozenModel):
@@ -392,6 +646,7 @@ class PlannerDecision(FrozenModel):
     selected_plan_id: PlanId
     selected_plan: PlanDefinition | None = None
     executed_vector_top_k: Annotated[int, Field(ge=MIN_TOP_K, le=MAX_TOP_K)] | None = None
+    executed_graph_top_k: Annotated[int, Field(ge=MIN_TOP_K, le=MAX_TOP_K)] | None = None
     matched_rules: tuple[str, ...] = ()
     remaining_budget_ms: NonNegativeFloat
     candidate_estimates: tuple[PlanEstimate, ...] = ()
@@ -417,10 +672,25 @@ class BranchResult(FrozenModel):
     latency_ms: NonNegativeFloat | None = None
     hits: tuple[RetrievalHit, ...] = Field(default=(), exclude=True, repr=False)
     error_code: ErrorCode | None = None
+    hit_count: Annotated[int, Field(ge=0)] = 0
+    started_at_ms: NonNegativeFloat | None = None
+    ended_at_ms: NonNegativeFloat | None = None
+    remaining_budget_at_start_ms: NonNegativeFloat | None = None
+    remaining_budget_at_end_ms: NonNegativeFloat | None = None
+    cancellation_reason: CancellationReason | None = None
+    failure_origin: FailureOrigin | None = None
+    timeout_origin: TimeoutOrigin | None = None
+    circuit_state_before: CircuitState | None = None
+    circuit_state_after: CircuitState | None = None
 
-    @computed_field
-    def hit_count(self) -> int:
-        return len(self.hits)
+    @model_validator(mode="before")
+    @classmethod
+    def _derive_internal_hit_count(cls, values: object) -> object:
+        if isinstance(values, dict) and "hit_count" not in values:
+            hits = values.get("hits", ())
+            if isinstance(hits, (tuple, list)):
+                return {**values, "hit_count": len(hits)}
+        return values
 
     @model_validator(mode="after")
     def _check_terminal_shape(self) -> BranchResult:
@@ -436,10 +706,137 @@ class BranchResult(FrozenModel):
             raise ValueError("terminal branch requires latency")
         if self.status is not BranchStatus.SUCCEEDED and self.hits:
             raise ValueError("only a succeeded branch can contain hits")
+        if self.hits and self.hit_count != len(self.hits):
+            raise ValueError("branch hit count must match retained internal hits")
+        if self.status is not BranchStatus.SUCCEEDED and self.hit_count != 0:
+            raise ValueError("only a succeeded branch can report hits")
         if self.status is BranchStatus.FAILED and self.error_code is None:
             raise ValueError("a failed branch requires an error code")
         if self.status is not BranchStatus.FAILED and self.error_code is not None:
             raise ValueError("only a failed branch can contain an error code")
+        timing_values = (
+            self.started_at_ms,
+            self.ended_at_ms,
+            self.remaining_budget_at_start_ms,
+            self.remaining_budget_at_end_ms,
+        )
+        if any(value is not None for value in timing_values) and any(
+            value is None for value in timing_values
+        ):
+            raise ValueError("branch boundary timing fields must be jointly present")
+        if self.started_at_ms is not None and self.ended_at_ms is not None:
+            if self.ended_at_ms < self.started_at_ms:
+                raise ValueError("branch end cannot precede branch start")
+            measured = self.ended_at_ms - self.started_at_ms
+            if self.latency_ms is None or not math.isclose(
+                self.latency_ms,
+                measured,
+                rel_tol=0.0,
+                abs_tol=1e-9,
+            ):
+                raise ValueError("branch latency must match scheduler boundaries")
+        if self.cancellation_reason is not None and self.status not in {
+            BranchStatus.TIMED_OUT,
+            BranchStatus.CANCELLED,
+        }:
+            raise ValueError("only timed-out or cancelled branches have a cancellation reason")
+        if self.timeout_origin is not None and self.status is not BranchStatus.TIMED_OUT:
+            raise ValueError("timeout origin requires a timed-out branch")
+        if self.failure_origin is not None and self.status is BranchStatus.SUCCEEDED:
+            raise ValueError("a succeeded branch cannot have a failure origin")
+        return self
+
+
+class RequestStateEvent(FrozenModel):
+    state: RequestState
+    elapsed_ms: NonNegativeFloat
+    remaining_budget_ms: NonNegativeFloat
+    branch_remaining_budget_ms: NonNegativeFloat
+
+
+class SchedulerTrace(FrozenModel):
+    """Frozen Stage 7 execution semantics shared by serving and profiling."""
+
+    runtime_semantics_version: Literal["v1"] = "v1"
+    state_events: tuple[RequestStateEvent, ...] = Field(min_length=2)
+    expected_terminal_state: Literal[RequestState.COMPLETE] = RequestState.COMPLETE
+    actual_terminal_state: Literal[RequestState.COMPLETE, RequestState.PARTIAL]
+    backend_task_count: Annotated[int, Field(ge=1, le=2)]
+    branch_start_skew_ms: NonNegativeFloat
+    deadline_overshoot_ms: NonNegativeFloat
+    admission_limit: Annotated[int, Field(ge=1)]
+    kill_switches: tuple[KillSwitch, ...] = ()
+    vector_circuit_state: CircuitState | None = None
+    graph_circuit_state: CircuitState | None = None
+    fallback_reason: str | None = None
+
+    @model_validator(mode="after")
+    def _check_scheduler_trace(self) -> SchedulerTrace:
+        states = tuple(event.state for event in self.state_events)
+        required_prefix = (
+            RequestState.RECEIVED,
+            RequestState.ANALYZING,
+            RequestState.PLANNING,
+            RequestState.EXECUTING,
+            RequestState.FUSING,
+        )
+        valid_states = (*required_prefix, self.actual_terminal_state)
+        valid_rerank_states = (
+            *required_prefix,
+            RequestState.RERANKING,
+            self.actual_terminal_state,
+        )
+        if states not in {valid_states, valid_rerank_states}:
+            raise ValueError("scheduler trace must follow the frozen request state machine")
+        if any(
+            later.elapsed_ms < earlier.elapsed_ms
+            for earlier, later in zip(self.state_events, self.state_events[1:], strict=False)
+        ):
+            raise ValueError("scheduler state event times must be monotonic")
+        if len(set(self.kill_switches)) != len(self.kill_switches):
+            raise ValueError("kill switch trace values must be unique")
+        canonical_switches = tuple(
+            switch
+            for switch in (KillSwitch.FORCE_VECTOR_ONLY, KillSwitch.DISABLE_COST_AWARE)
+            if switch in self.kill_switches
+        )
+        if self.kill_switches != canonical_switches:
+            raise ValueError("kill switch trace values must use canonical order")
+        if (self.actual_terminal_state is RequestState.PARTIAL) is not (
+            self.fallback_reason is not None
+        ):
+            raise ValueError("partial scheduler completion requires one fallback reason")
+        return self
+
+
+class FusionTrace(FrozenModel):
+    """Privacy-safe deterministic fusion summary."""
+
+    fusion_version: Literal["weighted_rrf_v1"] = "weighted_rrf_v1"
+    rrf_k: Literal[60] = 60
+    vector_input_count: Annotated[int, Field(ge=0)]
+    graph_input_count: Annotated[int, Field(ge=0)]
+    output_count: Annotated[int, Field(ge=0)]
+    duplicate_count: Annotated[int, Field(ge=0)]
+    missing_branches: tuple[BranchKind, ...] = ()
+
+    @model_validator(mode="after")
+    def _check_fusion_counts(self) -> FusionTrace:
+        if len(set(self.missing_branches)) != len(self.missing_branches):
+            raise ValueError("missing fusion branches must be unique")
+        canonical_missing_order = tuple(
+            branch
+            for branch in (BranchKind.VECTOR, BranchKind.GRAPH)
+            if branch in self.missing_branches
+        )
+        if self.missing_branches != canonical_missing_order:
+            raise ValueError("missing fusion branches must use canonical branch order")
+        if self.duplicate_count > min(self.vector_input_count, self.graph_input_count):
+            raise ValueError("fusion duplicate count exceeds branch intersection")
+        if self.output_count > (
+            self.vector_input_count + self.graph_input_count - self.duplicate_count
+        ):
+            raise ValueError("fusion output count exceeds the deduplicated candidate count")
         return self
 
 
@@ -450,6 +847,7 @@ class SearchRequest(FrozenModel):
         DEFAULT_LATENCY_BUDGET_MS
     )
     planner: PlannerMode = PlannerMode.RULE
+    plan_id: PlanId | None = None
 
     @field_validator("planner", mode="before")
     @classmethod
@@ -469,9 +867,19 @@ class SearchRequest(FrozenModel):
         return values
 
     @model_validator(mode="after")
-    def _check_cost_aware_top_k(self) -> SearchRequest:
+    def _check_planner_constraints(self) -> SearchRequest:
         if self.planner is PlannerMode.COST_AWARE and self.top_k != 10:
             raise ValueError("cost_aware planner supports only top_k=10")
+        if self.plan_id is not None and self.planner is not PlannerMode.FIXED_HYBRID:
+            raise ValueError("plan_id is supported only by fixed_hybrid")
+        if self.planner is PlannerMode.FIXED_HYBRID and self.plan_id not in {
+            None,
+            "P4",
+            "P5",
+            "P6",
+            "P8",
+        }:
+            raise ValueError("fixed_hybrid supports only P4, P5, P6, and P8")
         return self
 
 
@@ -490,7 +898,11 @@ class SearchTrace(FrozenModel):
     planner_latency_ms: NonNegativeFloat
     embedding_latency_ms: NonNegativeFloat = 0.0
     vector_latency_ms: NonNegativeFloat | None = None
+    graph_latency_ms: NonNegativeFloat | None = None
+    graph_trace: GraphTrace | None = None
     fusion_latency_ms: NonNegativeFloat = 0.0
+    fusion_trace: FusionTrace | None = None
+    scheduler_trace: SchedulerTrace | None = None
     rerank_latency_ms: NonNegativeFloat = 0.0
     total_latency_ms: NonNegativeFloat
     latency_budget_ms: Annotated[int, Field(ge=MIN_LATENCY_BUDGET_MS, le=MAX_LATENCY_BUDGET_MS)]
@@ -518,6 +930,9 @@ class SearchTrace(FrozenModel):
             raise ValueError("finalization reserve must match the request budget")
         if self.result_count > self.features.final_top_k:
             raise ValueError("trace result count cannot exceed requested final_top_k")
+        branch_kinds = tuple(branch.branch for branch in self.branch_results)
+        if len(set(branch_kinds)) != len(branch_kinds):
+            raise ValueError("a trace cannot contain duplicate retrieval branches")
         vector_branches = tuple(
             branch
             for branch in self.branch_results
@@ -535,6 +950,94 @@ class SearchTrace(FrozenModel):
                 abs_tol=1e-12,
             ):
                 raise ValueError("vector latency must match the vector branch latency")
+        graph_branches = tuple(
+            branch
+            for branch in self.branch_results
+            if branch.branch is BranchKind.GRAPH
+            and branch.status not in {BranchStatus.NOT_SCHEDULED, BranchStatus.RUNNING}
+        )
+        if not graph_branches and (
+            self.graph_latency_ms is not None or self.graph_trace is not None
+        ):
+            raise ValueError("graph timing requires a terminal graph branch")
+        if graph_branches:
+            branch_latency = graph_branches[0].latency_ms
+            if self.graph_latency_ms is None or not math.isclose(
+                self.graph_latency_ms,
+                cast(float, branch_latency),
+                rel_tol=0.0,
+                abs_tol=1e-12,
+            ):
+                raise ValueError("graph latency must match the graph branch latency")
+            if graph_branches[0].status is BranchStatus.SUCCEEDED and self.graph_trace is None:
+                raise ValueError("a succeeded graph branch requires bounded graph trace evidence")
+        if self.fusion_trace is None and self.fusion_latency_ms != 0.0:
+            raise ValueError("fusion latency requires a fusion trace")
+        if self.fusion_trace is not None:
+            if self.planner_decision.effective_mode is not PlannerMode.FIXED_HYBRID:
+                raise ValueError("fusion trace requires effective fixed_hybrid mode")
+            if self.fusion_trace.output_count != self.result_count:
+                raise ValueError("fusion output count must match trace result count")
+            branches_by_kind = {branch.branch: branch for branch in self.branch_results}
+            input_counts = {
+                BranchKind.VECTOR: self.fusion_trace.vector_input_count,
+                BranchKind.GRAPH: self.fusion_trace.graph_input_count,
+            }
+            for branch_kind, input_count in input_counts.items():
+                branch = branches_by_kind.get(branch_kind)
+                missing = branch_kind in self.fusion_trace.missing_branches
+                if missing and input_count != 0:
+                    raise ValueError("a missing fusion branch must have zero input candidates")
+                if missing and branch is not None and branch.status is BranchStatus.SUCCEEDED:
+                    raise ValueError("a succeeded fusion branch cannot be marked missing")
+                if not missing and (
+                    branch is None
+                    or branch.status is not BranchStatus.SUCCEEDED
+                    or branch.hit_count != input_count
+                ):
+                    raise ValueError("fusion inputs must match succeeded branch results")
+        if self.scheduler_trace is not None:
+            expected_terminal = RequestState.PARTIAL if self.fallback else RequestState.COMPLETE
+            if self.scheduler_trace.actual_terminal_state is not expected_terminal:
+                raise ValueError("scheduler terminal state must match response fallback semantics")
+            if self.fallback and (
+                self.planner_decision.fallback_reason != self.scheduler_trace.fallback_reason
+            ):
+                raise ValueError("planner and scheduler fallback reasons must match")
+            expected_overshoot = max(0.0, self.total_latency_ms - self.latency_budget_ms)
+            if not math.isclose(
+                self.scheduler_trace.deadline_overshoot_ms,
+                expected_overshoot,
+                rel_tol=0.0,
+                abs_tol=1e-9,
+            ):
+                raise ValueError("scheduler overshoot must match total request latency")
+            if self.scheduler_trace.backend_task_count != len(self.branch_results):
+                raise ValueError("scheduler task count must match scheduled branches")
+            if self.scheduler_trace.state_events[-1].elapsed_ms > self.total_latency_ms:
+                raise ValueError("scheduler terminal boundary cannot follow total latency")
+            starts = tuple(
+                branch.started_at_ms
+                for branch in self.branch_results
+                if branch.started_at_ms is not None
+            )
+            expected_skew = max(starts) - min(starts) if starts else 0.0
+            if not math.isclose(
+                self.scheduler_trace.branch_start_skew_ms,
+                expected_skew,
+                rel_tol=0.0,
+                abs_tol=1e-9,
+            ):
+                raise ValueError("scheduler start skew must match branch boundaries")
+            branches_by_kind = {branch.branch: branch for branch in self.branch_results}
+            for branch_kind, circuit_state in (
+                (BranchKind.VECTOR, self.scheduler_trace.vector_circuit_state),
+                (BranchKind.GRAPH, self.scheduler_trace.graph_circuit_state),
+            ):
+                branch = branches_by_kind.get(branch_kind)
+                expected_state = branch.circuit_state_after if branch is not None else None
+                if circuit_state is not expected_state:
+                    raise ValueError("scheduler circuit state must match its branch result")
         return self
 
 
@@ -611,7 +1114,7 @@ class IngestionManifest(FrozenModel):
             and self.qdrant_id_checksum == self.neo4j_id_checksum
         )
         if self.activation_status is ActivationStatus.ACTIVE and not (
-            stores_succeeded and reconciled
+            stores_succeeded and reconciled and self.document_count > 0 and self.chunk_count > 0
         ):
             raise ValueError("only reconciled successful stores can become active")
         return self

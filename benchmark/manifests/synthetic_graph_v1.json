@@ -1,0 +1,4634 @@
+{
+  "edges": [
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_000_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_000_0",
+      "target_entity": "entity_000_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_001_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_001_0",
+      "target_entity": "entity_001_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_001_1",
+      "target_entity": "entity_001_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_001_2",
+      "target_entity": "entity_001_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_002_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_002_0",
+      "target_entity": "entity_002_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_002_1",
+      "target_entity": "entity_002_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_002_2",
+      "target_entity": "entity_002_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_002_3",
+      "target_entity": "entity_002_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_003_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_003_0",
+      "target_entity": "entity_003_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_004_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_004_0",
+      "target_entity": "entity_004_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_004_1",
+      "target_entity": "entity_004_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_004_2",
+      "target_entity": "entity_004_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_005_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_005_0",
+      "target_entity": "entity_005_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_005_1",
+      "target_entity": "entity_005_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_005_2",
+      "target_entity": "entity_005_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_005_3",
+      "target_entity": "entity_005_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_006_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_006_0",
+      "target_entity": "entity_006_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_007_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_007_0",
+      "target_entity": "entity_007_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_007_1",
+      "target_entity": "entity_007_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_007_2",
+      "target_entity": "entity_007_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_008_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_008_0",
+      "target_entity": "entity_008_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_008_1",
+      "target_entity": "entity_008_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_008_2",
+      "target_entity": "entity_008_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_008_3",
+      "target_entity": "entity_008_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_009_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_009_0",
+      "target_entity": "entity_009_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_010_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_010_0",
+      "target_entity": "entity_010_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_010_1",
+      "target_entity": "entity_010_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_010_2",
+      "target_entity": "entity_010_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_011_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_011_0",
+      "target_entity": "entity_011_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_011_1",
+      "target_entity": "entity_011_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_011_2",
+      "target_entity": "entity_011_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_011_3",
+      "target_entity": "entity_011_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_012_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_012_0",
+      "target_entity": "entity_012_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_013_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_013_0",
+      "target_entity": "entity_013_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_013_1",
+      "target_entity": "entity_013_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_013_2",
+      "target_entity": "entity_013_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_014_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_014_0",
+      "target_entity": "entity_014_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_014_1",
+      "target_entity": "entity_014_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_014_2",
+      "target_entity": "entity_014_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_014_3",
+      "target_entity": "entity_014_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_015_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_015_0",
+      "target_entity": "entity_015_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_016_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_016_0",
+      "target_entity": "entity_016_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_016_1",
+      "target_entity": "entity_016_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_016_2",
+      "target_entity": "entity_016_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_017_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_017_0",
+      "target_entity": "entity_017_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_017_1",
+      "target_entity": "entity_017_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_017_2",
+      "target_entity": "entity_017_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_017_3",
+      "target_entity": "entity_017_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_018_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_018_0",
+      "target_entity": "entity_018_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_019_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_019_0",
+      "target_entity": "entity_019_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_019_1",
+      "target_entity": "entity_019_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_019_2",
+      "target_entity": "entity_019_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_020_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_020_0",
+      "target_entity": "entity_020_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_020_1",
+      "target_entity": "entity_020_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_020_2",
+      "target_entity": "entity_020_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_020_3",
+      "target_entity": "entity_020_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_021_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_021_0",
+      "target_entity": "entity_021_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_022_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_022_0",
+      "target_entity": "entity_022_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_022_1",
+      "target_entity": "entity_022_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_022_2",
+      "target_entity": "entity_022_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_023_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_023_0",
+      "target_entity": "entity_023_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_023_1",
+      "target_entity": "entity_023_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_023_2",
+      "target_entity": "entity_023_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_023_3",
+      "target_entity": "entity_023_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_024_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_024_0",
+      "target_entity": "entity_024_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_025_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_025_0",
+      "target_entity": "entity_025_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_025_1",
+      "target_entity": "entity_025_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_025_2",
+      "target_entity": "entity_025_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_026_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_026_0",
+      "target_entity": "entity_026_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_026_1",
+      "target_entity": "entity_026_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_026_2",
+      "target_entity": "entity_026_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_026_3",
+      "target_entity": "entity_026_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_027_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_027_0",
+      "target_entity": "entity_027_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_028_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_028_0",
+      "target_entity": "entity_028_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_028_1",
+      "target_entity": "entity_028_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_028_2",
+      "target_entity": "entity_028_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_029_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_029_0",
+      "target_entity": "entity_029_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_029_1",
+      "target_entity": "entity_029_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_029_2",
+      "target_entity": "entity_029_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_029_3",
+      "target_entity": "entity_029_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_030_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_030_0",
+      "target_entity": "entity_030_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_031_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_031_0",
+      "target_entity": "entity_031_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_031_1",
+      "target_entity": "entity_031_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_031_2",
+      "target_entity": "entity_031_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_032_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_032_0",
+      "target_entity": "entity_032_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_032_1",
+      "target_entity": "entity_032_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_032_2",
+      "target_entity": "entity_032_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_032_3",
+      "target_entity": "entity_032_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_033_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_033_0",
+      "target_entity": "entity_033_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_034_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_034_0",
+      "target_entity": "entity_034_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_034_1",
+      "target_entity": "entity_034_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_034_2",
+      "target_entity": "entity_034_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_035_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_035_0",
+      "target_entity": "entity_035_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_035_1",
+      "target_entity": "entity_035_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_035_2",
+      "target_entity": "entity_035_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_035_3",
+      "target_entity": "entity_035_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_036_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_036_0",
+      "target_entity": "entity_036_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_037_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_037_0",
+      "target_entity": "entity_037_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_037_1",
+      "target_entity": "entity_037_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_037_2",
+      "target_entity": "entity_037_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_038_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_038_0",
+      "target_entity": "entity_038_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_038_1",
+      "target_entity": "entity_038_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_038_2",
+      "target_entity": "entity_038_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_038_3",
+      "target_entity": "entity_038_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_039_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_039_0",
+      "target_entity": "entity_039_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_040_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_040_0",
+      "target_entity": "entity_040_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_040_1",
+      "target_entity": "entity_040_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_040_2",
+      "target_entity": "entity_040_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_041_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_041_0",
+      "target_entity": "entity_041_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_041_1",
+      "target_entity": "entity_041_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_041_2",
+      "target_entity": "entity_041_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_041_3",
+      "target_entity": "entity_041_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_042_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_042_0",
+      "target_entity": "entity_042_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_043_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_043_0",
+      "target_entity": "entity_043_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_043_1",
+      "target_entity": "entity_043_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_043_2",
+      "target_entity": "entity_043_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_044_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_044_0",
+      "target_entity": "entity_044_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_044_1",
+      "target_entity": "entity_044_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_044_2",
+      "target_entity": "entity_044_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_044_3",
+      "target_entity": "entity_044_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_045_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_045_0",
+      "target_entity": "entity_045_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_046_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_046_0",
+      "target_entity": "entity_046_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_046_1",
+      "target_entity": "entity_046_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_046_2",
+      "target_entity": "entity_046_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_047_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_047_0",
+      "target_entity": "entity_047_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_047_1",
+      "target_entity": "entity_047_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_047_2",
+      "target_entity": "entity_047_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_047_3",
+      "target_entity": "entity_047_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_048_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_048_0",
+      "target_entity": "entity_048_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_049_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_049_0",
+      "target_entity": "entity_049_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_049_1",
+      "target_entity": "entity_049_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_049_2",
+      "target_entity": "entity_049_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_050_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_050_0",
+      "target_entity": "entity_050_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_050_1",
+      "target_entity": "entity_050_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_050_2",
+      "target_entity": "entity_050_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_050_3",
+      "target_entity": "entity_050_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_051_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_051_0",
+      "target_entity": "entity_051_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_052_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_052_0",
+      "target_entity": "entity_052_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_052_1",
+      "target_entity": "entity_052_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_052_2",
+      "target_entity": "entity_052_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_053_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_053_0",
+      "target_entity": "entity_053_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_053_1",
+      "target_entity": "entity_053_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_053_2",
+      "target_entity": "entity_053_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_053_3",
+      "target_entity": "entity_053_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_054_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_054_0",
+      "target_entity": "entity_054_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_055_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_055_0",
+      "target_entity": "entity_055_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_055_1",
+      "target_entity": "entity_055_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_055_2",
+      "target_entity": "entity_055_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_056_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_056_0",
+      "target_entity": "entity_056_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_056_1",
+      "target_entity": "entity_056_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_056_2",
+      "target_entity": "entity_056_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_056_3",
+      "target_entity": "entity_056_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_057_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_057_0",
+      "target_entity": "entity_057_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_058_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_058_0",
+      "target_entity": "entity_058_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_058_1",
+      "target_entity": "entity_058_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_058_2",
+      "target_entity": "entity_058_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_059_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_059_0",
+      "target_entity": "entity_059_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_059_1",
+      "target_entity": "entity_059_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_059_2",
+      "target_entity": "entity_059_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_059_3",
+      "target_entity": "entity_059_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_060_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_060_0",
+      "target_entity": "entity_060_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_061_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_061_0",
+      "target_entity": "entity_061_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_061_1",
+      "target_entity": "entity_061_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_061_2",
+      "target_entity": "entity_061_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_062_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_062_0",
+      "target_entity": "entity_062_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_062_1",
+      "target_entity": "entity_062_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_062_2",
+      "target_entity": "entity_062_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_062_3",
+      "target_entity": "entity_062_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_063_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_063_0",
+      "target_entity": "entity_063_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_064_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_064_0",
+      "target_entity": "entity_064_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_064_1",
+      "target_entity": "entity_064_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_064_2",
+      "target_entity": "entity_064_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_065_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_065_0",
+      "target_entity": "entity_065_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_065_1",
+      "target_entity": "entity_065_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_065_2",
+      "target_entity": "entity_065_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_065_3",
+      "target_entity": "entity_065_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_066_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_066_0",
+      "target_entity": "entity_066_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_067_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_067_0",
+      "target_entity": "entity_067_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_067_1",
+      "target_entity": "entity_067_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_067_2",
+      "target_entity": "entity_067_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_068_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_068_0",
+      "target_entity": "entity_068_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_068_1",
+      "target_entity": "entity_068_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_068_2",
+      "target_entity": "entity_068_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_068_3",
+      "target_entity": "entity_068_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_069_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_069_0",
+      "target_entity": "entity_069_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_070_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_070_0",
+      "target_entity": "entity_070_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_070_1",
+      "target_entity": "entity_070_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_070_2",
+      "target_entity": "entity_070_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_071_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_071_0",
+      "target_entity": "entity_071_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_071_1",
+      "target_entity": "entity_071_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_071_2",
+      "target_entity": "entity_071_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_071_3",
+      "target_entity": "entity_071_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_072_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_072_0",
+      "target_entity": "entity_072_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_073_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_073_0",
+      "target_entity": "entity_073_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_073_1",
+      "target_entity": "entity_073_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_073_2",
+      "target_entity": "entity_073_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_074_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_074_0",
+      "target_entity": "entity_074_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_074_1",
+      "target_entity": "entity_074_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_074_2",
+      "target_entity": "entity_074_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_074_3",
+      "target_entity": "entity_074_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_075_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_075_0",
+      "target_entity": "entity_075_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_076_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_076_0",
+      "target_entity": "entity_076_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_076_1",
+      "target_entity": "entity_076_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_076_2",
+      "target_entity": "entity_076_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_077_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_077_0",
+      "target_entity": "entity_077_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_077_1",
+      "target_entity": "entity_077_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_077_2",
+      "target_entity": "entity_077_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_077_3",
+      "target_entity": "entity_077_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_078_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_078_0",
+      "target_entity": "entity_078_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_079_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_079_0",
+      "target_entity": "entity_079_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_079_1",
+      "target_entity": "entity_079_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_079_2",
+      "target_entity": "entity_079_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_080_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_080_0",
+      "target_entity": "entity_080_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_080_1",
+      "target_entity": "entity_080_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_080_2",
+      "target_entity": "entity_080_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_080_3",
+      "target_entity": "entity_080_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_081_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_081_0",
+      "target_entity": "entity_081_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_082_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_082_0",
+      "target_entity": "entity_082_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_082_1",
+      "target_entity": "entity_082_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_082_2",
+      "target_entity": "entity_082_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_083_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_083_0",
+      "target_entity": "entity_083_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_083_1",
+      "target_entity": "entity_083_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_083_2",
+      "target_entity": "entity_083_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_083_3",
+      "target_entity": "entity_083_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_084_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_084_0",
+      "target_entity": "entity_084_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_085_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_085_0",
+      "target_entity": "entity_085_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_085_1",
+      "target_entity": "entity_085_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_085_2",
+      "target_entity": "entity_085_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_086_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_086_0",
+      "target_entity": "entity_086_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_086_1",
+      "target_entity": "entity_086_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_086_2",
+      "target_entity": "entity_086_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_086_3",
+      "target_entity": "entity_086_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_087_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_087_0",
+      "target_entity": "entity_087_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_088_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_088_0",
+      "target_entity": "entity_088_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_088_1",
+      "target_entity": "entity_088_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_088_2",
+      "target_entity": "entity_088_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_089_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_089_0",
+      "target_entity": "entity_089_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_089_1",
+      "target_entity": "entity_089_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_089_2",
+      "target_entity": "entity_089_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_089_3",
+      "target_entity": "entity_089_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_090_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_090_0",
+      "target_entity": "entity_090_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_091_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_091_0",
+      "target_entity": "entity_091_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_091_1",
+      "target_entity": "entity_091_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_091_2",
+      "target_entity": "entity_091_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_092_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_092_0",
+      "target_entity": "entity_092_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_092_1",
+      "target_entity": "entity_092_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_092_2",
+      "target_entity": "entity_092_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_092_3",
+      "target_entity": "entity_092_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_093_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_093_0",
+      "target_entity": "entity_093_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_094_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_094_0",
+      "target_entity": "entity_094_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_094_1",
+      "target_entity": "entity_094_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_094_2",
+      "target_entity": "entity_094_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_095_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_095_0",
+      "target_entity": "entity_095_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_095_1",
+      "target_entity": "entity_095_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_095_2",
+      "target_entity": "entity_095_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_095_3",
+      "target_entity": "entity_095_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_096_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_096_0",
+      "target_entity": "entity_096_1"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_097_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_097_0",
+      "target_entity": "entity_097_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_097_1",
+      "target_entity": "entity_097_2"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_097_2",
+      "target_entity": "entity_097_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_098_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_098_0",
+      "target_entity": "entity_098_1"
+    },
+    {
+      "relation": "REL_STEP_2",
+      "source_entity": "entity_098_1",
+      "target_entity": "entity_098_2"
+    },
+    {
+      "relation": "REL_STEP_3",
+      "source_entity": "entity_098_2",
+      "target_entity": "entity_098_3"
+    },
+    {
+      "relation": "CYCLES_TO",
+      "source_entity": "entity_098_3",
+      "target_entity": "entity_098_0"
+    },
+    {
+      "relation": "LINKS_TO_HUB",
+      "source_entity": "entity_099_0",
+      "target_entity": "entity_shared_hub"
+    },
+    {
+      "relation": "REL_STEP_1",
+      "source_entity": "entity_099_0",
+      "target_entity": "entity_099_1"
+    },
+    {
+      "relation": "DISCONNECTED",
+      "source_entity": "entity_disconnected_a",
+      "target_entity": "entity_disconnected_b"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_000_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_001_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_002_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_003_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_004_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_005_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_006_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_007_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_008_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_009_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_010_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_011_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_012_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_013_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_014_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_015_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_016_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_017_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_018_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_019_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_020_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_021_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_022_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_023_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_024_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_025_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_026_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_027_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_028_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_029_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_030_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_031_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_032_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_033_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_034_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_035_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_036_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_037_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_038_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_039_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_040_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_041_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_042_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_043_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_044_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_045_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_046_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_047_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_048_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_049_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_050_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_051_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_052_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_053_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_054_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_055_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_056_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_057_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_058_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_059_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_060_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_061_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_062_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_063_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_064_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_065_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_066_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_067_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_068_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_069_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_070_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_071_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_072_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_073_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_074_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_075_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_076_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_077_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_078_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_079_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_080_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_081_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_082_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_083_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_084_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_085_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_086_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_087_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_088_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_089_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_090_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_091_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_092_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_093_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_094_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_095_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_096_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_097_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_098_0"
+    },
+    {
+      "relation": "LINKS_FROM_HUB",
+      "source_entity": "entity_shared_hub",
+      "target_entity": "entity_099_0"
+    }
+  ],
+  "fixture_id": "adaptive_rag_synthetic_graph_v1",
+  "manifest_sha256": "f1026d8052cbe6052077ad8273a2ab810175336554d4a984d1488f882153f3e3",
+  "primary_metrics_eligible": false,
+  "queries": [
+    {
+      "answer_entity": "entity_000_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_000_0",
+          "target_entity": "entity_000_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q000",
+      "question": "Starting at entity_000_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q000:hop1"
+      ],
+      "start_entity": "entity_000_0"
+    },
+    {
+      "answer_entity": "entity_001_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_001_0",
+          "target_entity": "entity_001_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_001_1",
+          "target_entity": "entity_001_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q001",
+      "question": "Starting at entity_001_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q001:hop1",
+        "synthetic:chunk:q001:hop2"
+      ],
+      "start_entity": "entity_001_0"
+    },
+    {
+      "answer_entity": "entity_002_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_002_0",
+          "target_entity": "entity_002_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_002_1",
+          "target_entity": "entity_002_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_002_2",
+          "target_entity": "entity_002_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q002",
+      "question": "Starting at entity_002_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q002:hop1",
+        "synthetic:chunk:q002:hop2",
+        "synthetic:chunk:q002:hop3"
+      ],
+      "start_entity": "entity_002_0"
+    },
+    {
+      "answer_entity": "entity_003_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_003_0",
+          "target_entity": "entity_003_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q003",
+      "question": "Starting at entity_003_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q003:hop1"
+      ],
+      "start_entity": "entity_003_0"
+    },
+    {
+      "answer_entity": "entity_004_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_004_0",
+          "target_entity": "entity_004_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_004_1",
+          "target_entity": "entity_004_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q004",
+      "question": "Starting at entity_004_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q004:hop1",
+        "synthetic:chunk:q004:hop2"
+      ],
+      "start_entity": "entity_004_0"
+    },
+    {
+      "answer_entity": "entity_005_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_005_0",
+          "target_entity": "entity_005_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_005_1",
+          "target_entity": "entity_005_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_005_2",
+          "target_entity": "entity_005_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q005",
+      "question": "Starting at entity_005_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q005:hop1",
+        "synthetic:chunk:q005:hop2",
+        "synthetic:chunk:q005:hop3"
+      ],
+      "start_entity": "entity_005_0"
+    },
+    {
+      "answer_entity": "entity_006_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_006_0",
+          "target_entity": "entity_006_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q006",
+      "question": "Starting at entity_006_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q006:hop1"
+      ],
+      "start_entity": "entity_006_0"
+    },
+    {
+      "answer_entity": "entity_007_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_007_0",
+          "target_entity": "entity_007_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_007_1",
+          "target_entity": "entity_007_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q007",
+      "question": "Starting at entity_007_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q007:hop1",
+        "synthetic:chunk:q007:hop2"
+      ],
+      "start_entity": "entity_007_0"
+    },
+    {
+      "answer_entity": "entity_008_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_008_0",
+          "target_entity": "entity_008_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_008_1",
+          "target_entity": "entity_008_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_008_2",
+          "target_entity": "entity_008_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q008",
+      "question": "Starting at entity_008_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q008:hop1",
+        "synthetic:chunk:q008:hop2",
+        "synthetic:chunk:q008:hop3"
+      ],
+      "start_entity": "entity_008_0"
+    },
+    {
+      "answer_entity": "entity_009_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_009_0",
+          "target_entity": "entity_009_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q009",
+      "question": "Starting at entity_009_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q009:hop1"
+      ],
+      "start_entity": "entity_009_0"
+    },
+    {
+      "answer_entity": "entity_010_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_010_0",
+          "target_entity": "entity_010_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_010_1",
+          "target_entity": "entity_010_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q010",
+      "question": "Starting at entity_010_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q010:hop1",
+        "synthetic:chunk:q010:hop2"
+      ],
+      "start_entity": "entity_010_0"
+    },
+    {
+      "answer_entity": "entity_011_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_011_0",
+          "target_entity": "entity_011_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_011_1",
+          "target_entity": "entity_011_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_011_2",
+          "target_entity": "entity_011_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q011",
+      "question": "Starting at entity_011_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q011:hop1",
+        "synthetic:chunk:q011:hop2",
+        "synthetic:chunk:q011:hop3"
+      ],
+      "start_entity": "entity_011_0"
+    },
+    {
+      "answer_entity": "entity_012_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_012_0",
+          "target_entity": "entity_012_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q012",
+      "question": "Starting at entity_012_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q012:hop1"
+      ],
+      "start_entity": "entity_012_0"
+    },
+    {
+      "answer_entity": "entity_013_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_013_0",
+          "target_entity": "entity_013_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_013_1",
+          "target_entity": "entity_013_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q013",
+      "question": "Starting at entity_013_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q013:hop1",
+        "synthetic:chunk:q013:hop2"
+      ],
+      "start_entity": "entity_013_0"
+    },
+    {
+      "answer_entity": "entity_014_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_014_0",
+          "target_entity": "entity_014_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_014_1",
+          "target_entity": "entity_014_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_014_2",
+          "target_entity": "entity_014_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q014",
+      "question": "Starting at entity_014_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q014:hop1",
+        "synthetic:chunk:q014:hop2",
+        "synthetic:chunk:q014:hop3"
+      ],
+      "start_entity": "entity_014_0"
+    },
+    {
+      "answer_entity": "entity_015_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_015_0",
+          "target_entity": "entity_015_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q015",
+      "question": "Starting at entity_015_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q015:hop1"
+      ],
+      "start_entity": "entity_015_0"
+    },
+    {
+      "answer_entity": "entity_016_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_016_0",
+          "target_entity": "entity_016_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_016_1",
+          "target_entity": "entity_016_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q016",
+      "question": "Starting at entity_016_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q016:hop1",
+        "synthetic:chunk:q016:hop2"
+      ],
+      "start_entity": "entity_016_0"
+    },
+    {
+      "answer_entity": "entity_017_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_017_0",
+          "target_entity": "entity_017_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_017_1",
+          "target_entity": "entity_017_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_017_2",
+          "target_entity": "entity_017_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q017",
+      "question": "Starting at entity_017_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q017:hop1",
+        "synthetic:chunk:q017:hop2",
+        "synthetic:chunk:q017:hop3"
+      ],
+      "start_entity": "entity_017_0"
+    },
+    {
+      "answer_entity": "entity_018_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_018_0",
+          "target_entity": "entity_018_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q018",
+      "question": "Starting at entity_018_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q018:hop1"
+      ],
+      "start_entity": "entity_018_0"
+    },
+    {
+      "answer_entity": "entity_019_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_019_0",
+          "target_entity": "entity_019_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_019_1",
+          "target_entity": "entity_019_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q019",
+      "question": "Starting at entity_019_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q019:hop1",
+        "synthetic:chunk:q019:hop2"
+      ],
+      "start_entity": "entity_019_0"
+    },
+    {
+      "answer_entity": "entity_020_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_020_0",
+          "target_entity": "entity_020_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_020_1",
+          "target_entity": "entity_020_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_020_2",
+          "target_entity": "entity_020_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q020",
+      "question": "Starting at entity_020_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q020:hop1",
+        "synthetic:chunk:q020:hop2",
+        "synthetic:chunk:q020:hop3"
+      ],
+      "start_entity": "entity_020_0"
+    },
+    {
+      "answer_entity": "entity_021_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_021_0",
+          "target_entity": "entity_021_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q021",
+      "question": "Starting at entity_021_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q021:hop1"
+      ],
+      "start_entity": "entity_021_0"
+    },
+    {
+      "answer_entity": "entity_022_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_022_0",
+          "target_entity": "entity_022_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_022_1",
+          "target_entity": "entity_022_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q022",
+      "question": "Starting at entity_022_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q022:hop1",
+        "synthetic:chunk:q022:hop2"
+      ],
+      "start_entity": "entity_022_0"
+    },
+    {
+      "answer_entity": "entity_023_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_023_0",
+          "target_entity": "entity_023_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_023_1",
+          "target_entity": "entity_023_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_023_2",
+          "target_entity": "entity_023_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q023",
+      "question": "Starting at entity_023_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q023:hop1",
+        "synthetic:chunk:q023:hop2",
+        "synthetic:chunk:q023:hop3"
+      ],
+      "start_entity": "entity_023_0"
+    },
+    {
+      "answer_entity": "entity_024_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_024_0",
+          "target_entity": "entity_024_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q024",
+      "question": "Starting at entity_024_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q024:hop1"
+      ],
+      "start_entity": "entity_024_0"
+    },
+    {
+      "answer_entity": "entity_025_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_025_0",
+          "target_entity": "entity_025_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_025_1",
+          "target_entity": "entity_025_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q025",
+      "question": "Starting at entity_025_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q025:hop1",
+        "synthetic:chunk:q025:hop2"
+      ],
+      "start_entity": "entity_025_0"
+    },
+    {
+      "answer_entity": "entity_026_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_026_0",
+          "target_entity": "entity_026_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_026_1",
+          "target_entity": "entity_026_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_026_2",
+          "target_entity": "entity_026_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q026",
+      "question": "Starting at entity_026_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q026:hop1",
+        "synthetic:chunk:q026:hop2",
+        "synthetic:chunk:q026:hop3"
+      ],
+      "start_entity": "entity_026_0"
+    },
+    {
+      "answer_entity": "entity_027_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_027_0",
+          "target_entity": "entity_027_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q027",
+      "question": "Starting at entity_027_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q027:hop1"
+      ],
+      "start_entity": "entity_027_0"
+    },
+    {
+      "answer_entity": "entity_028_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_028_0",
+          "target_entity": "entity_028_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_028_1",
+          "target_entity": "entity_028_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q028",
+      "question": "Starting at entity_028_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q028:hop1",
+        "synthetic:chunk:q028:hop2"
+      ],
+      "start_entity": "entity_028_0"
+    },
+    {
+      "answer_entity": "entity_029_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_029_0",
+          "target_entity": "entity_029_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_029_1",
+          "target_entity": "entity_029_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_029_2",
+          "target_entity": "entity_029_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q029",
+      "question": "Starting at entity_029_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q029:hop1",
+        "synthetic:chunk:q029:hop2",
+        "synthetic:chunk:q029:hop3"
+      ],
+      "start_entity": "entity_029_0"
+    },
+    {
+      "answer_entity": "entity_030_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_030_0",
+          "target_entity": "entity_030_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q030",
+      "question": "Starting at entity_030_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q030:hop1"
+      ],
+      "start_entity": "entity_030_0"
+    },
+    {
+      "answer_entity": "entity_031_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_031_0",
+          "target_entity": "entity_031_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_031_1",
+          "target_entity": "entity_031_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q031",
+      "question": "Starting at entity_031_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q031:hop1",
+        "synthetic:chunk:q031:hop2"
+      ],
+      "start_entity": "entity_031_0"
+    },
+    {
+      "answer_entity": "entity_032_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_032_0",
+          "target_entity": "entity_032_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_032_1",
+          "target_entity": "entity_032_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_032_2",
+          "target_entity": "entity_032_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q032",
+      "question": "Starting at entity_032_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q032:hop1",
+        "synthetic:chunk:q032:hop2",
+        "synthetic:chunk:q032:hop3"
+      ],
+      "start_entity": "entity_032_0"
+    },
+    {
+      "answer_entity": "entity_033_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_033_0",
+          "target_entity": "entity_033_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q033",
+      "question": "Starting at entity_033_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q033:hop1"
+      ],
+      "start_entity": "entity_033_0"
+    },
+    {
+      "answer_entity": "entity_034_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_034_0",
+          "target_entity": "entity_034_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_034_1",
+          "target_entity": "entity_034_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q034",
+      "question": "Starting at entity_034_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q034:hop1",
+        "synthetic:chunk:q034:hop2"
+      ],
+      "start_entity": "entity_034_0"
+    },
+    {
+      "answer_entity": "entity_035_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_035_0",
+          "target_entity": "entity_035_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_035_1",
+          "target_entity": "entity_035_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_035_2",
+          "target_entity": "entity_035_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q035",
+      "question": "Starting at entity_035_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q035:hop1",
+        "synthetic:chunk:q035:hop2",
+        "synthetic:chunk:q035:hop3"
+      ],
+      "start_entity": "entity_035_0"
+    },
+    {
+      "answer_entity": "entity_036_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_036_0",
+          "target_entity": "entity_036_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q036",
+      "question": "Starting at entity_036_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q036:hop1"
+      ],
+      "start_entity": "entity_036_0"
+    },
+    {
+      "answer_entity": "entity_037_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_037_0",
+          "target_entity": "entity_037_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_037_1",
+          "target_entity": "entity_037_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q037",
+      "question": "Starting at entity_037_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q037:hop1",
+        "synthetic:chunk:q037:hop2"
+      ],
+      "start_entity": "entity_037_0"
+    },
+    {
+      "answer_entity": "entity_038_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_038_0",
+          "target_entity": "entity_038_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_038_1",
+          "target_entity": "entity_038_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_038_2",
+          "target_entity": "entity_038_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q038",
+      "question": "Starting at entity_038_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q038:hop1",
+        "synthetic:chunk:q038:hop2",
+        "synthetic:chunk:q038:hop3"
+      ],
+      "start_entity": "entity_038_0"
+    },
+    {
+      "answer_entity": "entity_039_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_039_0",
+          "target_entity": "entity_039_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q039",
+      "question": "Starting at entity_039_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q039:hop1"
+      ],
+      "start_entity": "entity_039_0"
+    },
+    {
+      "answer_entity": "entity_040_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_040_0",
+          "target_entity": "entity_040_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_040_1",
+          "target_entity": "entity_040_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q040",
+      "question": "Starting at entity_040_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q040:hop1",
+        "synthetic:chunk:q040:hop2"
+      ],
+      "start_entity": "entity_040_0"
+    },
+    {
+      "answer_entity": "entity_041_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_041_0",
+          "target_entity": "entity_041_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_041_1",
+          "target_entity": "entity_041_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_041_2",
+          "target_entity": "entity_041_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q041",
+      "question": "Starting at entity_041_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q041:hop1",
+        "synthetic:chunk:q041:hop2",
+        "synthetic:chunk:q041:hop3"
+      ],
+      "start_entity": "entity_041_0"
+    },
+    {
+      "answer_entity": "entity_042_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_042_0",
+          "target_entity": "entity_042_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q042",
+      "question": "Starting at entity_042_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q042:hop1"
+      ],
+      "start_entity": "entity_042_0"
+    },
+    {
+      "answer_entity": "entity_043_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_043_0",
+          "target_entity": "entity_043_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_043_1",
+          "target_entity": "entity_043_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q043",
+      "question": "Starting at entity_043_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q043:hop1",
+        "synthetic:chunk:q043:hop2"
+      ],
+      "start_entity": "entity_043_0"
+    },
+    {
+      "answer_entity": "entity_044_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_044_0",
+          "target_entity": "entity_044_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_044_1",
+          "target_entity": "entity_044_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_044_2",
+          "target_entity": "entity_044_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q044",
+      "question": "Starting at entity_044_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q044:hop1",
+        "synthetic:chunk:q044:hop2",
+        "synthetic:chunk:q044:hop3"
+      ],
+      "start_entity": "entity_044_0"
+    },
+    {
+      "answer_entity": "entity_045_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_045_0",
+          "target_entity": "entity_045_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q045",
+      "question": "Starting at entity_045_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q045:hop1"
+      ],
+      "start_entity": "entity_045_0"
+    },
+    {
+      "answer_entity": "entity_046_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_046_0",
+          "target_entity": "entity_046_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_046_1",
+          "target_entity": "entity_046_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q046",
+      "question": "Starting at entity_046_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q046:hop1",
+        "synthetic:chunk:q046:hop2"
+      ],
+      "start_entity": "entity_046_0"
+    },
+    {
+      "answer_entity": "entity_047_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_047_0",
+          "target_entity": "entity_047_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_047_1",
+          "target_entity": "entity_047_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_047_2",
+          "target_entity": "entity_047_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q047",
+      "question": "Starting at entity_047_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q047:hop1",
+        "synthetic:chunk:q047:hop2",
+        "synthetic:chunk:q047:hop3"
+      ],
+      "start_entity": "entity_047_0"
+    },
+    {
+      "answer_entity": "entity_048_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_048_0",
+          "target_entity": "entity_048_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q048",
+      "question": "Starting at entity_048_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q048:hop1"
+      ],
+      "start_entity": "entity_048_0"
+    },
+    {
+      "answer_entity": "entity_049_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_049_0",
+          "target_entity": "entity_049_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_049_1",
+          "target_entity": "entity_049_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q049",
+      "question": "Starting at entity_049_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q049:hop1",
+        "synthetic:chunk:q049:hop2"
+      ],
+      "start_entity": "entity_049_0"
+    },
+    {
+      "answer_entity": "entity_050_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_050_0",
+          "target_entity": "entity_050_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_050_1",
+          "target_entity": "entity_050_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_050_2",
+          "target_entity": "entity_050_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q050",
+      "question": "Starting at entity_050_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q050:hop1",
+        "synthetic:chunk:q050:hop2",
+        "synthetic:chunk:q050:hop3"
+      ],
+      "start_entity": "entity_050_0"
+    },
+    {
+      "answer_entity": "entity_051_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_051_0",
+          "target_entity": "entity_051_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q051",
+      "question": "Starting at entity_051_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q051:hop1"
+      ],
+      "start_entity": "entity_051_0"
+    },
+    {
+      "answer_entity": "entity_052_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_052_0",
+          "target_entity": "entity_052_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_052_1",
+          "target_entity": "entity_052_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q052",
+      "question": "Starting at entity_052_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q052:hop1",
+        "synthetic:chunk:q052:hop2"
+      ],
+      "start_entity": "entity_052_0"
+    },
+    {
+      "answer_entity": "entity_053_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_053_0",
+          "target_entity": "entity_053_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_053_1",
+          "target_entity": "entity_053_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_053_2",
+          "target_entity": "entity_053_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q053",
+      "question": "Starting at entity_053_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q053:hop1",
+        "synthetic:chunk:q053:hop2",
+        "synthetic:chunk:q053:hop3"
+      ],
+      "start_entity": "entity_053_0"
+    },
+    {
+      "answer_entity": "entity_054_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_054_0",
+          "target_entity": "entity_054_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q054",
+      "question": "Starting at entity_054_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q054:hop1"
+      ],
+      "start_entity": "entity_054_0"
+    },
+    {
+      "answer_entity": "entity_055_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_055_0",
+          "target_entity": "entity_055_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_055_1",
+          "target_entity": "entity_055_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q055",
+      "question": "Starting at entity_055_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q055:hop1",
+        "synthetic:chunk:q055:hop2"
+      ],
+      "start_entity": "entity_055_0"
+    },
+    {
+      "answer_entity": "entity_056_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_056_0",
+          "target_entity": "entity_056_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_056_1",
+          "target_entity": "entity_056_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_056_2",
+          "target_entity": "entity_056_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q056",
+      "question": "Starting at entity_056_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q056:hop1",
+        "synthetic:chunk:q056:hop2",
+        "synthetic:chunk:q056:hop3"
+      ],
+      "start_entity": "entity_056_0"
+    },
+    {
+      "answer_entity": "entity_057_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_057_0",
+          "target_entity": "entity_057_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q057",
+      "question": "Starting at entity_057_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q057:hop1"
+      ],
+      "start_entity": "entity_057_0"
+    },
+    {
+      "answer_entity": "entity_058_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_058_0",
+          "target_entity": "entity_058_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_058_1",
+          "target_entity": "entity_058_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q058",
+      "question": "Starting at entity_058_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q058:hop1",
+        "synthetic:chunk:q058:hop2"
+      ],
+      "start_entity": "entity_058_0"
+    },
+    {
+      "answer_entity": "entity_059_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_059_0",
+          "target_entity": "entity_059_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_059_1",
+          "target_entity": "entity_059_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_059_2",
+          "target_entity": "entity_059_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q059",
+      "question": "Starting at entity_059_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q059:hop1",
+        "synthetic:chunk:q059:hop2",
+        "synthetic:chunk:q059:hop3"
+      ],
+      "start_entity": "entity_059_0"
+    },
+    {
+      "answer_entity": "entity_060_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_060_0",
+          "target_entity": "entity_060_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q060",
+      "question": "Starting at entity_060_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q060:hop1"
+      ],
+      "start_entity": "entity_060_0"
+    },
+    {
+      "answer_entity": "entity_061_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_061_0",
+          "target_entity": "entity_061_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_061_1",
+          "target_entity": "entity_061_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q061",
+      "question": "Starting at entity_061_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q061:hop1",
+        "synthetic:chunk:q061:hop2"
+      ],
+      "start_entity": "entity_061_0"
+    },
+    {
+      "answer_entity": "entity_062_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_062_0",
+          "target_entity": "entity_062_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_062_1",
+          "target_entity": "entity_062_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_062_2",
+          "target_entity": "entity_062_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q062",
+      "question": "Starting at entity_062_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q062:hop1",
+        "synthetic:chunk:q062:hop2",
+        "synthetic:chunk:q062:hop3"
+      ],
+      "start_entity": "entity_062_0"
+    },
+    {
+      "answer_entity": "entity_063_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_063_0",
+          "target_entity": "entity_063_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q063",
+      "question": "Starting at entity_063_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q063:hop1"
+      ],
+      "start_entity": "entity_063_0"
+    },
+    {
+      "answer_entity": "entity_064_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_064_0",
+          "target_entity": "entity_064_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_064_1",
+          "target_entity": "entity_064_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q064",
+      "question": "Starting at entity_064_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q064:hop1",
+        "synthetic:chunk:q064:hop2"
+      ],
+      "start_entity": "entity_064_0"
+    },
+    {
+      "answer_entity": "entity_065_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_065_0",
+          "target_entity": "entity_065_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_065_1",
+          "target_entity": "entity_065_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_065_2",
+          "target_entity": "entity_065_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q065",
+      "question": "Starting at entity_065_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q065:hop1",
+        "synthetic:chunk:q065:hop2",
+        "synthetic:chunk:q065:hop3"
+      ],
+      "start_entity": "entity_065_0"
+    },
+    {
+      "answer_entity": "entity_066_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_066_0",
+          "target_entity": "entity_066_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q066",
+      "question": "Starting at entity_066_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q066:hop1"
+      ],
+      "start_entity": "entity_066_0"
+    },
+    {
+      "answer_entity": "entity_067_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_067_0",
+          "target_entity": "entity_067_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_067_1",
+          "target_entity": "entity_067_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q067",
+      "question": "Starting at entity_067_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q067:hop1",
+        "synthetic:chunk:q067:hop2"
+      ],
+      "start_entity": "entity_067_0"
+    },
+    {
+      "answer_entity": "entity_068_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_068_0",
+          "target_entity": "entity_068_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_068_1",
+          "target_entity": "entity_068_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_068_2",
+          "target_entity": "entity_068_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q068",
+      "question": "Starting at entity_068_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q068:hop1",
+        "synthetic:chunk:q068:hop2",
+        "synthetic:chunk:q068:hop3"
+      ],
+      "start_entity": "entity_068_0"
+    },
+    {
+      "answer_entity": "entity_069_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_069_0",
+          "target_entity": "entity_069_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q069",
+      "question": "Starting at entity_069_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q069:hop1"
+      ],
+      "start_entity": "entity_069_0"
+    },
+    {
+      "answer_entity": "entity_070_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_070_0",
+          "target_entity": "entity_070_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_070_1",
+          "target_entity": "entity_070_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q070",
+      "question": "Starting at entity_070_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q070:hop1",
+        "synthetic:chunk:q070:hop2"
+      ],
+      "start_entity": "entity_070_0"
+    },
+    {
+      "answer_entity": "entity_071_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_071_0",
+          "target_entity": "entity_071_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_071_1",
+          "target_entity": "entity_071_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_071_2",
+          "target_entity": "entity_071_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q071",
+      "question": "Starting at entity_071_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q071:hop1",
+        "synthetic:chunk:q071:hop2",
+        "synthetic:chunk:q071:hop3"
+      ],
+      "start_entity": "entity_071_0"
+    },
+    {
+      "answer_entity": "entity_072_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_072_0",
+          "target_entity": "entity_072_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q072",
+      "question": "Starting at entity_072_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q072:hop1"
+      ],
+      "start_entity": "entity_072_0"
+    },
+    {
+      "answer_entity": "entity_073_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_073_0",
+          "target_entity": "entity_073_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_073_1",
+          "target_entity": "entity_073_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q073",
+      "question": "Starting at entity_073_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q073:hop1",
+        "synthetic:chunk:q073:hop2"
+      ],
+      "start_entity": "entity_073_0"
+    },
+    {
+      "answer_entity": "entity_074_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_074_0",
+          "target_entity": "entity_074_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_074_1",
+          "target_entity": "entity_074_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_074_2",
+          "target_entity": "entity_074_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q074",
+      "question": "Starting at entity_074_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q074:hop1",
+        "synthetic:chunk:q074:hop2",
+        "synthetic:chunk:q074:hop3"
+      ],
+      "start_entity": "entity_074_0"
+    },
+    {
+      "answer_entity": "entity_075_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_075_0",
+          "target_entity": "entity_075_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q075",
+      "question": "Starting at entity_075_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q075:hop1"
+      ],
+      "start_entity": "entity_075_0"
+    },
+    {
+      "answer_entity": "entity_076_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_076_0",
+          "target_entity": "entity_076_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_076_1",
+          "target_entity": "entity_076_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q076",
+      "question": "Starting at entity_076_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q076:hop1",
+        "synthetic:chunk:q076:hop2"
+      ],
+      "start_entity": "entity_076_0"
+    },
+    {
+      "answer_entity": "entity_077_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_077_0",
+          "target_entity": "entity_077_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_077_1",
+          "target_entity": "entity_077_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_077_2",
+          "target_entity": "entity_077_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q077",
+      "question": "Starting at entity_077_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q077:hop1",
+        "synthetic:chunk:q077:hop2",
+        "synthetic:chunk:q077:hop3"
+      ],
+      "start_entity": "entity_077_0"
+    },
+    {
+      "answer_entity": "entity_078_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_078_0",
+          "target_entity": "entity_078_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q078",
+      "question": "Starting at entity_078_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q078:hop1"
+      ],
+      "start_entity": "entity_078_0"
+    },
+    {
+      "answer_entity": "entity_079_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_079_0",
+          "target_entity": "entity_079_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_079_1",
+          "target_entity": "entity_079_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q079",
+      "question": "Starting at entity_079_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q079:hop1",
+        "synthetic:chunk:q079:hop2"
+      ],
+      "start_entity": "entity_079_0"
+    },
+    {
+      "answer_entity": "entity_080_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_080_0",
+          "target_entity": "entity_080_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_080_1",
+          "target_entity": "entity_080_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_080_2",
+          "target_entity": "entity_080_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q080",
+      "question": "Starting at entity_080_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q080:hop1",
+        "synthetic:chunk:q080:hop2",
+        "synthetic:chunk:q080:hop3"
+      ],
+      "start_entity": "entity_080_0"
+    },
+    {
+      "answer_entity": "entity_081_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_081_0",
+          "target_entity": "entity_081_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q081",
+      "question": "Starting at entity_081_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q081:hop1"
+      ],
+      "start_entity": "entity_081_0"
+    },
+    {
+      "answer_entity": "entity_082_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_082_0",
+          "target_entity": "entity_082_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_082_1",
+          "target_entity": "entity_082_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q082",
+      "question": "Starting at entity_082_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q082:hop1",
+        "synthetic:chunk:q082:hop2"
+      ],
+      "start_entity": "entity_082_0"
+    },
+    {
+      "answer_entity": "entity_083_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_083_0",
+          "target_entity": "entity_083_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_083_1",
+          "target_entity": "entity_083_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_083_2",
+          "target_entity": "entity_083_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q083",
+      "question": "Starting at entity_083_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q083:hop1",
+        "synthetic:chunk:q083:hop2",
+        "synthetic:chunk:q083:hop3"
+      ],
+      "start_entity": "entity_083_0"
+    },
+    {
+      "answer_entity": "entity_084_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_084_0",
+          "target_entity": "entity_084_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q084",
+      "question": "Starting at entity_084_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q084:hop1"
+      ],
+      "start_entity": "entity_084_0"
+    },
+    {
+      "answer_entity": "entity_085_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_085_0",
+          "target_entity": "entity_085_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_085_1",
+          "target_entity": "entity_085_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q085",
+      "question": "Starting at entity_085_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q085:hop1",
+        "synthetic:chunk:q085:hop2"
+      ],
+      "start_entity": "entity_085_0"
+    },
+    {
+      "answer_entity": "entity_086_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_086_0",
+          "target_entity": "entity_086_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_086_1",
+          "target_entity": "entity_086_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_086_2",
+          "target_entity": "entity_086_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q086",
+      "question": "Starting at entity_086_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q086:hop1",
+        "synthetic:chunk:q086:hop2",
+        "synthetic:chunk:q086:hop3"
+      ],
+      "start_entity": "entity_086_0"
+    },
+    {
+      "answer_entity": "entity_087_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_087_0",
+          "target_entity": "entity_087_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q087",
+      "question": "Starting at entity_087_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q087:hop1"
+      ],
+      "start_entity": "entity_087_0"
+    },
+    {
+      "answer_entity": "entity_088_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_088_0",
+          "target_entity": "entity_088_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_088_1",
+          "target_entity": "entity_088_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q088",
+      "question": "Starting at entity_088_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q088:hop1",
+        "synthetic:chunk:q088:hop2"
+      ],
+      "start_entity": "entity_088_0"
+    },
+    {
+      "answer_entity": "entity_089_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_089_0",
+          "target_entity": "entity_089_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_089_1",
+          "target_entity": "entity_089_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_089_2",
+          "target_entity": "entity_089_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q089",
+      "question": "Starting at entity_089_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q089:hop1",
+        "synthetic:chunk:q089:hop2",
+        "synthetic:chunk:q089:hop3"
+      ],
+      "start_entity": "entity_089_0"
+    },
+    {
+      "answer_entity": "entity_090_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_090_0",
+          "target_entity": "entity_090_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q090",
+      "question": "Starting at entity_090_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q090:hop1"
+      ],
+      "start_entity": "entity_090_0"
+    },
+    {
+      "answer_entity": "entity_091_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_091_0",
+          "target_entity": "entity_091_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_091_1",
+          "target_entity": "entity_091_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q091",
+      "question": "Starting at entity_091_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q091:hop1",
+        "synthetic:chunk:q091:hop2"
+      ],
+      "start_entity": "entity_091_0"
+    },
+    {
+      "answer_entity": "entity_092_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_092_0",
+          "target_entity": "entity_092_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_092_1",
+          "target_entity": "entity_092_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_092_2",
+          "target_entity": "entity_092_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q092",
+      "question": "Starting at entity_092_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q092:hop1",
+        "synthetic:chunk:q092:hop2",
+        "synthetic:chunk:q092:hop3"
+      ],
+      "start_entity": "entity_092_0"
+    },
+    {
+      "answer_entity": "entity_093_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_093_0",
+          "target_entity": "entity_093_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q093",
+      "question": "Starting at entity_093_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q093:hop1"
+      ],
+      "start_entity": "entity_093_0"
+    },
+    {
+      "answer_entity": "entity_094_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_094_0",
+          "target_entity": "entity_094_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_094_1",
+          "target_entity": "entity_094_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q094",
+      "question": "Starting at entity_094_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q094:hop1",
+        "synthetic:chunk:q094:hop2"
+      ],
+      "start_entity": "entity_094_0"
+    },
+    {
+      "answer_entity": "entity_095_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_095_0",
+          "target_entity": "entity_095_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_095_1",
+          "target_entity": "entity_095_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_095_2",
+          "target_entity": "entity_095_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q095",
+      "question": "Starting at entity_095_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q095:hop1",
+        "synthetic:chunk:q095:hop2",
+        "synthetic:chunk:q095:hop3"
+      ],
+      "start_entity": "entity_095_0"
+    },
+    {
+      "answer_entity": "entity_096_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_096_0",
+          "target_entity": "entity_096_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q096",
+      "question": "Starting at entity_096_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q096:hop1"
+      ],
+      "start_entity": "entity_096_0"
+    },
+    {
+      "answer_entity": "entity_097_2",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_097_0",
+          "target_entity": "entity_097_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_097_1",
+          "target_entity": "entity_097_2"
+        }
+      ],
+      "hop_count": 2,
+      "query_id": "synthetic_graph_v1:q097",
+      "question": "Starting at entity_097_0, which entity is reached after 2 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q097:hop1",
+        "synthetic:chunk:q097:hop2"
+      ],
+      "start_entity": "entity_097_0"
+    },
+    {
+      "answer_entity": "entity_098_3",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_098_0",
+          "target_entity": "entity_098_1"
+        },
+        {
+          "relation": "REL_STEP_2",
+          "source_entity": "entity_098_1",
+          "target_entity": "entity_098_2"
+        },
+        {
+          "relation": "REL_STEP_3",
+          "source_entity": "entity_098_2",
+          "target_entity": "entity_098_3"
+        }
+      ],
+      "hop_count": 3,
+      "query_id": "synthetic_graph_v1:q098",
+      "question": "Starting at entity_098_0, which entity is reached after 3 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q098:hop1",
+        "synthetic:chunk:q098:hop2",
+        "synthetic:chunk:q098:hop3"
+      ],
+      "start_entity": "entity_098_0"
+    },
+    {
+      "answer_entity": "entity_099_1",
+      "gold_path": [
+        {
+          "relation": "REL_STEP_1",
+          "source_entity": "entity_099_0",
+          "target_entity": "entity_099_1"
+        }
+      ],
+      "hop_count": 1,
+      "query_id": "synthetic_graph_v1:q099",
+      "question": "Starting at entity_099_0, which entity is reached after 1 gold relation step(s)?",
+      "relevant_chunk_ids": [
+        "synthetic:chunk:q099:hop1"
+      ],
+      "start_entity": "entity_099_0"
+    }
+  ],
+  "schema_version": "v1"
+}

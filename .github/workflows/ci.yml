@@ -31,7 +31,7 @@ jobs:
           cache-dependency-glob: uv.lock
 
       - name: Install locked dependencies
-        run: uv sync --frozen
+        run: uv sync --frozen --all-groups
 
       - name: Check formatting
         run: uv run ruff format --check .
@@ -79,6 +79,21 @@ jobs:
           uv run pytest \
             tests/integration/test_qdrant_vector_backend.py \
             tests/integration/test_vector_vertical_slice.py
+
+      - name: Run Stage 4/5/6/7 dual-store and scheduler integration tests
+        env:
+          RAGPLAN_TEST_QDRANT_URL: http://127.0.0.1:6333
+          RAGPLAN_TEST_NEO4J_URI: bolt://127.0.0.1:7687
+          RAGPLAN_TEST_NEO4J_USER: neo4j
+          RAGPLAN_TEST_NEO4J_PASSWORD: ragplan-ci-ephemeral-password
+        run: |
+          uv run pytest \
+            tests/integration/test_neo4j_ingestion.py \
+            tests/integration/test_graph_retrieval.py \
+            tests/integration/test_fixed_hybrid.py \
+            tests/integration/test_scheduler_backends.py \
+            tests/integration/test_dual_store_activation.py \
+            tests/integration/test_reconcile.py
 
       - name: Show Compose logs on failure
         if: failure()

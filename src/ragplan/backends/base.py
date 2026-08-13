@@ -2,11 +2,22 @@
 
 from __future__ import annotations
 
+import hashlib
 import re
+from collections.abc import Sequence
 from dataclasses import dataclass
 from enum import StrEnum
 
 _SHA256_PATTERN = re.compile(r"[0-9a-f]{64}")
+
+
+def canonical_id_checksum(canonical_chunk_ids: Sequence[str]) -> str:
+    """Hash an order-independent canonical chunk-ID set shared by both stores."""
+
+    if any(not isinstance(value, str) or not value for value in canonical_chunk_ids):
+        raise ValueError("canonical chunk IDs must be non-empty strings")
+    canonical_bytes = "\n".join(sorted(canonical_chunk_ids)).encode("utf-8")
+    return hashlib.sha256(canonical_bytes).hexdigest()
 
 
 class BackendHealthStatus(StrEnum):

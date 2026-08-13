@@ -391,6 +391,26 @@ wheels = [
 ]
 
 [[package]]
+name = "ijson"
+version = "3.5.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/3a/06/b31f040a8764336a11152e474a7abcb3782fedb0d1cdf78f442b82878c56/ijson-3.5.1.tar.gz", hash = "sha256:af40bd1a85f55db0b8b30715c858761306bd92d5590148636f75c3309e6e76bd", size = 69913, upload-time = "2026-07-06T17:37:42.923Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5b/6e/f3ded1ebb85ccc89a30f7b10a0076f30db70ae1d1e0b6423ff93c57b7539/ijson-3.5.1-cp312-cp312-macosx_10_13_universal2.whl", hash = "sha256:ee60c7741012671867678eae71c51872cac938b76f3d4ca40a778e6c361774d2", size = 88643, upload-time = "2026-07-06T17:36:28.529Z" },
+    { url = "https://files.pythonhosted.org/packages/ee/f2/18f14a1d79ef4898e746b4f50dcdbe60abab317cc2bd8390f043b9553c4e/ijson-3.5.1-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:11c1d7d36a13054b5872ecd5d745dc4009d9abdbcba2312de69e66c2f92a46d2", size = 60611, upload-time = "2026-07-06T17:36:29.597Z" },
+    { url = "https://files.pythonhosted.org/packages/30/c7/6e3e591324fd4c7a7a9e1bc23548bacbd84c0d91766b71f09f13e945e7e9/ijson-3.5.1-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:b9517efbe6604bce16f3e50d49b0cd1bdc58917f98cf2eab026599c5c0422991", size = 60447, upload-time = "2026-07-06T17:36:30.747Z" },
+    { url = "https://files.pythonhosted.org/packages/4d/a5/9af7be670381ddac26dd55107ed0110b50f5161673b053311db67f510dcc/ijson-3.5.1-cp312-cp312-manylinux1_i686.manylinux_2_28_i686.manylinux_2_5_i686.whl", hash = "sha256:ea4fd7bec203a600b1cc88a492dfe6b75ce4b1b87488a66adcd5406022213f64", size = 139092, upload-time = "2026-07-06T17:36:31.749Z" },
+    { url = "https://files.pythonhosted.org/packages/41/fb/f9c1664d75467453e6bd4e5f9cd2211b730b09e049445ab64cbac68cc6a3/ijson-3.5.1-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:350caea815e53151994b597abc80cf669454276b5ac6aadcec69ef6d48f7e90b", size = 149921, upload-time = "2026-07-06T17:36:32.912Z" },
+    { url = "https://files.pythonhosted.org/packages/43/80/d20b1c49c4aa7cc6644131e2e57192b45346ef4816566ed1cd9fd05bae38/ijson-3.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:e4fcebfe1685bb7ba06a8255a5d428ea6b4b895d7acf979cb637d8bbc9db2f47", size = 149848, upload-time = "2026-07-06T17:36:34.032Z" },
+    { url = "https://files.pythonhosted.org/packages/fd/fc/5baa710869f5ab939e6233583ced1546889b55c35f35b844c518ac10abc3/ijson-3.5.1-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:d78f362f51c8691798758a9e6ac3c9d385ee1228cb82987c91562a2fae235cd3", size = 150810, upload-time = "2026-07-06T17:36:35.19Z" },
+    { url = "https://files.pythonhosted.org/packages/54/16/a12b3d987a5c1677b04557c6f9b9feb7e04b7d4171e9a344856cb9136e9b/ijson-3.5.1-cp312-cp312-musllinux_1_2_i686.whl", hash = "sha256:0b184180d45f85fd4479659582749b109e49f4a29c21ac700ccc9c2280fe015e", size = 142989, upload-time = "2026-07-06T17:36:36.23Z" },
+    { url = "https://files.pythonhosted.org/packages/ed/63/1026c535671fc334fc85aeb78f0945c825e7a338575edc753c0f455459ae/ijson-3.5.1-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:e353891d33a2e6aa5caf72c2a5fbadd7a46f5f9b32dcfd0c84113b2444c255b8", size = 151702, upload-time = "2026-07-06T17:36:37.296Z" },
+    { url = "https://files.pythonhosted.org/packages/cb/af/b58aa3a2bf4d31c388ea78b49826605f60932891ce97e404d196766b4ea3/ijson-3.5.1-cp312-cp312-win32.whl", hash = "sha256:936f28671f018f8ac4d3f003ae9fa01d0467ab4ef4cfd0c97f23beda485b61c6", size = 52613, upload-time = "2026-07-06T17:36:38.345Z" },
+    { url = "https://files.pythonhosted.org/packages/04/66/ce70a92949c2a753dad91fdd5761dc14f3a44517e80cfc3c26612982ed61/ijson-3.5.1-cp312-cp312-win_amd64.whl", hash = "sha256:322c783f3ee0c6b383bbd4db88370b10172168808cc2a0bf811f1253f7435602", size = 54729, upload-time = "2026-07-06T17:36:39.337Z" },
+    { url = "https://files.pythonhosted.org/packages/a5/ff/e17784240c9cf1d58de2f2853ebaf9cc54f6bce117a1f12a6150bbb4a5aa/ijson-3.5.1-cp312-cp312-win_arm64.whl", hash = "sha256:e2ac204b59f09e38e16d277f906240e9fd38780e42076599419265af183dc4b4", size = 53714, upload-time = "2026-07-06T17:36:40.308Z" },
+]
+
+[[package]]
 name = "iniconfig"
 version = "2.3.0"
 source = { registry = "https://pypi.org/simple" }
@@ -697,6 +717,21 @@ wheels = [
 ]
 
 [[package]]
+name = "pyarrow"
+version = "23.0.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/88/22/134986a4cc224d593c1afde5494d18ff629393d74cc2eddb176669f234a4/pyarrow-23.0.1.tar.gz", hash = "sha256:b8c5873e33440b2bc2f4a79d2b47017a89c5a24116c055625e6f2ee50523f019", size = 1167336, upload-time = "2026-02-16T10:14:12.39Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/9a/4b/4166bb5abbfe6f750fc60ad337c43ecf61340fa52ab386da6e8dbf9e63c4/pyarrow-23.0.1-cp312-cp312-macosx_12_0_arm64.whl", hash = "sha256:f4b0dbfa124c0bb161f8b5ebb40f1a680b70279aa0c9901d44a2b5a20806039f", size = 34214575, upload-time = "2026-02-16T10:09:56.225Z" },
+    { url = "https://files.pythonhosted.org/packages/e1/da/3f941e3734ac8088ea588b53e860baeddac8323ea40ce22e3d0baa865cc9/pyarrow-23.0.1-cp312-cp312-macosx_12_0_x86_64.whl", hash = "sha256:7707d2b6673f7de054e2e83d59f9e805939038eebe1763fe811ee8fa5c0cd1a7", size = 35832540, upload-time = "2026-02-16T10:10:03.428Z" },
+    { url = "https://files.pythonhosted.org/packages/88/7c/3d841c366620e906d54430817531b877ba646310296df42ef697308c2705/pyarrow-23.0.1-cp312-cp312-manylinux_2_28_aarch64.whl", hash = "sha256:86ff03fb9f1a320266e0de855dee4b17da6794c595d207f89bba40d16b5c78b9", size = 44470940, upload-time = "2026-02-16T10:10:10.704Z" },
+    { url = "https://files.pythonhosted.org/packages/2c/a5/da83046273d990f256cb79796a190bbf7ec999269705ddc609403f8c6b06/pyarrow-23.0.1-cp312-cp312-manylinux_2_28_x86_64.whl", hash = "sha256:813d99f31275919c383aab17f0f455a04f5a429c261cc411b1e9a8f5e4aaaa05", size = 47586063, upload-time = "2026-02-16T10:10:17.95Z" },
+    { url = "https://files.pythonhosted.org/packages/5b/3c/b7d2ebcff47a514f47f9da1e74b7949138c58cfeb108cdd4ee62f43f0cf3/pyarrow-23.0.1-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:bf5842f960cddd2ef757d486041d57c96483efc295a8c4a0e20e704cbbf39c67", size = 48173045, upload-time = "2026-02-16T10:10:25.363Z" },
+    { url = "https://files.pythonhosted.org/packages/43/b2/b40961262213beaba6acfc88698eb773dfce32ecdf34d19291db94c2bd73/pyarrow-23.0.1-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:564baf97c858ecc03ec01a41062e8f4698abc3e6e2acd79c01c2e97880a19730", size = 50621741, upload-time = "2026-02-16T10:10:33.477Z" },
+    { url = "https://files.pythonhosted.org/packages/f6/70/1fdda42d65b28b078e93d75d371b2185a61da89dda4def8ba6ba41ebdeb4/pyarrow-23.0.1-cp312-cp312-win_amd64.whl", hash = "sha256:07deae7783782ac7250989a7b2ecde9b3c343a643f82e8a4df03d93b633006f0", size = 27620678, upload-time = "2026-02-16T10:10:39.31Z" },
+]
+
+[[package]]
 name = "pydantic"
 version = "2.13.4"
 source = { registry = "https://pypi.org/simple" }
@@ -874,8 +909,10 @@ dependencies = [
 
 [package.dev-dependencies]
 benchmark = [
+    { name = "ijson" },
     { name = "numpy" },
     { name = "pandas" },
+    { name = "pyarrow" },
     { name = "scikit-learn" },
     { name = "scipy" },
     { name = "skops" },
@@ -907,8 +944,10 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 benchmark = [
+    { name = "ijson", specifier = ">=3.4,<4" },
     { name = "numpy", specifier = ">=2.1,<3" },
     { name = "pandas", specifier = ">=2.2,<3" },
+    { name = "pyarrow", specifier = ">=23,<24" },
     { name = "scikit-learn", specifier = ">=1.5,<2" },
     { name = "scipy", specifier = ">=1.14,<2" },
     { name = "skops", specifier = ">=0.13,<1" },
@@ -1315,13 +1354,13 @@ resolution-markers = [
     "sys_platform == 'darwin'",
 ]
 dependencies = [
-    { name = "filelock", marker = "sys_platform == 'darwin'" },
-    { name = "fsspec", marker = "sys_platform == 'darwin'" },
-    { name = "jinja2", marker = "sys_platform == 'darwin'" },
-    { name = "networkx", marker = "sys_platform == 'darwin'" },
-    { name = "setuptools", marker = "sys_platform == 'darwin'" },
-    { name = "sympy", marker = "sys_platform == 'darwin'" },
-    { name = "typing-extensions", marker = "sys_platform == 'darwin'" },
+    { name = "filelock" },
+    { name = "fsspec" },
+    { name = "jinja2" },
+    { name = "networkx" },
+    { name = "setuptools" },
+    { name = "sympy" },
+    { name = "typing-extensions" },
 ]
 wheels = [
     { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.13.0-cp312-cp312-macosx_14_0_arm64.whl", hash = "sha256:2fe228aba290d14b9f31b049be550dbd469c3fd3013d7a19705b30454da97027", upload-time = "2026-07-08T12:26:18Z" },
@@ -1335,13 +1374,13 @@ resolution-markers = [
     "sys_platform != 'darwin'",
 ]
 dependencies = [
-    { name = "filelock", marker = "sys_platform != 'darwin'" },
-    { name = "fsspec", marker = "sys_platform != 'darwin'" },
-    { name = "jinja2", marker = "sys_platform != 'darwin'" },
-    { name = "networkx", marker = "sys_platform != 'darwin'" },
-    { name = "setuptools", marker = "sys_platform != 'darwin'" },
-    { name = "sympy", marker = "sys_platform != 'darwin'" },
-    { name = "typing-extensions", marker = "sys_platform != 'darwin'" },
+    { name = "filelock" },
+    { name = "fsspec" },
+    { name = "jinja2" },
+    { name = "networkx" },
+    { name = "setuptools" },
+    { name = "sympy" },
+    { name = "typing-extensions" },
 ]
 wheels = [
     { url = "https://download-r2.pytorch.org/whl/cpu/torch-2.13.0%2Bcpu-cp312-cp312-linux_s390x.whl", hash = "sha256:ffadde149901c8afa138daa38d898264003cfcf1a3336ca5cd964b5af227d867", upload-time = "2026-07-08T19:28:41Z" },

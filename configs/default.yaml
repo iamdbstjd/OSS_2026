@@ -9,6 +9,8 @@ engine:
 
 planner:
   mode: rule
+  feature_config: configs/query_features_v1.json
+  rule_config: configs/rule_planner_v1.json
 
 vector:
   backend: qdrant
@@ -31,6 +33,11 @@ graph:
   backend: neo4j
   uri: bolt://127.0.0.1:7687
   user: neo4j
+  database: neo4j
+  extractor_model: en_core_web_sm
+  extractor_model_version: 3.8.0
+  minimum_relation_confidence: 0.70
+  rule_tier_policy: configs/graph_tier_policy.json
   # Deliberately no password. Supply RAGPLAN_GRAPH__PASSWORD at runtime.
 
 logging:

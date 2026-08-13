@@ -1,0 +1,35 @@
+{
+  "benchmark_manifest_sha256": "c5d959ca1da8c5b5e977af948c96012efc3a0754599e34edcefff30755e1ef76",
+  "chunker": {
+    "overlap": 40,
+    "window_size": 220
+  },
+  "corpus_document_count": 8310,
+  "corpus_version": "adaptive_rag_bench_v1-corpus-v1",
+  "embedding_artifact_manifest_sha256": "f0635a959113bf3817d63ecd3a02b9c840795cbd17afeab9af596c9226771574",
+  "normalized_chunks_sha256": "e2a821bb1bfe5fcb13e5ab0d90fbcf22ca95b1794512d6eb1b84641afb414977",
+  "normalized_corpus_sha256": "7a4b3016fa4cd4349a27c608b1fe8829d571972f7c28efd272f150fc816d95f2",
+  "qrel_grade_counts": {
+    "1": 42,
+    "2": 3425
+  },
+  "qrel_row_count": 3467,
+  "qrels_logical_sha256": "7f287320d8014344d12c770af159cce07457bdd8d092a7ece51c7eae67c6b505",
+  "query_count": 600,
+  "relevant_pair_count": 2710,
+  "split_counts": {
+    "test": 120,
+    "train": 360,
+    "validation": 120
+  },
+  "split_hash": "b01deb380f039447d626bb7b9d74ca344d3a55dc22cf9fea725d90049a5e1a31",
+  "test_ids_sha256": "2fa161f8517900f723426c4f896f6b2c8b6308decac23c31cb15883347833fcc",
+  "test_tag_counts": {
+    "2hop": 60,
+    "3hop": 20,
+    "comparison": 20,
+    "entity": 15,
+    "relationship": 40,
+    "semantic": 25
+  }
+}

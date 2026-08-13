@@ -1,0 +1,12 @@
+{
+  "neo4j": {
+    "image_defaults": true,
+    "query_runtime": "pipelined",
+    "request_retries": 0
+  },
+  "qdrant": {
+    "image_defaults": true,
+    "request_retries": 0
+  },
+  "schema_version": "db_tuning_default_v1"
+}

@@ -1,0 +1,2409 @@
+{
+  "assignments": [
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a70f20a5542994082a3e415",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a7130485542994082a3e646",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a7146715542994082a3e744",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a723b3655429971e9dc9367",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a73ace2554299623ed4ac17",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a74ac445542996c70cfada5",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a75b3535542992d0ec05fe5",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a75dc2255429976ec32bc41",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a75dc7a5542992d0ec06004",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a77506d5542994aec3b7289",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a77524255429966f1a36cfc",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a7753c25542994aec3b7290",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a77790255429967ab1051af",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a7779185542997042120a7c",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a77c0585542992a6e59dfb6",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a77c7d95542997042120b33",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a78f18c55429974737f7916",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a78f50855429974737f7922",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a79119a55429974737f7963",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a7934e955429907847277ef",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a79ffe9554299029c4b5f9d",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a7a314f5542996a35c1712a",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a7a4f805542990783324f0a",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a7a7a5c55429941d65f266c",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a7ac27c55429927d897bf05",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a7b53ec55429927d897bf91",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a7c6ffa5542996dd594b936",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a7d14a955429909bec76943",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a7da32e5542990b8f5039e0",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a7dbe215542997cc2c47490",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a7dea655542995f4f402300",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a7dfa585542991319bc941e",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a7e2f105542994959419918",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a7ea81f5542994959419a47",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a7f034e55429934daa2fc8f",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a7f787e5542995d8a8dde84",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a7fa08e5542995d8a8dded2",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a7fa2545542995d8a8dded6",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a7fbc9a55429969796c1b3a",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a7fd16955429969796c1b80",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a80892c554299485f598643",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a80c8d555429938b61421de",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a80db6255429938b6142219",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a81ebb1554299676cceb16c",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a82014b554299676cceb1d0",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a824dba5542990a1d231f94",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a83142855429954d2e2ec09",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a83ba565542996488c2e4a0",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a8405b2554299123d8c21cf",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a85ff2a5542994775f606ea",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a8642ec5542991e771815e4",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a8713ac55429960ec39b729",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a8791c65542994846c1cd9c",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a87b0c75542994846c1cdc9",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a87b2dd5542996e4f3088cf",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a881e3155429938390d3ef1",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a889f0b5542997e5c09a63a",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a8901125542997e5c09a6ee",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a89133c55429951533612ac",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a897bd255429946c8d6e927",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a899c925542993b751ca95f",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a89a85155429946c8d6e986",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a89b6ae5542992e4fca8398",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a8a53e455429970aeb7028f",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a8a7c6d55429930ff3c0df7",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a8a82f25542996c9b8d5f14",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a8af17355429950cd6afc25",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a8afb8055429949d91db455",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a8b594955429971feec46ef",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a8b5b1e55429949d91db568",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a8b7b9255429949d91db5ad",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a8bbd6c5542997f31a41db1",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a8cb354554299585d9e3728",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a8cc90a554299441c6b9eff",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a8dc60e554299441c6ba089",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a8dcdba5542994ba4e3dd22",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a8e0bf755429917b4a5bcf6",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5a8e25745542990e94052a76",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ab29c7e554299706120966f",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ab2bea8554299166977408d",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ab2c1645542992953946871",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ab2d3c25542992953946879",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ab2ec6f55429929539468c2",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ab3f88b55429976abd1bd09",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ab40ea6554299753aec5a29",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ab40f635542996a3a969f05",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ab421f05542991751b4d67c",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ab5473b554299494045ef62",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ab56c23554299637185c58a",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ab59f0c5542997d4ad1f191",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ab5b900554299637185c5f5",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ab61eb5554299637185c66b",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ab69ce255429953192ad32a",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ab69d5a55429953192ad32e",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ab6a93c554299710c8d1f32",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ab6dae755429954757d3398",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ab6fae8554299110f219a82",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ab8174055429916710eafe6",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ab840d455429934fafe6d3a",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ab9592a55429970cfb8ea80",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ab98442554299131ca42358",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5aba602e5542994dbf0198fb",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5abb70ee5542992ccd8e7f45",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5abc06f855429959677d69f6",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5abc166d5542996583600420",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5abc2bfe554299114383a0ef",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5abc5762554299114383a111",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5abc78ca554299114383a126",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5abc8697554299700f9d78e5",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5abd04f15542996e802b467e",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5abd0d065542996e802b46c4",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5abd217655429924427fcf05",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5abd86475542993062266cbc",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5abe1b0255429976d4830a77",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5abe412d55429965af743eac",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5abe4b7455429965af743eb7",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5abea3db5542991f661061bc",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5abeb6db5542993fe9a41d15",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5abed2415542993fe9a41d4d",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5abfa4af5542997ec76fd414",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5abfcf995542994516f454fc",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ac016515542992a796dec7d",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ac0551b5542997d64295a07",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ac070fc554299012d1db5f0",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ac09f945542992a796ded3d",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ac0dc12554299012d1db649",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ac15bc45542994d76dccde5",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ac1d02855429964131be29a",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ac268df5542992f1f2b38b7",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ac2b3f7554299218029dafb",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ac2bc76554299218029db0a",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ac309435542995ef918c0d0",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ac3672c5542995ef918c181",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ac39f2a554299391541382d",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ac3bc72554299391541391c",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ac3e0765542995c82c4ac76",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ac416c65542997ea680ca00",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ac41c375542995c82c4acc6",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ac492805542996feb3fe8d7",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ac499945542996feb3fe904",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ac51ef255429924173fb5d4",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ac5262755429924173fb60f",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ac5357a5542996feb3fea26",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5adcae6a5542990d50227ced",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5adcc6285542994ed6169bfa",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5adcc8be554299473435379c",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5add27325542994734353880",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5add27455542992ae4cec4b4",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5add3a5d5542997545bbbcc7",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5add4bc55542992ae4cec505",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5addf6cd5542995b365faba1",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ade18e755429975fa854e3d",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ade39cd554299728e26c683",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ade996f554299728e26c75b",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5adea7a85542992fa25da7f6",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5adeb11755429975fa854f73",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5adecac555429975fa854f93",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5adf079a5542995534e8c737",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5adf75df5542995ec70e901b",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5adfe51755429925eb1afb09",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae0000855429942ec259bcd",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae0898355429945ae9593a4",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae109f755429920d523429e",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae13dd0554299422ee99639",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae15d115542997b2ef7d1a6",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae166c55542990adbacf784",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae1e6665542997f29b3c185",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae203b95542997283cd2329",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae20b4c554299234fd043c1",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae24f515542994d89d5b3ce",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae257705542994d89d5b3eb",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae280d55542996483e649cc",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae2a8bf554299492dc91c40",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae2df9355429928c4239518",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae2e4bd55429928c4239539",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae31aaf5542991a06ce9928",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae354b95542991a06ce9995",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae3732e5542990afbd1e156",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae37f785542990afbd1e179",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae429a85542996836b02c46",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae4dbb85542990ba0bbb17b",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae4e53255429960a22e0203",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae526815542993aec5ec162",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae53b0b55429960a22e0281",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae563da5542993aec5ec19f",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae596955542993aec5ec1cc",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae5c8465542992663a4f226",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae5f5cf5542996de7b71a86",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae6082e55429929b0807a7f",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae60d0055429929b0807ab5",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae615c95542995703ce8aea",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae62b6d5542992ae0d1625c",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae64b785542992ae0d162be",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae664d35542992ae0d1631e",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae6799f5542991bbc9760e4",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae69e575542991bbc976152",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae787895542994a481bbd64",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae78d305542997ec27276a1",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae7f98a554299540e5a56e2",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_bridge:5ae813ed55429952e35ea9fa",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a713f4d5542994082a3e6ed",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a72c0895542994cef4bc3f7",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a72d60e5542991f9a20c5b8",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a733bca5542994cef4bc4e9",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a73ecb05542993a88ae2e99",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a7565795542992db9473654",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a75da855542992db94736fb",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a76007d554299109176e5f2",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a7700f355429966f1a36c0a",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a772dfa55429972597f146c",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a77c4725542995d831812b3",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a797bc1554299029c4b5f56",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a7a120e5542996a35c170b6",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a7b25dc554299042af8f70f",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a7b28e255429931da12ca0b",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a7b331d55429927d897bf56",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a7b49e755429927d897bf75",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a7cc24c55429909bec767f5",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a7cc474554299452d57ba34",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a7ce180554299683c1c63b8",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a7f250955429934daa2fcf1",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a7f5fbd55429969796c1a18",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a7f74bb5542992097ad2f78",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a809a4a5542996402f6a592",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a81ac945542990a1d231e63",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a84ec335542994c784dda87",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a850bdb5542994c784ddae4",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a87415355429960ec39b775",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a8751cf5542996432c57266",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a88ee6e554299206df2b3bb",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a891b55554299669944a4b4",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a89400d55429946c8d6e90d",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a899f7d55429946c8d6e972",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a8a37a955429930ff3c0d0c",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a8c6ad1554299585d9e3690",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a8e0a1c5542995085b373a2",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a8eca075542995085b3748c",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a8efa035542995a26add59e",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a8f29da55429918e830d1b1",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5a8f440b55429918e830d1e4",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ab1c2d5554299722f9b4c56",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ab1c4b05542997061209560",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ab29e605542997061209674",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ab30395554299166977417e",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ab313c4554299233954ff02",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ab31dfe554299233954ff11",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ab3c71b5542992ade7c6e8b",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ab3fc61554299753aec5a17",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ab414b45542996a3a969f21",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ab4fe8555429942dd415fc0",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ab505c45542991779162d57",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ab5676f554299494045efa6",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ab5ae5d554299637185c5d8",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ab6b99f5542995eadef007a",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ab6e0a9554299710c8d1f90",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ab878475542990e739ec912",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ab9943755429970cfb8eb4d",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5aba737055429901930fa7d3",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5abaddbe5542996cc5e49eb7",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5abadddb554299660624164c",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5abbb5da5542996606241723",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5abe627555429976d4830b09",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5abe8b9455429976d4830b63",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5abe9d4b5542993f32c2a185",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5abfcc0a5542997ec76fd452",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5abfe6735542997ec76fd46e",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ac068d25542996f0d89cba2",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ac1114d554299294b219084",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ac143915542991316484ab1",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ac1a51e5542991316484b87",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ac26ecf5542990b17b1538c",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ac2cb7e554299657fa29068",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ac3b9b555429939154138ec",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ac3da89554299204fd21ea5",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ac41eb25542991943173922",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5adc34015542996e685252dc",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5adcfb015542990d50227d7e",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5add694d5542992ae4cec556",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5adde79c5542992200553b96",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ade176f5542997545bbbe4c",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ade26da5542992fa25da6f4",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ade87d95542992fa25da7ae",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ade87f155429939a52fe8e5",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5adeb3c85542995534e8c6dc",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5adf8e735542992d7e9f9398",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5adfb4b055429942ec259b04",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ae0006055429942ec259bce",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ae0113455429925eb1afbf8",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ae130cb55429920d52342fa",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ae139ba55429901ffe4ae0e",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ae1804355429901ffe4aec6",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ae1a9f8554299234fd042b7",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ae1e22a554299422ee996bb",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ae21447554299495565d9ea",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ae22c875542996483e64922",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ae3323b55429928c4239673",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ae3ae975542992e3233c446",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ae4c25355429960a22e01bb",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ae4c2e85542995dadf243f2",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:hotpot_comparison:5ae538cc55429960a22e026f",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__102195_52584_79479",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__102694_35178_686699",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__103777_81195_67444",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__107006_41885_233357",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__107407_217516_76921",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__107866_146715_77801",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__115624_314101_85185",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__115799_753582_3684",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__11632_65293_48285",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__120823_7019_48224",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__125955_618888_221665",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__129969_832324_795274",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__13315_594903_41375",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__142636_65665_490716",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__143777_229859_5303",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__145491_5960_52356",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__150999_301867_127418",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__15161_728452_124684",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__158678_48408_37038",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__161436_74189_12463",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__162325_11248_11140",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__1707_158293_70782",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__18305_84421_35261",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__18305_84421_35301",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__194721_295697_126906",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__20961_87850_49736",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__20961_87850_93848",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__213491_782843_75255",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__222048_348668_782779",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__247266_8995_43551",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__247266_8995_90774",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__262651_365698_819160",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__26417_449353_64275",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__278358_823374_26254",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__29335_30907_55276",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__299467_395094_64745",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__299857_69818_21101",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__339367_707133_72062",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__343268_298775_622895",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__347338_548045_159613",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__356150_164954_75527",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__364779_559792_25082",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__366739_106790_85889",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__388966_508834_145463",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__400851_797479_57072",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__401096_861630_87032",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__409533_830682_68600",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__413364_833580_61459",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__420194_668347_492654",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__424334_280480_194644",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__42594_61656_6892",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__472224_672194_40232",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__475407_84467_63942",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__475407_84467_65406",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__475407_84467_89676",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__486644_10383_15069",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__486818_375983_820357",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__487773_252578_158704",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__489233_629230_49087",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__52213_751642_160613",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__522518_132413_15980",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__54755_681261_369731",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__564909_668347_492654",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__63227_482320_255237",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__641136_738926_127068",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__659125_39490_87717",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__662041_818753_71981",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__678937_786384_80004",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__69507_82553_247284",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__709382_146811_31312",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__729595_585703_369147",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__754569_236435_250802",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__7546_7540_588033",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__760007_715233_59314",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__763149_633553_43671",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__764479_147364_251997",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__773551_226789_844905",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__785514_299916_31236",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__793955_501716_79175",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__809774_144910_26427",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__818367_434582_74310",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__821692_74047_350761",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__830282_99691_28721",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__862690_164954_75527",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__93271_1955_90328",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__94551_65225_158841",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop1__9998_93626_820357",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop2__101072_18393_54090",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop2__10222_35281_18364",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop2__10222_767276_18364",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop2__136850_51280_242202",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop2__29467_132060_73594",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop2__30796_283562_24137",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop2__30796_804098_24137",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop2__337255_105257_83343",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop2__41363_234987_24137",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop2__51964_31713_32334",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop2__64181_28338_160498",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop2__73462_26851_19700",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:musique:3hop2__763533_863695_74533",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:0385a8db5550d018e3fe3c756783528c1c26ff8d4a9ffcfbe3f8751bf8763385",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:03e6f0c0f83cd46d38af78f8454fbcfe90fbc19785d2cc753711cded4ba9d511",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:06833ea6c88e7ebf4e22d85b914c95b7de1e2882d78a923d62b60932222fcfb7",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:07285668f34a4ff8bdb8cf72f6b63a48158613eed8a56a54fd0dbb50ad23fe06",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:077904f02cf5857260c9d1e67d62c9764757003110f01e4d005d6f2dd7417a77",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:0bf011879ee335d22cb83393aa20686303edfd7cd7cb6fd6392d13de7a3adaaf",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:11fa26a00a0c565d8b6ffd99b124336b963e11b21b9ffe89897e99de4294c482",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:134599aabd4314b6bf70a145f295a57cf081512847e1683a03d4511e33c053d0",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:1468a931ce5893385c6b784aa488ecc2620d8e96639002e9bfa34b442762e087",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:16d784d663f0c8fcf8e6ac3d9e769c8d9200160b6cf30540ff52e8114ed840ae",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:18e1c2b3164e6de794234b3e94fc71d27b6820b835eed75254b32cb280d23774",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:18f03c523e3986f0dfe12d3216b98442a1c08b2532342ede194b5573870be659",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:1bb368cf5c5e25ed22e9aca3587d6ac5b58905817b06b8105d1bdb0a589e9d94",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:1bc493f9d8a4b27a96f4c03f6095ec31e18fe7bcb680cc8bf69d65e102fe6128",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:1c8b41724f99cb0f25f2646b04b7f14c34f8205b62b4f29d3a2a524650b62c8c",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:2298a64eb04ffc88ea80cc104ff81602374ee508ed32386f765c6bec3d1697ad",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:240a9dd6fbd8651085894c98ed6d2af3026a33bb362027eb1f23304d5289c07d",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:248419cf25c839a0ea034cf52d12959eadcd6f8a4ac9e10fcd8c522f2058a67d",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:2554a3c5bf6a5b9295e7eb1e79a99e8eb97956eb6a2fb9b0a506c693ae92e0f1",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:257a5c3d689d3d2cb704f89b8426ac983678ddfadd6bdf48c03846d06e199636",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:2780a98764db210fdf670ecdc2463e7220d467e0cc16f25022f41d20b73743b6",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:29dc2a2d5fe7c12fe3aa13e63aa91659b684d67bc5999fd77acee543e7d32e9e",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:2bfdda53b128ca01b770c7f543b5d36d18169416fcceb44b134dcc8c3ea5f67f",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:32771ef678476be644acd01ae7a8ded36bc681554505044f62b98707275a36fa",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:335a9cade037e050cf9ffd692a1857f46287fb9bda8b58f744a8d6e67282118d",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:336cc01dc72f1ba196b1d25468b84a8bf10e8d7cafd9588dd91527ee6411b848",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:33f2bae4409d7d4582207b609d1f0e6bc09fe94fe5be5af7f6581ced8bfa31c9",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:38e36736ef8eb8d5ac69cee6809197526b48d15aba55156dfad8c1d9b7bc7a96",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:395ea17d6178e84bcfc480ca5f2f946ce99a4d1dd72430887f3c34bebeaa4688",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:3ab962e929134b413215798187eb34cfba3e37c8452dba6de1c57556ed2e3ee7",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:3aca03bb41c213f3e3377ad2398ee36d966b9591ab52559fec6a6c030d92043c",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:3b5590f54f3d0b9af97b24b9c09e9b188a72537365259186307c9ab64a197008",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:3bb6f3ca9fbb63760c09c46809def3a3f4a0b4b369c84561e77c3dcf762b266f",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:3bcbf7eedc57056aa989192c5f0d17eed6552d0a30a98d6c0a9fcf942a450784",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:3d8af8da9ca062b57e70c34e5bd49b25214cd81b5f7549b3c08b4a940ad05af3",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:3dae77f01371105d729897bebe9a159f6d267f058270ae976ec0526a105eca69",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:3e301c611be92e777437694d9aab52d93e92ed3a557d1c107b2e6fcb3b2bd674",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:42566f14655e53ac6fa1fcccc96c7802c94a96fe58a6998e8c1ac43d0b58ae58",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:451961b47eda0e1985e1b8ae003b04668c24e98c793080666f477755a4e33f39",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:45c367aaf355333f6769660a69f2790821320940612472bd7ef454ebcd7f271a",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:46622baeae47437bcd80d09b70315d5cede80a5b6bbac9168298f49bbd280cda",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:46e95e4cd3551cd9b72dab4a26ac13e04ae606120ba0d1d54417cd2999044e98",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:4793f4a2acea219e00bce852137cdf83c0f6027edb561a96807a257631c3b57b",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:47ba760310580db1cc34170a794989d74efb033369a1f6ab9a2988a6393e607d",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:483012bbcb625459b7ced8a05bfb82c7a9cc39505969453a4d8e9b62b6d56566",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:48d761698531943cb1cb317918bf0ecc1da146d8fec8975b286e89bde2421dd3",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:4bab6ce501f893e6f0954a192602db5d919b077c2a2cbd5f043f6c2aa344c52e",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:4f36ba55f377e7459c7d9228ee371f3318b43952184e3e2193c2d6af07f59815",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:51b69e117695c75a66d9a7fb63daf1bad6735fbfa2e181fe7d4d712f8c45968d",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:5204f975926a66f8fc4c07276774cad10f163d7c5862fa2a83af142ae8192404",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:53debd02186e63fb343a4185bd54443a581e521a46dca56c8c6772285df51cb7",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:56b65e6d1472980b959d5233b973ee5ea490a7d82ceeedda5ffdeb2daff58361",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:589f5faca38363d7da230e77759e2287e0f217ee474c5b29e7cb6375e0cd78e2",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:5914a13d77487193a0a5cb64eb21c2c5e28799020ed3f2bf3337189fcdfccbba",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:5918c428a52c0ca3a5f963abc33e2bc696e1dfd7483c291d94d0ef6afab4e985",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:59329b8e41e24e864b73a7022dd41397e42ddf22312c09906b0d77dc8acc9325",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:59fff4b9f4dbe339d7319e3d7dbe26bb5de13c3d780437b187d1f5397e85e144",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:5a31761be7222ec7c49464af26a8b4a0619bc8a4d36cc1f65dae565e1b8d90df",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:5b5ede4c5ec0a2894149d3b78ff4a8e0783f1c42bfa55ba92cdd359b057ea657",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:5baf67a176bdbb6a5ac7c5d03749052c35f8b17e7db4b18a8275a4991d47098a",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:5bbe477abec66ea00886560c6811127adde9559b71f317ff8f28a1c6bbb2d958",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:5beb8dae6493a87633075bf107e7c7b73914be8ec5c22471979f50158fe7529f",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:5cdd624c30cfc9557e90188b9f7bff89685524981e708adc6229ee8dbc4696ab",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:5dc554ad98b4c232422a573a89ffbf5d9a88601d01f8176032579e659a056ed7",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:5de4e2f67a709150ae65c7b28dfe9468c08b5de33c1280ae193aeedc41481a92",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:5edcd583be13492a2c79fba156b48cd9ba2c8fe08a5fb0f182a018c3a08db5a5",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:606e4d99b954497cf48f4f5a78af585aa9cb85882ae1bd80fff53299a58e3d8c",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:611a8eff6549ce4d5a825990cbaff3d965e69ab7d8f5858e1403dccb8bdd1d16",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:62d894a54247ab0a2052df1dea4be16073f0e9975ef0e10957c0a4896361b028",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:653737904cc72fd7925897bda4a0ad70ade13bfd39779162cbc31251af23a998",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:67f329119a1a58ee0cc629cf644c646be6f51292a311a51ceea91492c029dc57",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:681af05804ef09a9baf7548d1aa6fa1cd646aabc0d3631d2f732e5bf255a100a",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:68563426bcb755a358ab4dc18e3846b7d334f8d92d9547ff5d629288e967872a",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:6941d0d3bd8399f114a9716786c17af69af884d8b36993499b186850f03be93a",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:6c2f6e4c2865e68e3c147f94dfdc4cf9d408ccba74151a8f0884af5662d91b69",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:6dfd811430319c02aac8442ff482b488e9890393491ae1a20d0a03e864dd4e04",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:6e3d23caa26f7afe39842271996110dd087b9dc92fb6bbd569a03a91bb257630",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:6e40542a338c33f031407a1bdbeed381835859230bd3e6419115bee459ebff33",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:6ea8a9898963263f326380ab9269abe352fcc5b4c7c62cd4261e4407d1966169",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:6f295ba5a87bc359eaa77d19e227616e8e8c85ecb8847a6291df5c9e84a90933",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:6f63af2199958c57b04d9caaf702c31e1f115cc1b39217b0bb565c73694ac016",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:70d53ff12304a7593864411e08905874f79021d669a4b91c477dd614f7d43c21",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:71f55fa9b4ea4ec7d38d44b27aab6afc83a3705f4fce4c7585acdc1e047ea27b",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:72a5c7f58611193662b798c6076264f87d82a5faccc0a40dd06b6d58afdec2c7",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:7488c749026085cb05bd8c2bdb16a5da88a75f2d06e8b57da5f97a20692aa0a6",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:762c60f654adcc4dd751f5f2634bfb0501facdd4c276093cd5ab1140b9b06365",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:79b1b03628c13a64357b86a19923b97bd179c0b36c388bb209713db88a36be03",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:79e5daff9939af15882660614926ff6df957f0a285e8190b195dfa951bcc90b2",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:801c658bce423e17b6ad329e99297328f6fec2b55c4737911993453d7c7628c1",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:81108f2fe4069073010b6eec6f2f9c7e57cb2281343c2239a02ca1e7f6e878b2",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:828aafc510fcacaca4268be88bfdb15e097816c42c5392375f7ae154651f4da8",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:83b72dae9e23cca39d7b1a0345dd5d377f9b4852af5ed9b51069cce350d4c440",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:83d4a296176fca0e59d203fc19fd80d699c82d36123e2665dfd0f90e4180d848",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:8477cd6a6910e0d5978c841b28caf16c775a1e1006d3ce77b25c2a09554308b1",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:88b4e23368b10c38cda015abf90d43f696a8088dee46de423fcee5190b38132b",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:897ac45af07870cbb937dcf369ee74d5b0eaef43b79430def0d2918b8d05b505",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:8b1bec00c8c61358355285e40118267a163d2e0bc1c84b1ac1119257e477090d",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:8c8cd77b5e03e769f7ed3eaad00ab3d7933b106f09c3986ae4f4476afb8535c9",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:8d91c0b7dfa8acc08343c6fbaecf8305add71a7b6cb5f0d52d7a7ae041887d5e",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:8f3b1769c4c8fe1a4ce7d87e03a3ceabd5c3e86c50f4dd62f32774ff0e82128e",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:903fcb924be72fe54b1524c7e12542b430eaf9cfff2dddf2661d303f8e1f532c",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:92da08bcb5af7bffcb00719939b709aec3c7ef61833d5c0aa4bf9367ea4f2684",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:93ae60437568b7b565929220fc8d6b294055adeea67340465c06f5809cdaae92",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:945186ebc4dc800535806eb2c75b7c24c0bc7cadb7cdc33c784cb275589a891c",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:946e2450d93c936651681d1dd1ddde7521131823ade3e98bcc4de75eb8c12599",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:960e52ec9ddb698f77b88a863a165d4284369d1c942020cc840524516317fa1c",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:96e25496896f548ee4adf5fda9ae9bf9ed696baa01f898ecc88527e4e1d420e5",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:99aa2d25f4f32c514c45805c4d89792b857466895b4cc646ee453da80fc80754",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:9a1170335df3e55df395731e6e3e06047a853c885b0703b3a218d2d51ad02957",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:9b987e2898e15a31e47629acea03dfbf2da8d794ad5bf219f1709ea2c34281fa",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:9c72683fc50863e04c5c2b9c8ca1d13ac4bb35562609bcfc0b1277c619103a70",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:9d2e86aa0958890987cb752e12dab01124ae86a4db9afdbcbac967c6367b33dc",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:9d58f6ad2e41a65d9e2b0b34102dd467ed8882841e78be096d5a74078cc878fe",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:9e206f967b4d641aa2da404d81fecfead4a339d677c3b17fdc38fc077fec6521",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:a01bad048ad1e2328b5682b2b688b8d2137fea3a4adf5bc6c39bbf1e11a93efd",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:a13110ec01b22b6c213738f987a2d6be1c10bb558f60dea6fc4878baec7e0262",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:a1642a59a7d4b98e11bc24a0899e66e973804260adb43ee21f8ac10c8d33a379",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:a2db46d6d3d5f9601cfe928b2aa016a91754062d35d0178e94234cf30db09017",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:a35199f3d5474e3ad14cef0496c64572b8a3004e9d61d4cb2b71ae7fa3031333",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:a44d69694c72afaf2bc8831c14be62838970ffcb8186497b8d04431c7b578275",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:a52c0a1911441381d9ece63e0f6b52bfd83da6c20d50645757b8c961e4aa4659",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:a68e909f92dfc279413960403d1bab76814b9c5f9c49e8f864dcecb851d07334",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:a69f41c0251e069c67afd3e13fb0500782037f6607b02ca648d4a0295c00a8c1",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:a86af3429b34ff76deac3f217a6fe33bcfe25233c0128bacfcaf05d2269b2d5f",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:a899eaa784a629b5fc62caedde986d7b37a23ee178903c6fc14fd0eb86081280",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:a90c0a8d86aebf51f6553a81671b7897d305a449c05e3888e710b1c11ea2ae6d",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:a955fed66ece5962f046e6e1280f3a0396932df89228b999207b478bad23be2b",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:ab8371f431fee6fd6994cbb67ac3ad480884322886134b763e79e5f67b9eddde",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:abaf11784b21694f1cec0192f0baca97f2a22e4c91e95487a7920bd7ac4c8d48",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:ad374c2a017abe659f91b5b92fa13c190996ed8ef80e154380664784858fedc5",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:aecdd92ee64465efb226d585eb129f43d4cb9f46cedc8d121fbbfaae192db4ed",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:af2e75a02a7f13e2e16a9bf2c3554989f39ce61aae4b71139b3b730c88d272c7",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:af38ac58b79bf0faccad18a5fb83cf57ec3e6772e6b35380d852c3a3aa09b561",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:b14f416d9732c995d0c7f737b5a0ccd36cf7d126fbb7684955f9f63a5f116eec",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:b21736a8f7c03aaa98d57275ce5dd40342ced6f043c3fccbf15a87ca6fbb60c0",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:b25a7e05cd6dde24bdfadfac0e52fa6acfcd994f53265de59a25a2ebe6eeaa4d",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:b40191b141b4c17287208a3e75771ebd19e88558a1829297aeebe450e088573e",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:b4061bddf2bb39068a4a65ec5d5b35f63f66fb22abb77e403246f7373a35eaf1",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:b775b12fee52e40c4800993134840059a2b9aec70a6f01c3805f3abca71d9d73",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:bd51fb27003d1decde91a13611d8ca3d24a88115763ef1bf344dadddb6b0b6a2",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:bd76258a16196540bbd29fe6736efe81bd198846f666ff64d7fecd12c3154be6",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:bdc53596803df1155513dc0d3afb3a6beac57e417a3a41aebb4705edd0e079ea",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:bdd14d170462907667fee549cd3bf1c11d2be65b5cdb0c1deb8f75a9ebb0c81c",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:be1d85e53bc69e2d38010339508cc600b25dd4b2439410655e1d2cbfafda91a3",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:bea35314c73662e0ecab69c59134a01dc9a07bc2e3e71e9f67ec237449626261",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:bea554c7ee4147fde9a134878b3bf814b60f519cda90a5c858cba5afa87f9f93",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:bfd76e11fa8d0feebc27ba699a6353ae90b82d227aaf9c1fe9e14d456c74427b",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:c03b39fcb8b42349eaf71f3fd008884664c21036340a83d44a92643d44643eca",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:c0c8255a9cea07516ebc7915d36f19195a0c42b7e97ba48c1514710c615248e1",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:c0ead1bd7c52f7e56dc05c6cde27982ef9a606940b0c93f1e4680bbdbd74e881",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:c4b05426e55ee1fe4b93b65ab481bda6929988b3fdc61dc6d3dc2343f13ae4cb",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:c4c25940cdc6376be5c52f03babea443e2947f3db07b8001efd1440bb9e90365",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:c4c75e1ba2fedd35bfe65202fb91ca4f330fc233540d1e19eabcb485a4eb731b",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:c5da97dc858b5f5a506d9391d30a110a7090b2bf69de17d57a3d43bd9e795891",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:c7252ac41d09e18f35aebe3ef5d78d68d965261141e6c90aaba40e96c78c3ae7",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:c7fcbce506a4cc4dcf0b7705a7645ac5843e264c505b663cc08a7eaef0654e39",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:c8428632339743068a5dc70c7d55afa02cc8842812391eb4253bec019c48da04",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:c884a80142d0ba09edc27376f53658262be3140940dc7cc5052aa9ad81e929d2",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:c9ebe1641f691d6ea786e4781a804379b4955050d95f1dfb02503f4ae7ad074d",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:ca5861a1fae39100be10fc1597e9efb185246a513bb545a3445dabfef3873511",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:cd45ad1dbba104a3299413a838831b35270bf19281e1375b4e1e283c47b85ece",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:ce9f89bf2f2e61b4db1a2cb5302e04e787623e06fd5ad290cec59d83da7ac772",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:cfb1388087eeaf9d116fcaa848b601415662797850d011149e11a08077fa4e02",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:d233bdcdb2cc4b94f41c0075e3ba2a132b201c48147f3fd08d7779ed5aa1523f",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:d37bfca0408a3ba0dd2d7e57a376a3dc7db01b6b331751f0487e68b52050c5a7",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:d4886f66046476a082f80ed71ce885c31e3b240477bdb7b9b3eaa3b2088713b4",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:d791d14a8b2124122f3db38f908ff9fa73bc107cdde9ebfbfa3bb1f91b1e7b1f",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:d88d15798c489e7b8d9a2adcf7ab75f040127446967a5a9eaab8e111a8e2a4fa",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:d901e6ed2888fa559f084beaa3d4b458b97d56486bd821de2efad2c935035261",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:daa9541b27f135e38a65898dd3f319342f6d198cc1b86fbf2e8d264fab984ab4",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:daecfc6c8a3fd68be4f5758036515c7841c7b540aec0056cb01f74d4ef9877ec",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:dbe472424fb93ebb95ac0c5cdbe4afab6438fb486149d15c8e1affdf11079b52",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:dcf6147f24acea66560af5e73fbe6fca46d8fcb86d5adc585fc074b7d77d2c90",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:de61121e662b36c9dadefca0ac4c621b548d9dd17eb0666b86ff36ab04b63af2",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:de897a3369204b129d3b9ecc841c8e07a1426f40b27e5ad144ffebaeaeacf23b",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:e31c54079b1d3c25cc73a1437cde4125665b4c16305a46a817d1cb19c184af12",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:e4687908f1deb983ac8a8ec2813d595ac8b261271ca0c90b907d8f44dc713169",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:e4b6605e96a72b754d2b62a49819cc068a95aaf160eea5dbb460524b669c42ce",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:e666d52c78a7c718d5d5f93bb65220ec3c198001efd3ffb02f23b030ae3d6046",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:e69f8b42bddb92b7bb850fbd2b00581a7179721ae3060faf97feb8caa65c78ac",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:e705bce9964a0aa5928111a8ef50aa31e27115b6760682125f6fa4e0f832908b",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:e9de59228480fefd255b8e93427e68b6b20bdbaa2271ed7ed0ea457353dcd5de",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:eaca8ada3ea0e5d3f45744bb77d4346c00f2710858a3bfb7f916107f983acdd6",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:ee8f35e7ae6b3eef2632219fb679a042fd48e19af6ece3483be247028fb74b07",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:ef5b768fc941db552f80dfc4a2743214aa94df01a884d563d662f2ad734a6c06",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:f319c93a380d72be139bd708c61bb9d4906858c4fc7ccc4e395b6ee86316d934",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:f3407802a52589caca861590bce4f75258cda2ea5e2ec5ddfff7df26acaf05d6",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:f3d23af1e91b685a88ae20a76403561c64a63e9e387414be3d14a6129a38fdd6",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:f4754b0d815b60ccf1106fe131444cdbce819f6d3820002c8d67feba162b4fc3",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:f57e64203f7975045cf587fbd13f59025378faeb7a43ca91f44a150072b6daba",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:f682a99f42880babd80ce8c78ed45d1a76033127dc6e56015b6c11577f35b822",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:f6a269f910d3682d43929c799369cd22235b5accc06ac793ddb209e49df8fcd5",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:f8e0d7540c3d654c992d57341f3fd087b5b803bd19afc0f685d3c51eef7431bc",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:f9215cb891bcac51782756971de44a1936baf6b75a4698968bfcda58f722b95a",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:fa748017d318939c4be2ea51da7a20b7e88c57c4e9cb66e26fe698ea186b8d9c",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:fa7af08e727a958532bb6bca83634e7932986a7060ddcca79586204b08ddea57",
+      "split": "test"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:fc401a6f5be16dbac0329355cc08a7c9c4ddf29543d062d0a4e8b433ac8f42c3",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:fcdbf0d69dd899a910707775261fed901a0647b7cb65a1c9bca68c3bae6552a0",
+      "split": "validation"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:fda8f3e9297f2ba20709165cd16a3f481465f9e313d6473ecc14160519a64ff5",
+      "split": "train"
+    },
+    {
+      "query_id": "adaptive_rag_bench_v1:nq:ff56fc7f0d834167911801b432849e5eceed90d568234b6a2de1e09cc3a2b61e",
+      "split": "train"
+    }
+  ],
+  "benchmark_id": "adaptive_rag_bench_v1",
+  "benchmark_manifest_sha256": "c5d959ca1da8c5b5e977af948c96012efc3a0754599e34edcefff30755e1ef76",
+  "schema_version": "v1",
+  "split_hash": "b01deb380f039447d626bb7b9d74ca344d3a55dc22cf9fea725d90049a5e1a31",
+  "split_seed": 20260809
+}

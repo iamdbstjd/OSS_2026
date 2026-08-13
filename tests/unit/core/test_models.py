@@ -13,6 +13,7 @@ from ragplan.core.models import (
     BranchStatus,
     Chunk,
     GraphPath,
+    GraphSeedMatch,
     IngestionManifest,
     IngestionStoreStatus,
     PlanDefinition,
@@ -385,6 +386,31 @@ def test_graph_path_rejects_cycles_and_disconnected_relations() -> None:
         GraphPath(entity_ids=("entity-a", "entity-b", "entity-a"), relations=(relation, relation))
 
 
+def test_exact_graph_seed_scores_cannot_be_probabilistic() -> None:
+    matched = {
+        "mention_sha256": "a" * 64,
+        "requested_entity_id": "entity-a",
+        "matched_entity_id": "entity-a",
+    }
+    assert GraphSeedMatch(**matched, lookup_score=1.0).lookup_score == 1.0
+    assert (
+        GraphSeedMatch(
+            mention_sha256="a" * 64,
+            requested_entity_id="entity-a",
+            lookup_score=0.0,
+        ).matched_entity_id
+        is None
+    )
+    with pytest.raises(ValidationError, match="exact seed lookup"):
+        GraphSeedMatch(**matched, lookup_score=0.5)
+    with pytest.raises(ValidationError, match="exact seed lookup"):
+        GraphSeedMatch(
+            mention_sha256="a" * 64,
+            requested_entity_id="entity-a",
+            lookup_score=0.5,
+        )
+
+
 def test_only_reconciled_ingestion_can_be_active() -> None:
     values = {
         "ingestion_run_id": "run-1",
@@ -410,4 +436,14 @@ def test_only_reconciled_ingestion_can_be_active() -> None:
         IngestionManifest(**{**values, "neo4j_count": 1})
     with pytest.raises(ValidationError, match="reconciled"):
         IngestionManifest(**{**values, "qdrant_count": 0, "neo4j_count": 0})
+    with pytest.raises(ValidationError, match="reconciled"):
+        IngestionManifest(
+            **{
+                **values,
+                "document_count": 0,
+                "chunk_count": 0,
+                "qdrant_count": 0,
+                "neo4j_count": 0,
+            }
+        )
     (Chunk,)

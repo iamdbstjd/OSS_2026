@@ -7,9 +7,11 @@ import math
 from collections.abc import Sequence
 from uuid import UUID
 
+import httpx
 import pytest
 from qdrant_client import AsyncQdrantClient
 from qdrant_client.http import models
+from qdrant_client.http.exceptions import ResponseHandlingException
 
 from ragplan.backends.vector.qdrant import (
     VECTOR_SIZE,
@@ -21,7 +23,7 @@ from ragplan.backends.vector.qdrant import (
     collection_name_for_version,
 )
 from ragplan.core.deadline import Deadline, ManualClock
-from ragplan.core.errors import ErrorCode, RAGPlanError
+from ragplan.core.errors import ErrorCode, RAGPlanError, TimeoutOrigin
 from ragplan.core.ids import canonical_chunk_id, canonical_document_id, qdrant_point_id
 from ragplan.core.models import Chunk
 
@@ -162,6 +164,28 @@ async def test_stage_verification_rejects_count_or_checksum_drift() -> None:
             await manager.verify_stage(stage.model_copy(update={"chunk_count": 2}))
 
         assert captured.value.code is ErrorCode.CORPUS_INCONSISTENT
+    finally:
+        await client.close()
+
+
+@pytest.mark.asyncio
+async def test_explicit_version_discard_is_idempotent() -> None:
+    client = AsyncQdrantClient(location=":memory:")
+    manager = _local_manager(client, prefix="discard_chunks")
+    writer = QdrantVectorWriter(manager)
+    try:
+        await writer.stage_chunks(
+            (_chunk(0, "discardable evidence"),),
+            (_vector(),),
+            "corpus-v1",
+            embedding_artifact_manifest_sha256="b" * 64,
+        )
+        assert await client.collection_exists(manager.collection_name("corpus-v1"))
+
+        await manager.discard_version("corpus-v1")
+        await manager.discard_version("corpus-v1")
+
+        assert not await client.collection_exists(manager.collection_name("corpus-v1"))
     finally:
         await client.close()
 
@@ -556,3 +580,26 @@ async def test_health_and_close_contract() -> None:
     await backend.close()
 
     assert health.available is True
+
+
+@pytest.mark.asyncio
+async def test_qdrant_transport_timeout_is_typed_as_backend_client_timeout() -> None:
+    class TimeoutClient:
+        async def query_points(self, **kwargs: object) -> None:
+            del kwargs
+            raise ResponseHandlingException(httpx.ReadTimeout("transport timeout"))
+
+    class OnlineManager:
+        client = TimeoutClient()
+
+        async def require_collection(self, corpus_version: str) -> str:
+            del corpus_version
+            return "collection"
+
+    backend = QdrantVectorBackend(OnlineManager())  # type: ignore[arg-type]
+
+    with pytest.raises(RAGPlanError) as captured:
+        await backend.search(_vector(), 1, "corpus-v1", Deadline.start(200))
+
+    assert captured.value.code is ErrorCode.DEADLINE_EXCEEDED
+    assert captured.value.timeout_origin is TimeoutOrigin.BACKEND_CLIENT

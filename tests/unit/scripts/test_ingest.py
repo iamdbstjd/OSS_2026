@@ -176,6 +176,27 @@ def test_stage_manifest_write_is_complete_and_never_active(tmp_path: Path) -> No
     assert not tuple(target.parent.glob(f".{target.name}.*.tmp"))
 
 
+def test_chunk_handoff_jsonl_contains_exact_vector_stage_chunks(tmp_path: Path) -> None:
+    chunks = (
+        Chunk(
+            id="v1:chunk:fixture:0:abc",
+            document_id="v1:document:fixture:one",
+            corpus_version="sample-v1",
+            position=0,
+            text="exact graph handoff",
+            token_count=3,
+        ),
+    )
+    target = tmp_path / "state" / "chunks.jsonl"
+
+    command.write_chunks_jsonl(target, chunks)
+
+    assert [Chunk.model_validate_json(line) for line in target.read_text().splitlines()] == list(
+        chunks
+    )
+    assert not tuple(target.parent.glob(f".{target.name}.*.tmp"))
+
+
 def test_parser_error_is_json_and_does_not_echo_argument(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
