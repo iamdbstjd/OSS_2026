@@ -7,6 +7,7 @@ import hashlib
 from collections.abc import Callable, Sequence
 from typing import Protocol, runtime_checkable
 
+from ragplan.backends.graph.base import GraphBackend
 from ragplan.backends.vector.base import VectorBackend
 from ragplan.core.deadline import (
     NANOSECONDS_PER_MILLISECOND,
@@ -15,6 +16,7 @@ from ragplan.core.deadline import (
     PerfCounterClock,
 )
 from ragplan.core.errors import ErrorCode, RAGPlanError, TimeoutOrigin
+from ragplan.core.health import EngineReadinessSnapshot, RuntimeProfile
 from ragplan.core.models import (
     BranchKind,
     BranchResult,
@@ -49,11 +51,7 @@ from ragplan.planner.features import (
 )
 from ragplan.planner.rule import RulePlanner, load_default_rule_planner_config
 from ragplan.retrieval.fusion import annotate_single_source, weighted_rrf_v1
-from ragplan.retrieval.graph import (
-    GraphExecutionBackend,
-    GraphQueryAnalyzer,
-    execute_graph_search,
-)
+from ragplan.retrieval.graph import GraphQueryAnalyzer, execute_graph_search
 from ragplan.retrieval.vector import execute_vector_search
 from ragplan.scheduler.cancellation import cancel_and_await
 from ragplan.scheduler.executor import (
@@ -97,6 +95,13 @@ class SearchEngine(Protocol):
     async def close(self) -> None: ...
 
 
+@runtime_checkable
+class ReadinessProvider(Protocol):
+    """Optional operational surface implemented by production search engines."""
+
+    async def readiness(self) -> EngineReadinessSnapshot: ...
+
+
 class VectorSearchEngine:
     """Execute explicit vector retrieval against one vector-staged corpus version.
 
@@ -114,6 +119,7 @@ class VectorSearchEngine:
         vector_stage: VectorStageManifest,
         clock: MonotonicClock | None = None,
         rule_planner: RulePlanner | None = None,
+        active_corpus: bool = False,
     ) -> None:
         self._embedder = embedder
         self._vector_backend = vector_backend
@@ -121,6 +127,7 @@ class VectorSearchEngine:
         self._vector_stage = vector_stage
         self._corpus_version = vector_stage.corpus_version
         self._model_revision = vector_stage.embedding_model_revision
+        self._active_corpus = active_corpus
         self._clock = clock if clock is not None else PerfCounterClock()
         self._feature_config = load_default_query_feature_config()
         self._rule_planner = (
@@ -296,6 +303,19 @@ class VectorSearchEngine:
     async def close(self) -> None:
         await self._vector_backend.close()
 
+    async def readiness(self) -> EngineReadinessSnapshot:
+        return EngineReadinessSnapshot(
+            profile=(
+                RuntimeProfile.VECTOR_ACTIVE
+                if self._active_corpus
+                else RuntimeProfile.VECTOR_STAGED
+            ),
+            corpus_version=self._corpus_version,
+            active_corpus=self._active_corpus,
+            supported_modes=(PlannerMode.VECTOR, PlannerMode.RULE),
+            vector=await self._vector_backend.health(),
+        )
+
 
 class GraphSearchEngine:
     """Execute explicit graph retrieval against one reconciled active corpus."""
@@ -304,7 +324,7 @@ class GraphSearchEngine:
         self,
         *,
         analyzer: GraphQueryAnalyzer,
-        graph_backend: GraphExecutionBackend,
+        graph_backend: GraphBackend,
         plan_catalog: PlanCatalog,
         active_manifest: IngestionManifest,
         clock: MonotonicClock | None = None,
@@ -417,6 +437,15 @@ class GraphSearchEngine:
     async def close(self) -> None:
         await self._graph_backend.close()
 
+    async def readiness(self) -> EngineReadinessSnapshot:
+        return EngineReadinessSnapshot(
+            profile=RuntimeProfile.GRAPH_ACTIVE,
+            corpus_version=self._corpus_version,
+            active_corpus=True,
+            supported_modes=(PlannerMode.GRAPH,),
+            graph=await self._graph_backend.health(),
+        )
+
 
 class BaselineSearchEngine:
     """Serve explicit baselines and deterministic rule adaptation over one corpus."""
@@ -429,7 +458,7 @@ class BaselineSearchEngine:
         embedder: QueryEmbedder,
         vector_backend: VectorBackend,
         analyzer: GraphQueryAnalyzer,
-        graph_backend: GraphExecutionBackend,
+        graph_backend: GraphBackend,
         plan_catalog: PlanCatalog,
         active_manifest: IngestionManifest,
         vector_stage: VectorStageManifest,
@@ -1274,6 +1303,25 @@ class BaselineSearchEngine:
             raise vector_error
         if graph_error is not None:
             raise graph_error
+
+    async def readiness(self) -> EngineReadinessSnapshot:
+        vector, graph = await asyncio.gather(
+            self._vector_backend.health(),
+            self._graph_backend.health(),
+        )
+        return EngineReadinessSnapshot(
+            profile=RuntimeProfile.DUAL_STORE_ACTIVE,
+            corpus_version=self._active_manifest.corpus_version,
+            active_corpus=True,
+            supported_modes=(
+                PlannerMode.VECTOR,
+                PlannerMode.GRAPH,
+                PlannerMode.FIXED_HYBRID,
+                PlannerMode.RULE,
+            ),
+            vector=vector,
+            graph=graph,
+        )
 
 
 async def _embed_before_cutoff(

@@ -15,10 +15,13 @@ from pydantic import BaseModel
 
 from ragplan import __version__
 from ragplan.api.middleware import RequestBodyLimitMiddleware, request_id_from_scope
+from ragplan.api.readiness import ReadinessResponse, inspect_readiness
 from ragplan.api.runtime import build_search_engine_from_environment
 from ragplan.core.engine import SearchEngine
 from ragplan.core.errors import ErrorCode, ErrorResponse, RAGPlanError
 from ragplan.core.models import SearchRequest, SearchResponse
+from ragplan.ingestion.audit import load_graph_tier_policy
+from ragplan.observability.metrics import MetricsRegistry, MetricsSnapshot
 from ragplan.planner.catalog import load_default_plan_catalog, load_plan_catalog
 from ragplan.scheduler.cancellation import run_until_disconnect
 
@@ -53,6 +56,7 @@ def create_app(
     plan_catalog_path: Path | None = None,
     search_engine: SearchEngine | None = None,
     runtime_factory: Callable[[], Awaitable[SearchEngine | None]] | None = None,
+    metrics_registry: MetricsRegistry | None = None,
 ) -> FastAPI:
     """Create the local single-process RAGPlan API application."""
 
@@ -86,9 +90,12 @@ def create_app(
     api.add_middleware(RequestBodyLimitMiddleware)
     api.state.plan_catalog = plan_catalog
     api.state.search_engine = search_engine
+    api.state.metrics = metrics_registry if metrics_registry is not None else MetricsRegistry()
+    api.state.graph_tier_policy = load_graph_tier_policy()
 
     @api.exception_handler(RAGPlanError)
     async def ragplan_error_handler(request: Request, error: RAGPlanError) -> JSONResponse:
+        _record_error_metric(request, error.code)
         return _error_response(error, request)
 
     @api.exception_handler(RequestValidationError)
@@ -98,6 +105,7 @@ def create_app(
         invalid_query = any("query" in item["loc"] for item in error.errors())
         code = ErrorCode.INVALID_QUERY if invalid_query else ErrorCode.INVALID_REQUEST
         message = "query is invalid" if invalid_query else "request validation failed"
+        _record_error_metric(request, code)
         return _error_response(RAGPlanError(code, message), request)
 
     @api.exception_handler(Exception)
@@ -109,6 +117,7 @@ def create_app(
             type(error).__name__,
         )
         internal_error = RAGPlanError(ErrorCode.INTERNAL_ERROR, "internal server error")
+        _record_error_metric(request, internal_error.code)
         return JSONResponse(
             status_code=internal_error.http_status,
             content=internal_error.response(request_id).model_dump(mode="json"),
@@ -117,6 +126,28 @@ def create_app(
     @api.get("/health", response_model=HealthResponse, tags=["health"])
     async def health() -> HealthResponse:
         return HealthResponse(status="ok")
+
+    @api.get(
+        "/ready",
+        response_model=ReadinessResponse,
+        responses={503: {"model": ReadinessResponse, "description": "Runtime not ready"}},
+        tags=["health"],
+    )
+    async def ready() -> JSONResponse:
+        engine = cast(SearchEngine | None, api.state.search_engine)
+        response, status_code = await inspect_readiness(
+            engine,
+            graph_tier_enabled=api.state.graph_tier_policy.graph_tier_enabled,
+        )
+        return JSONResponse(
+            status_code=status_code,
+            content=response.model_dump(mode="json"),
+        )
+
+    @api.get("/metrics", response_model=MetricsSnapshot, tags=["observability"])
+    async def metrics() -> MetricsSnapshot:
+        registry = cast(MetricsRegistry, api.state.metrics)
+        return registry.snapshot()
 
     @api.post(
         "/v1/search",
@@ -131,18 +162,33 @@ def create_app(
     async def search_contract(request: Request, search_request: SearchRequest) -> SearchResponse:
         """Run the configured engine while retaining a stable unready state."""
 
+        registry = cast(MetricsRegistry, api.state.metrics)
+        registry.record_request(search_request.planner)
+        request.scope["ragplan_metrics_counted"] = True
         engine = cast(SearchEngine | None, api.state.search_engine)
         if engine is None:
             raise RAGPlanError(ErrorCode.NOT_READY, "search engine is not initialized")
-        return await run_until_disconnect(
+        response = await run_until_disconnect(
             engine.search(
                 search_request,
                 request_id=request_id_from_scope(request.scope),
             ),
             wait_for_disconnect=lambda: _wait_for_http_disconnect(request),
         )
+        registry.record_success(response)
+        return response
 
     return api
+
+
+def _record_error_metric(request: Request, code: ErrorCode) -> None:
+    if request.url.path != "/v1/search":
+        return
+    registry = cast(MetricsRegistry, request.app.state.metrics)
+    if not request.scope.get("ragplan_metrics_counted"):
+        registry.record_request(None)
+        request.scope["ragplan_metrics_counted"] = True
+    registry.record_error(code)
 
 
 app = create_app()
