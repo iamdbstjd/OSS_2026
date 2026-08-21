@@ -151,6 +151,7 @@ services:
         condition: service_healthy
     entrypoint: [".venv/bin/ragplan", "benchmark"]
     command: ["--help"]
+    user: "${RAGPLAN_HOST_UID:-1000}:${RAGPLAN_HOST_GID:-1000}"
     environment:
       RAGPLAN_STAGE6_MODEL_SNAPSHOT: "${RAGPLAN_STAGE6_MODEL_SNAPSHOT:-}"
       RAGPLAN_STAGE6_VECTOR_STAGE_MANIFEST: "${RAGPLAN_STAGE6_VECTOR_STAGE_MANIFEST:-}"
@@ -166,6 +167,8 @@ services:
       RAGPLAN_FORCE_VECTOR_ONLY: "false"
       RAGPLAN_DISABLE_COST_AWARE: "true"
     read_only: true
+    tmpfs:
+      - /tmp:size=2g
     volumes:
       - type: bind
         source: ${RAGPLAN_STAGE3_MODELS_HOST_DIR:-./models}
@@ -178,8 +181,6 @@ services:
       - type: bind
         source: ./benchmark/results
         target: /app/benchmark/results
-    tmpfs:
-      - /tmp:size=64m
     security_opt:
       - no-new-privileges:true
 

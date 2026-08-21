@@ -452,6 +452,39 @@ class Neo4jGraphWriter:
             raise RAGPlanError(ErrorCode.CORPUS_INCONSISTENT, _CORPUS_MESSAGE)
         return manifest
 
+    async def recover_stage(self, corpus_version: str) -> GraphStageManifest:
+        """Recover local evidence only from an already sealed, live-verified marker."""
+
+        if not corpus_version.strip():
+            raise ValueError("corpus_version must not be blank")
+        try:
+            marker = _one_record(
+                await self._execute(
+                    _READ_MARKER,
+                    {"corpus_version": corpus_version},
+                ),
+                "corpus version marker",
+            )
+            if marker.get("status") != "graph_staged":
+                raise RAGPlanError(ErrorCode.CORPUS_INCONSISTENT, _CORPUS_MESSAGE)
+            recovered = GraphStageManifest(
+                corpus_version=corpus_version,
+                database=self._config.database,
+                document_count=_required_nonnegative_int(marker, "document_count"),
+                chunk_count=_required_nonnegative_int(marker, "chunk_count"),
+                entity_count=_required_nonnegative_int(marker, "entity_count"),
+                mention_count=_required_nonnegative_int(marker, "mention_count"),
+                relation_count=_required_nonnegative_int(marker, "relation_count"),
+                canonical_id_checksum=_required_string(marker, "canonical_id_checksum"),
+                graph_content_checksum=_required_string(marker, "graph_content_checksum"),
+                extractor_version=_required_string(marker, "extractor_version"),
+            )
+            return await self.verify_stage(recovered)
+        except RAGPlanError:
+            raise
+        except Exception as exc:
+            raise RAGPlanError(ErrorCode.DEPENDENCY_UNAVAILABLE, _DEPENDENCY_MESSAGE) from exc
+
     async def discard_version(self, corpus_version: str) -> None:
         """Delete one explicit inactive/failed graph version; never called implicitly."""
 
@@ -1058,5 +1091,12 @@ def _one_record(
 def _required_string(record: Mapping[str, object], field_name: str) -> str:
     value = record.get(field_name)
     if not isinstance(value, str) or not value:
+        raise RAGPlanError(ErrorCode.CORPUS_INCONSISTENT, _CORPUS_MESSAGE)
+    return value
+
+
+def _required_nonnegative_int(record: Mapping[str, object], field_name: str) -> int:
+    value = record.get(field_name)
+    if isinstance(value, bool) or not isinstance(value, int) or value < 0:
         raise RAGPlanError(ErrorCode.CORPUS_INCONSISTENT, _CORPUS_MESSAGE)
     return value

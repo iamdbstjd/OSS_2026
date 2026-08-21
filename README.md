@@ -433,6 +433,33 @@ validation-only BestFixed lock, environment/run/protocol manifest와 checksum을
 DB에 수집·활성화되고 전용 측정 환경이 준비된 뒤 실행해야 하며, 대용량 raw 결과는
 기본적으로 Git에서 제외됩니다.
 
+## Stage 10 offline plan profiler
+
+Stage 10은 train/validation 480개 각각에 대해 P0-enabled P0/P1/P2/P3/P4/P5/P6/P8을
+50/100/200/500ms에서 전수 실행합니다. 각 query-plan-budget은 cold 1회, warmup 2회,
+measured 10회를 유지하며 held-out test split은 loader와 runner 양쪽에서 거부됩니다. 공개
+API의 plan 계약은 확장하지 않고, benchmark 전용 진입점이 production analyzer, absolute
+deadline, Stage 7 scheduler, fallback, fusion 경로를 그대로 사용합니다.
+
+Stage 9과 동일한 전용 환경 manifest 및 Stage 6 active corpus 설정을 사용합니다.
+
+```bash
+docker compose --profile benchmark run --rm benchmark profile \
+  --run-id plans_20260819 \
+  --environment-manifest /opt/ragplan/artifacts/benchmark_environment.json \
+  --confirm-dedicated
+
+docker compose --profile benchmark run --rm benchmark profile-aggregate \
+  --run-id plans_20260819
+```
+
+완료 시 `benchmark/results/profile_<run_id>/`에 append-only raw trial, 평탄화된 query/plan
+feature CSV와 canonical JSONL training matrix, budget별 Oracle label/distribution, environment와
+모든 derived artifact checksum이 생성됩니다. Oracle은 measured p95 execution latency가
+budget 이하인 완전한 plan row 중 Recall@10 최대값을 선택하며, 동률은 낮은 p95, 낮은 graph
+depth, 낮은 plan ID 순으로 해소합니다. Timeout/error와 trace/hash 불일치는 삭제하지 않고
+명시적인 exclusion reason으로 남깁니다.
+
 ## 라이선스
 
 RAGPlan은 Apache License 2.0으로 배포됩니다. 제3자 소프트웨어, 모델 및 dataset은

@@ -24,6 +24,7 @@ from ragplan.core.models import (
     FusionTrace,
     GraphStageManifest,
     IngestionManifest,
+    PlanDefinition,
     PlannerDecision,
     PlannerMode,
     QueryAnalysis,
@@ -500,7 +501,12 @@ class BaselineSearchEngine:
     async def search(self, request: SearchRequest, *, request_id: str) -> SearchResponse:
         """Run every explicit baseline through the frozen Stage 7 scheduler."""
 
-        return await self._run_search(request, request_id=request_id, graph_depth_override=None)
+        return await self._run_search(
+            request,
+            request_id=request_id,
+            graph_depth_override=None,
+            profile_plan_id=None,
+        )
 
     async def benchmark_graph_search(
         self,
@@ -521,6 +527,54 @@ class BaselineSearchEngine:
             request,
             request_id=request_id,
             graph_depth_override=graph_depth,
+            profile_plan_id=None,
+        )
+
+    async def benchmark_plan_search(
+        self,
+        request: SearchRequest,
+        *,
+        request_id: str,
+        plan_id: str,
+    ) -> SearchResponse:
+        """Execute one immutable P0 plan through the final scheduler path.
+
+        This is an offline-profiler surface, not a public request alias.  It keeps
+        P1/P3 directly measurable without weakening ``SearchRequest`` validation.
+        """
+
+        try:
+            plan = self._plan_catalog.plan_for_id(plan_id)
+        except KeyError as exc:
+            raise RAGPlanError(
+                ErrorCode.PLAN_INVARIANT_VIOLATION,
+                "profiler plan is absent from the immutable catalog",
+                retryable=False,
+            ) from exc
+        if not plan.enabled_in_p0 or plan.rerank_enabled:
+            raise RAGPlanError(
+                ErrorCode.PLAN_INVARIANT_VIOLATION,
+                "profiler accepts only enabled P0 plans",
+                retryable=False,
+            )
+        expected_mode = self._mode_for_plan(plan)
+        if request.planner is not expected_mode:
+            raise RAGPlanError(
+                ErrorCode.INVALID_REQUEST,
+                "profiler request mode does not match the selected plan",
+                retryable=False,
+            )
+        if expected_mode is PlannerMode.FIXED_HYBRID and request.plan_id != plan.id:
+            raise RAGPlanError(
+                ErrorCode.INVALID_REQUEST,
+                "profiler hybrid request must name the selected plan",
+                retryable=False,
+            )
+        return await self._run_search(
+            request,
+            request_id=request_id,
+            graph_depth_override=None,
+            profile_plan_id=plan.id,
         )
 
     async def _run_search(
@@ -529,6 +583,7 @@ class BaselineSearchEngine:
         *,
         request_id: str,
         graph_depth_override: int | None,
+        profile_plan_id: str | None,
     ) -> SearchResponse:
         """Share lifecycle, admission, scheduler, and deadline semantics across callers."""
 
@@ -551,6 +606,7 @@ class BaselineSearchEngine:
                     states=states,
                     switches=switches,
                     graph_depth_override=graph_depth_override,
+                    profile_plan_id=profile_plan_id,
                 )
         except BaseException:
             states.fail_if_possible()
@@ -568,12 +624,19 @@ class BaselineSearchEngine:
         states: RequestStateMachine,
         switches: KillSwitchSnapshot,
         graph_depth_override: int | None,
+        profile_plan_id: str | None,
     ) -> SearchResponse:
         force_vector = switches.force_vector_only
-        if force_vector and graph_depth_override is not None:
+        if force_vector and (graph_depth_override is not None or profile_plan_id is not None):
             raise RAGPlanError(
                 ErrorCode.MODE_UNAVAILABLE,
-                "force-vector kill switch disables graph-depth benchmark execution",
+                "force-vector kill switch disables benchmark override execution",
+            )
+        if graph_depth_override is not None and profile_plan_id is not None:
+            raise RAGPlanError(
+                ErrorCode.PLAN_INVARIANT_VIOLATION,
+                "benchmark depth and profiler plan overrides are mutually exclusive",
+                retryable=False,
             )
         if (
             not force_vector
@@ -598,7 +661,23 @@ class BaselineSearchEngine:
 
         states.transition(RequestState.ANALYZING)
         effective_mode = PlannerMode.VECTOR if force_vector else request.planner
-        if effective_mode is PlannerMode.RULE:
+        if profile_plan_id is not None:
+            profile_plan = self._plan_catalog.plan_for_id(profile_plan_id)
+            effective_mode = self._mode_for_plan(profile_plan)
+            analyzer_execution = await self._query_analyzer.analyze(
+                request.query,
+                final_top_k=request.top_k,
+                deadline=deadline,
+            )
+            analysis = analyzer_execution.analysis
+            embedding_latency_ms = analyzer_execution.embedding_latency_ms
+            if analyzer_execution.feature_config_sha256 != self._rule_planner.feature_config_sha256:
+                raise RAGPlanError(
+                    ErrorCode.PLAN_INVARIANT_VIOLATION,
+                    "query analyzer and profiler feature configs do not match",
+                    retryable=False,
+                )
+        elif effective_mode is PlannerMode.RULE:
             analyzer_execution = await self._query_analyzer.analyze(
                 request.query,
                 final_top_k=request.top_k,
@@ -628,7 +707,13 @@ class BaselineSearchEngine:
 
         states.transition(RequestState.PLANNING)
         planner_started_ns = self._clock.now_ns()
-        if effective_mode is PlannerMode.RULE:
+        if profile_plan_id is not None:
+            decision = self._select_profile_plan(
+                request,
+                deadline,
+                plan_id=profile_plan_id,
+            )
+        elif effective_mode is PlannerMode.RULE:
             graph_circuit = await self._graph_circuit.snapshot()
             decision = self._rule_planner.select(
                 analysis,
@@ -740,6 +825,64 @@ class BaselineSearchEngine:
                 "response finalization deadline exceeded",
             )
         return response
+
+    def _select_profile_plan(
+        self,
+        request: SearchRequest,
+        deadline: Deadline,
+        *,
+        plan_id: str,
+    ) -> PlannerDecision:
+        """Build a decision for one catalog plan without bypassing runtime execution."""
+
+        plan = self._plan_catalog.plan_for_id(plan_id)
+        if not plan.enabled_in_p0 or plan.rerank_enabled:
+            raise RAGPlanError(
+                ErrorCode.PLAN_INVARIANT_VIOLATION,
+                "profiler plan is not enabled in P0",
+                retryable=False,
+            )
+        effective_mode = self._mode_for_plan(plan)
+        if request.planner is not effective_mode:
+            raise RAGPlanError(
+                ErrorCode.PLAN_INVARIANT_VIOLATION,
+                "profiler plan and request mode diverged",
+                retryable=False,
+            )
+        remaining_ms = deadline.snapshot().branch_remaining_ms
+        if remaining_ms <= 0:
+            raise RAGPlanError(ErrorCode.DEADLINE_EXCEEDED, "planning deadline exceeded")
+        return PlannerDecision(
+            mode=request.planner,
+            effective_mode=effective_mode,
+            selected_plan_id=plan.id,
+            selected_plan=plan,
+            executed_vector_top_k=(
+                max(request.top_k, plan.vector_top_k) if plan.vector_enabled else None
+            ),
+            executed_graph_top_k=(
+                max(request.top_k, plan.graph_top_k) if plan.graph_enabled else None
+            ),
+            remaining_budget_ms=remaining_ms,
+            budget_feasible=True,
+            selection_reason=f"Stage 10 offline profiler; immutable {plan.id} preset",
+            feature_version=FEATURE_VERSION,
+            config_version=self._plan_catalog.sha256(),
+        )
+
+    @staticmethod
+    def _mode_for_plan(plan: PlanDefinition) -> PlannerMode:
+        if plan.vector_enabled and plan.graph_enabled:
+            return PlannerMode.FIXED_HYBRID
+        if plan.vector_enabled:
+            return PlannerMode.VECTOR
+        if plan.graph_enabled:
+            return PlannerMode.GRAPH
+        raise RAGPlanError(
+            ErrorCode.PLAN_INVARIANT_VIOLATION,
+            "profiler plan has no retrieval branch",
+            retryable=False,
+        )
 
     async def _analyze(
         self,

@@ -430,6 +430,56 @@ async def test_same_engine_serves_vector_graph_and_all_fixed_presets() -> None:
         assert response.planner_decision.selected_plan_id == plan_id
 
 
+@pytest.mark.asyncio
+async def test_stage10_profiler_executes_p1_and_p3_through_final_scheduler_path() -> None:
+    engine, vector, graph = _engine(ManualClock())
+
+    p1 = await engine.benchmark_plan_search(
+        SearchRequest(query="question", planner=PlannerMode.VECTOR),
+        request_id="profile-p1",
+        plan_id="P1",
+    )
+    p3 = await engine.benchmark_plan_search(
+        SearchRequest(query="question", planner=PlannerMode.GRAPH),
+        request_id="profile-p3",
+        plan_id="P3",
+    )
+
+    assert p1.planner_decision.selected_plan_id == "P1"
+    assert p3.planner_decision.selected_plan_id == "P3"
+    assert vector.calls == [(30, "corpus-v1")]
+    assert graph.calls == [("corpus-v1", 30, 3)]
+    assert p1.trace.features == p3.trace.features
+    assert p1.trace.scheduler_trace is not None
+    assert p3.trace.scheduler_trace is not None
+    assert p1.trace.config_version == load_default_plan_catalog().sha256()
+    assert p3.trace.config_version == load_default_plan_catalog().sha256()
+
+
+@pytest.mark.asyncio
+async def test_stage10_profiler_refuses_mode_mismatch_and_p7() -> None:
+    engine, _, _ = _engine(ManualClock())
+    with pytest.raises(RAGPlanError) as mismatch:
+        await engine.benchmark_plan_search(
+            SearchRequest(query="question", planner=PlannerMode.GRAPH),
+            request_id="profile-mismatch",
+            plan_id="P1",
+        )
+    assert mismatch.value.code is ErrorCode.INVALID_REQUEST
+
+    with pytest.raises(RAGPlanError) as disabled:
+        await engine.benchmark_plan_search(
+            SearchRequest(
+                query="question",
+                planner=PlannerMode.FIXED_HYBRID,
+                plan_id="P4",
+            ),
+            request_id="profile-p7",
+            plan_id="P7",
+        )
+    assert disabled.value.code is ErrorCode.PLAN_INVARIANT_VIOLATION
+
+
 def test_mismatched_graph_stage_is_rejected_before_serving() -> None:
     clock = ManualClock()
     with pytest.raises(RAGPlanError) as error:

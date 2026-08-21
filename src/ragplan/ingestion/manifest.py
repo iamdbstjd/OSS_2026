@@ -174,6 +174,7 @@ def _atomic_write(path: Path, payload: bytes) -> None:
         temporary_path = Path(temporary_name)
         with os.fdopen(descriptor, "wb") as output:
             descriptor = None
+            os.fchmod(output.fileno(), 0o644)
             output.write(payload)
             output.flush()
             os.fsync(output.fileno())

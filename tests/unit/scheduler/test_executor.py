@@ -121,6 +121,31 @@ async def test_application_timeout_cancels_and_awaits_only_pending_branch() -> N
 
 
 @pytest.mark.asyncio
+async def test_deadline_expired_before_first_task_turn_becomes_branch_timeout() -> None:
+    clock = ManualClock()
+    deadline = Deadline.start(25, clock=clock)
+    clock.advance_ms(25)
+    calls = 0
+
+    async def operation() -> BranchPayload:
+        nonlocal calls
+        calls += 1
+        return BranchPayload((_hit(BranchKind.VECTOR),))
+
+    execution = await SchedulerExecutor().execute(
+        (_work(BranchKind.VECTOR, operation),),
+        deadline=deadline,
+    )
+
+    result = execution.branch_results[0]
+    assert calls == 0
+    assert result.status is BranchStatus.TIMED_OUT
+    assert result.latency_ms == 0.0
+    assert result.cancellation_reason is CancellationReason.APPLICATION_DEADLINE
+    assert result.timeout_origin is TimeoutOrigin.APPLICATION_DEADLINE
+
+
+@pytest.mark.asyncio
 async def test_backend_error_does_not_discard_sibling_success_and_has_zero_retry() -> None:
     calls = 0
 

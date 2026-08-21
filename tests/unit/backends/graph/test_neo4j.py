@@ -218,6 +218,9 @@ async def test_graph_writer_is_parameterized_idempotent_and_timeout_bounded() ->
         if isinstance(parameters.get("rows"), list)
     )
 
+    recovered = await writer.recover_stage("fixture-v1")
+    assert recovered == first
+
 
 @pytest.mark.asyncio
 async def test_same_version_with_changed_graph_content_is_rejected_before_write() -> None:

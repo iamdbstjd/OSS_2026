@@ -445,6 +445,33 @@ The repository does not fabricate the actual 480-query measurements. Run the com
 the frozen corpus is ingested and activated in both stores and a dedicated measurement environment
 is ready; large raw results are ignored by Git by default.
 
+## Stage 10 offline plan profiler
+
+Stage 10 exhaustively executes P0-enabled P0/P1/P2/P3/P4/P5/P6/P8 for each of the 480
+train/validation queries at 50/100/200/500ms. Every query-plan-budget retains one cold run, two
+warmups, and ten measured trials; both the loader and runner reject the held-out test split. The
+public API plan contract remains unchanged. An internal benchmark entry point reuses the production
+analyzer, absolute deadline, Stage 7 scheduler, fallback, and fusion path.
+
+Use the same dedicated environment manifest and Stage 6 active-corpus configuration as Stage 9.
+
+```bash
+docker compose --profile benchmark run --rm benchmark profile \
+  --run-id plans_20260819 \
+  --environment-manifest /opt/ragplan/artifacts/benchmark_environment.json \
+  --confirm-dedicated
+
+docker compose --profile benchmark run --rm benchmark profile-aggregate \
+  --run-id plans_20260819
+```
+
+Completion writes append-only raw trials, flattened query/plan feature CSV and canonical JSONL
+training matrices, per-budget Oracle labels/distributions, and environment/derived-artifact
+checksums under `benchmark/results/profile_<run_id>/`. Oracle selects maximum Recall@10 among
+complete plan rows whose measured p95 execution latency is within budget, breaking ties by lower
+p95, lower graph depth, then lower plan ID. Timeouts, errors, and trace/hash mismatches are retained
+with explicit exclusion reasons.
+
 ## License
 
 RAGPlan is licensed under Apache License 2.0. Third-party software, models, and
