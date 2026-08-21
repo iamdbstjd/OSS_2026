@@ -92,3 +92,46 @@ active manifest를 만든 뒤 Stage 6 환경변수를 설정한다. 그 다음 R
 runner는 Compose의 `benchmark` profile에서 Qdrant/Neo4j와 같은 local Docker network에 있고
 API network round trip 없이 production engine을 직접 호출한다. Corpus 또는 backend evidence가
 config와 다르면 첫 query 전에 종료한다.
+
+## Stage 10 profiler extension
+
+Stage 10은 baseline method 이름 대신 immutable plan ID를 축으로 사용한다. Production 실행은
+P0/P1/P2/P3/P4/P5/P6/P8의 8개 plan과 480 train/validation query, 4개 budget, 13개 trial을
+조합하므로 완전한 raw matrix는 199,680행이다. P7은 reranker P1 항목이라 거부한다.
+
+`BaselineSearchEngine.benchmark_plan_search()`는 public `SearchRequest`의 허용 plan을 넓히지
+않으면서 P1과 P3를 직접 실행한다. 모든 plan은 동일한 qf_v1 analyzer를 거치고 최종 Stage 7
+scheduler와 branch backend, weighted_rrf_v1 경로를 사용한다. Execution latency label은 scheduler
+trace의 `EXECUTING` state 진입부터 terminal COMPLETE/PARTIAL state까지로 계산되어 analyzer,
+embedding, planner 시간을 제외한다.
+
+Raw profile row는 다음을 함께 저장한다.
+
+- query ID/split/source/tags와 redacted qf_v1 numeric features
+- immutable plan feature 전체와 plan catalog hash
+- full/partial/none quality scope, fallback과 terminal branch 상태
+- total/phase/execution latency, timeout/error/budget violation
+- scheduler trace 존재 여부와 runtime/config/model identity
+- label validity와 invalid exclusion reason
+
+집계 전에 exact phase/repetition matrix, trial ID, query identity, environment, corpus, qrels,
+feature schema, plan catalog, runtime semantics를 다시 검증한다. Training matrix는 measured trial
+10개를 query-plan-budget 한 행으로 묶고 full/partial Recall을 분리한다. Execution trace가 하나라도
+없거나 identity가 다르면 해당 latency label은 model training에서 제외되며 이유는 보존된다.
+
+Oracle@Budget은 완전한 measured execution label의 type-7 p95가 budget 이하인 plan 중 mean
+Recall@10이 가장 높은 plan이다. 동률은 낮은 p95, 낮은 graph depth, 낮은 숫자 plan ID 순이다.
+Feasible plan이 없는 query-budget도 삭제하지 않고 `oracle_plan_id=null`로 distribution에 포함한다.
+
+```text
+benchmark/results/profile_<run_id>/
+├── .run.lock
+├── profile_protocol.json
+├── environment.json
+├── run_manifest.json
+├── raw_trials.jsonl
+├── training_matrix.jsonl
+├── training_matrix.csv
+├── oracle_at_budget.json
+└── checksums.json
+```

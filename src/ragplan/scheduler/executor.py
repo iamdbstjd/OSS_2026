@@ -131,7 +131,13 @@ class SchedulerExecutor:
             while pending:
                 timeout_seconds = deadline.remaining_seconds(reserve_finalization=True)
                 if timeout_seconds <= 0:
-                    await self._expire_pending(pending, tasks, contexts, outcomes)
+                    await self._expire_pending(
+                        pending,
+                        tasks,
+                        contexts,
+                        outcomes,
+                        deadline=deadline,
+                    )
                     break
                 completed, still_pending = await asyncio.wait(
                     pending,
@@ -139,7 +145,13 @@ class SchedulerExecutor:
                     return_when=asyncio.FIRST_COMPLETED,
                 )
                 if not completed:
-                    await self._expire_pending(pending, tasks, contexts, outcomes)
+                    await self._expire_pending(
+                        pending,
+                        tasks,
+                        contexts,
+                        outcomes,
+                        deadline=deadline,
+                    )
                     break
                 for task in completed:
                     outcomes[tasks[task]] = task.result()
@@ -185,6 +197,8 @@ class SchedulerExecutor:
         tasks: dict[asyncio.Task[_BranchOutcome], BranchKind],
         contexts: dict[BranchKind, _BranchContext],
         outcomes: dict[BranchKind, _BranchOutcome],
+        *,
+        deadline: Deadline,
     ) -> None:
         for task in pending:
             contexts[tasks[task]].cancellation_reason = CancellationReason.APPLICATION_DEADLINE
@@ -193,6 +207,24 @@ class SchedulerExecutor:
         for task, outcome in zip(pending_tasks, terminal, strict=True):
             if isinstance(outcome, _BranchOutcome):
                 outcomes[tasks[task]] = outcome
+                continue
+            if isinstance(outcome, asyncio.CancelledError):
+                # The absolute deadline may already be exhausted before a newly
+                # created task gets its first event-loop turn. In that case the
+                # branch coroutine cannot translate cancellation itself, so the
+                # scheduler must emit the same terminal timeout evidence here.
+                boundary = deadline.snapshot()
+                outcomes[tasks[task]] = _BranchOutcome(
+                    self._result(
+                        branch=tasks[task],
+                        status=BranchStatus.TIMED_OUT,
+                        started=boundary,
+                        finished=boundary,
+                        cancellation_reason=CancellationReason.APPLICATION_DEADLINE,
+                        failure_origin=FailureOrigin.APPLICATION,
+                        timeout_origin=TimeoutOrigin.APPLICATION_DEADLINE,
+                    )
+                )
                 continue
             if isinstance(outcome, BaseException):
                 raise outcome

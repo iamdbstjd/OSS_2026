@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import stat
 from pathlib import Path
 
 import pytest
@@ -97,6 +98,7 @@ async def test_partial_dual_write_never_changes_active_pointer(tmp_path: Path) -
 
     assert caught.value.code is ErrorCode.DEPENDENCY_UNAVAILABLE
     assert ActiveCorpusResolver(repository).resolve() == "corpus-v1"
+    assert stat.S_IMODE(repository.active_pointer_path.stat().st_mode) == 0o644
     failed = repository.load_run("run-v2")
     assert failed.activation_status is ActivationStatus.FAILED
     assert failed.qdrant_status is IngestionStoreStatus.SUCCEEDED

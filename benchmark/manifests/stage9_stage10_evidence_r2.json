@@ -1,0 +1,77 @@
+{
+  "audit": {
+    "graph_tier_enabled": false,
+    "human_review_status": "pending_human_review",
+    "scope": "audit-bypass explicit baseline and profiler evidence; no graph-audit pass claim"
+  },
+  "data_quality": {
+    "duplicate_trial_ids": 0,
+    "file_checksum_mismatches": 0,
+    "nonfinite_matrix_values": 0,
+    "split_leakage_queries": 0,
+    "status": "pass_with_documented_label_coverage_limitations"
+  },
+  "environment_manifest_sha256": "d4071060c7ae7328b7332754efcbcc2026c241783107c9348ff8231395ccae5e",
+  "generated_on": "2026-08-21",
+  "schema_version": "stage9_stage10_evidence_v1",
+  "stage9": {
+    "checksums_file_sha256": "0ec22dce751c585a39b06944b746735f69ab6b35bf7a7fb54933bf80d73bcd61",
+    "errors": {
+      "DEADLINE_EXCEEDED": 92042,
+      "MODE_UNAVAILABLE": 6138
+    },
+    "phase_rows": {
+      "cold": 17280,
+      "measured": 172800,
+      "warmup": 34560
+    },
+    "query_count": 480,
+    "raw_file_committed": false,
+    "raw_logical_sha256": "f98e7d00ec25abe44ca8743b033d4f389d06a990f8461bc6c38485e64ee43ddb",
+    "raw_rows": 224640,
+    "run_id": "baseline_audit_bypass_20260820_r2",
+    "statuses": {
+      "complete": 58490,
+      "error": 6138,
+      "partial": 67970,
+      "timeout": 92042
+    }
+  },
+  "stage10": {
+    "checksums_file_sha256": "1a1cdb2ee9470395aab34bf4a27ed74c7f27a96f4aec58df2fc048ad2569835b",
+    "feature_recovery": {
+      "derivation_runtime_source_sha256": "46f8e35d714d72663d9b2203b3e883dcb90624338733d4ec2fdc722fe397af3b",
+      "query_count": 15,
+      "raw_runtime_source_sha256": "7fa0472b11d9122c8fd5ecd7404e00048a59cd7c29b2a04f1f7a5fef9de11727"
+    },
+    "matrix": {
+      "invalid_reason_rows": {
+        "execution_trace_unavailable:error:MODE_UNAVAILABLE": 407,
+        "execution_trace_unavailable:timeout": 6880
+      },
+      "rows": 15360,
+      "unusable_rows": 7276,
+      "usable_rows": 8084
+    },
+    "oracle": {
+      "labels": 1920,
+      "no_feasible_labels": 421,
+      "plan_distribution": {
+        "P2": 884,
+        "P3": 614,
+        "P5": 1,
+        "none": 421
+      }
+    },
+    "query_count": 480,
+    "raw_file_committed": false,
+    "raw_logical_sha256": "adfc39ab4c0dc2308a26b920b4d0e24920043bd3429da132307b2074469a271d",
+    "raw_rows": 199680,
+    "run_id": "plans_audit_bypass_20260820_r2",
+    "training_matrix_sha256": "3e4b58eec4967acb75a5edbd9245c1b7cd454f407e858808c31caf2f98b0f16c"
+  },
+  "supersedes_invalid_run": {
+    "failed_raw_rows": 18003,
+    "run_id": "baseline_audit_bypass_20260820"
+  }
+}
