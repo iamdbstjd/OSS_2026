@@ -460,6 +460,48 @@ budget 이하인 완전한 plan row 중 Recall@10 최대값을 선택하며, 동
 depth, 낮은 plan ID 순으로 해소합니다. Timeout/error와 trace/hash 불일치는 삭제하지 않고
 명시적인 exclusion reason으로 남깁니다.
 
+## Stage 11 cost model 학습
+
+Stage 11은 Stage 10 matrix에서 query/plan feature를 deterministic numeric/one-hot schema로
+결합하고 raw embedding 없이 Recall@10 quality model과 conditional p95 execution-latency
+model을 학습합니다. Query 단위 train/validation 분리를 유지하며 held-out test는 읽지 않습니다.
+
+```bash
+uv run python scripts/train_cost_models.py \
+  --matrix benchmark/results/profile_plans_audit_bypass_20260820_r2/training_matrix.jsonl \
+  --profile-run-manifest benchmark/results/profile_plans_audit_bypass_20260820_r2/run_manifest.json \
+  --profile-environment benchmark/results/profile_plans_audit_bypass_20260820_r2/environment.json \
+  --oracle benchmark/results/profile_plans_audit_bypass_20260820_r2/oracle_at_budget.json \
+  --stage9-raw benchmark/results/baseline_audit_bypass_20260820_r2/raw_trials.jsonl \
+  --output-dir artifacts/cost_models/stage11_r2
+```
+
+Artifact는 checksum을 먼저 검증하는 `.skops` 형식만 허용하고 repository의 trusted-type
+allowlist 밖 type, critical runtime mismatch, 손상된 checksum을 거부합니다. 현재 R2 validation은
+quality MAE 0.0092와 latency coverage 0.9284를 달성했지만 plan-pair ranking 0.6815, plan별
+latency coverage(P0/P1 label 없음), pinball 개선 0.0479가 gate를 통과하지 못했습니다. 따라서
+artifact는 `research_only`이며 serving에서 명시적으로 차단됩니다. 자세한 내용은
+`docs/model_training.md`와 `benchmark/manifests/stage11_model_evidence_r2.json`에 있습니다.
+
+## Stage 12 research-only/offline 정책 비교
+
+Stage 12는 Stage 11 R2 artifact를 공개 검색 경로에 연결하지 않고 validation evidence에서만
+8개 P0 plan을 전수 점수화합니다. Stage 11 schema가 일반 요청에는 없는 dataset source와 query
+tag를 요구하므로 `OfflineResearchContext`로 그 의존성을 명시하며, 공개
+`planner=cost_aware`는 계속 `MODE_UNAVAILABLE`입니다.
+
+```bash
+uv run python scripts/evaluate_cost_policy.py
+```
+
+실제 R2 비교는 480 query-budget 그룹의 3,840 candidate를 평가했습니다. Cost-aware 연구 정책은
+Rule 대비 Recall@10 +0.005507, BestFixed 대비 +0.000726, Oracle regret 0.002618이었지만, 1,856개
+candidate prediction이 유효 범위를 벗어났고 120개 그룹에는 feasible plan이 없었습니다. 또한
+rolling calibration guard가 319번째 유효 관측 후 p95 underprediction rate 0.21로 artifact를
+disable하여 이후 422개 그룹을 Rule로 보냈습니다. 따라서 결과와 모델은 여전히
+`research_only`이며 serving 활성화 근거가 아닙니다. 상세 계약과 checksum은
+`docs/offline_cost_policy.md` 및 `benchmark/manifests/stage12_policy_evidence_r2.json`에 있습니다.
+
 ## 라이선스
 
 RAGPlan은 Apache License 2.0으로 배포됩니다. 제3자 소프트웨어, 모델 및 dataset은

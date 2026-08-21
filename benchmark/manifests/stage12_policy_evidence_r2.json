@@ -1,0 +1,29 @@
+{
+  "candidate_estimate_count": 3840,
+  "cost_recall_difference_vs_rule": 0.005506993006993007,
+  "cost_violation_difference_vs_rule": 0.004791666666666667,
+  "decision_record_count": 480,
+  "decision_records_file_sha256": "684871d03af2903f87c61bc9f15a4a5f792befc51d23995c1e172c56ab0f5529",
+  "execution_mode": "offline_shadow",
+  "inherited_model_gate_failures": [
+    "quality_plan_pair_ranking_lt_0.70",
+    "latency_plan_coverage_lt_0.85",
+    "latency_pinball_improvement_lt_0.10"
+  ],
+  "invalid_prediction_count": 1856,
+  "latency_artifact_sha256": "3f29b6dd8455bca7de042ae7ad176dae27b72e08818b993cdc506f6516d263a7",
+  "mean_cost_regret_vs_oracle": 0.002617801047120419,
+  "no_feasible_candidate_count": 120,
+  "planner_overhead_p95_ms": 9.9277302,
+  "public_api_cost_aware_enabled": false,
+  "quality_artifact_sha256": "297c1002eb459912c4b9428b56092d4d0eeef540e819e78717f01f9e99684f07",
+  "report_file_sha256": "0f7fb2fcd3d9f7e141e355ea37722bc9dcd5c98bb7c96485d54582320d3fd823",
+  "report_sha256": "6a468eb6671f8a4c4541bf9de0cae9b62f5ad7f1da082447a42d942c6cdad0a1",
+  "runtime_guard_disable_reason": "p95_underprediction_rate_gt_0.20",
+  "runtime_guard_disabled": true,
+  "runtime_guard_first_disabled_after_observation": 319,
+  "runtime_guard_routed_to_rule_group_count": 422,
+  "schema_version": "stage12_policy_evidence_v1",
+  "status": "research_only",
+  "test_split_used": false
+}

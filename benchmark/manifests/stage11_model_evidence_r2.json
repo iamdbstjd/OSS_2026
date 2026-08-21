@@ -1,0 +1,40 @@
+{
+  "artifacts_committed": false,
+  "bundle_manifest_file_sha256": "e05b5c6d93216ce8b12f5fb44aa30eebcc2f8cbed154c6924bf487ce24ff3ded",
+  "gate_failures": [
+    "quality_plan_pair_ranking_lt_0.70",
+    "latency_plan_coverage_lt_0.85",
+    "latency_pinball_improvement_lt_0.10"
+  ],
+  "latency": {
+    "coverage_overall": 0.9283681214421252,
+    "missing_validation_plans": [
+      "P0",
+      "P1"
+    ],
+    "pinball_improvement": 0.04789697806527917,
+    "severe_underprediction_rate": 0.018975332068311195,
+    "training_rows": 5976,
+    "validation_rows": 2108
+  },
+  "latency_artifact_sha256": "3f29b6dd8455bca7de042ae7ad176dae27b72e08818b993cdc506f6516d263a7",
+  "model_report_file_sha256": "b2ec87d62b9849b61b3ab0f966a8c40e559a371608ad603fd859e7d92c053680",
+  "policy": {
+    "mean_policy_regret_vs_oracle": 0.0,
+    "recall_difference_vs_rule": 0.0075903263403263406,
+    "violation_rate_difference_vs_rule": 0.00625
+  },
+  "quality": {
+    "mae": 0.009219027375960358,
+    "plan_pair_ranking_accuracy": 0.6815286624203821,
+    "predicted_best_plan_regret": 0.0031031468531468533,
+    "training_rows": 11520,
+    "validation_rows": 3840
+  },
+  "quality_artifact_sha256": "297c1002eb459912c4b9428b56092d4d0eeef540e819e78717f01f9e99684f07",
+  "raw_embeddings_used": false,
+  "schema_version": "stage11_model_evidence_v1",
+  "status": "research_only",
+  "test_split_used": false,
+  "training_matrix_sha256": "3e4b58eec4967acb75a5edbd9245c1b7cd454f407e858808c31caf2f98b0f16c"
+}

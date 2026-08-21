@@ -682,6 +682,24 @@ async def test_disable_cost_aware_kill_switch_rejects_before_any_backend_call() 
 
 
 @pytest.mark.asyncio
+async def test_research_only_cost_aware_is_not_exposed_by_public_engine() -> None:
+    clock = ManualClock()
+    vector = _VectorBackend(clock)
+    graph = _GraphBackend(clock)
+    engine = _custom_engine(clock, vector=vector, graph=graph)
+
+    with pytest.raises(RAGPlanError) as captured:
+        await engine.search(
+            SearchRequest(query="question", planner=PlannerMode.COST_AWARE),
+            request_id="cost-research-only",
+        )
+
+    assert captured.value.code is ErrorCode.MODE_UNAVAILABLE
+    assert vector.calls == []
+    assert graph.calls == []
+
+
+@pytest.mark.asyncio
 async def test_rule_mode_fail_closed_policy_executes_vector_only() -> None:
     engine, vector, graph = _engine(ManualClock())
 
