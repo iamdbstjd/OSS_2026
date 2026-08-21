@@ -2,21 +2,108 @@
 
 # RAGPlan
 
-벡터 및 그래프 검색을 위한 지연 시간 예산 인식 실행 계획 도구입니다.
+검색 품질과 지연 시간 예산 사이에서 vector·graph·hybrid 실행 계획을 선택하고, 순위화된
+근거와 설명 가능한 trace를 반환하는 retrieval execution layer입니다.
 
-RAGPlan은 실험용 로컬 우선 검색 최적화 도구입니다. 벡터, 그래프, 고정 하이브리드,
-규칙 기반 또는 비용 인식 검색 계획을 선택·실행하고, 실행 추적과 함께 순위가 매겨진
-근거를 반환합니다. 답변 생성, 에이전트 루프, 인증, 멀티테넌시 및 프로덕션 배포는 MVP
-범위에 포함되지 않습니다.
+RAGPlan은 최종 답변을 만드는 chatbot이 아닙니다. 기존 LLM/RAG 애플리케이션 앞에서 검색
+전략, deadline, 병렬 branch, fallback을 담당합니다. Stage 0~12와 Stage 13 public surface가
+구현됐으며, 학습 기반 cost-aware 정책은 validation gate 실패로 `research_only`입니다.
+기본 online planner는 계속 `rule`입니다.
 
-## 구현된 기반
+## 누구를 위한 도구인가
 
-Stage 0, 1, 2, 3, 4, 5, 6, 7, 8, 9는 재현 가능한 부트스트랩, 공통 런타임 계약, 동결된
-benchmark truth, 벡터·그래프 검색, deterministic fixed-hybrid fusion, 예산 인식 병렬 실행
-및 설명 가능한 rule planning을 제공합니다.
+- latency SLO 안에서 vector/graph 검색 전략을 바꾸려는 RAG 개발자
+- timeout, partial result, circuit breaker가 필요한 AI infrastructure 팀
+- 동일 query×plan matrix와 Oracle@Budget을 재현하려는 연구자
+
+다음 용도는 현재 범위가 아닙니다.
+
+- 완성형 질문답변 UI 또는 LLM answer generation
+- agent loop, 인증, 멀티테넌시, 분산 production control plane
+- human graph audit 없이 Rule이 graph를 자동 선택한다는 주장
+- `research_only` cost model의 public serving
+
+## 설치 후 1분 planner demo — DB와 모델 불필요
+
+```bash
+uv sync --frozen
+uv run ragplan demo-plan \
+  --query "Who founded Acme and who acquired it?" \
+  --budget-ms 100 \
+  --entity-count 2 \
+  --pretty
+
+uv run ragplan verify --pretty
+```
+
+`demo-plan`은 embedding이나 검색 결과를 가장하지 않습니다. lightweight token count와 사용자가
+전달한 entity count로 `qf_v1` feature와 Rule decision만 설명하며
+`mode=planner_only_no_embedding`, `executes_retrieval=false`를 기록합니다.
+
+## 필요한 인프라 수준
+
+| 하고 싶은 일 | 필요한 구성 |
+|---|---|
+| 코드 검증·planner 맛보기 | Python 3.12 + `uv`; DB/모델 불필요 |
+| Vector sample ingest/search | Qdrant + MiniLM (checksum-pinned) |
+| Full vector/graph/hybrid runtime | Qdrant + Neo4j + active corpus |
+| 새 graph corpus 생성 | 위 구성 + pinned spaCy `en_core_web_sm` |
+| 운영 인증·멀티테넌시·agent | 현재 비지원 |
+
+spaCy는 graph corpus를 새로 추출할 때 필요하며, 이미 생성된 vector-only corpus를 검색하는 데는
+필요하지 않습니다.
+
+## Sample ingest → search 한 경로
+
+`.env.example`의 비밀번호는 격리된 로컬 demo 전용입니다.
+
+```bash
+cp .env.example .env
+docker compose up -d qdrant
+uv run ragplan quickstart-vector --pretty
+```
+
+이 명령은 허용된 MiniLM revision만 내려받아 SHA-256을 검증하고, 세 문서 sample을 Qdrant에
+idempotent ingest한 다음 production `VectorSearchEngine`으로 한 번 검색합니다. 개별 명령이
+필요하면 `ragplan ingest`, `ragplan search`, `ragplan verify --configured-runtime`을 사용하세요.
+
+## REST 상태와 metrics
+
+```bash
+curl --fail http://127.0.0.1:8000/health
+curl --silent --show-error http://127.0.0.1:8000/ready
+curl --silent --show-error http://127.0.0.1:8000/metrics
+```
+
+- `/health`: process liveness만 확인
+- `/ready`: corpus/backend capability를 확인하고 Neo4j 장애 시 vector-only `degraded` 반환
+- `/metrics`: request/result/error/planner/latency JSON metrics; raw query/entity label 없음
+
+## LLM에 결과 넘기기
+
+RAGPlan은 answer generation을 소유하지 않습니다. [generic handoff 예제](examples/llm_handoff.py)는
+`SearchResponse`의 ranked chunk를 provider-neutral message로 바꾸며 어떤 LLM SDK도 import하지
+않습니다.
+
+```bash
+uv run ragplan search \
+  --query "What did Ada Lovelace write about?" \
+  --planner vector \
+  --pretty > /tmp/ragplan-response.json
+
+uv run python examples/llm_handoff.py \
+  --response /tmp/ragplan-response.json \
+  --question "What did Ada Lovelace write about?"
+```
+
+## 상세 구현 현황
+
+Stage 0~12와 Stage 13 accessibility surface는 재현 가능한 부트스트랩, 공통 runtime 계약,
+동결된 benchmark truth, vector/graph 검색, deterministic hybrid fusion, scheduler, Rule planning,
+research-only cost comparison과 public CLI/API를 제공합니다.
 
 - Python 3.12 패키지 및 `ragplan` CLI
-- FastAPI liveness 엔드포인트
+- FastAPI search, liveness, readiness 및 privacy-safe JSON metrics 엔드포인트
 - 고정된 의존성 lockfile
 - Docker Compose를 통한 로컬 Qdrant 및 Neo4j 서비스
 - lint, 타입 검사 및 테스트 구성
@@ -51,9 +138,10 @@ benchmark truth, 벡터·그래프 검색, deterministic fixed-hybrid fusion, �
 - remaining budget, graph audit/circuit 상태 및 정적 p95 profile로 P0/P1/P4/P5/P6/P8을 선택하는 rule planner
 - 동일 production engine의 224,640-row baseline matrix를 재개·검증·집계하는 Stage 9 harness
 
-학습 기반 cost-aware planner는 이후 Stage에서 구현됩니다. Stage 3 corpus는 의도적으로
+학습 기반 cost-aware planner는 Stage 11·12에서 offline 비교까지 구현됐지만 model gate와
+runtime guard를 통과하지 못해 public API에서는 비활성입니다. Stage 3 corpus는 의도적으로
 `vector_staged`이며, Stage 4의 두 저장소 검증이 성공해야만 `active`가 됩니다. Human
-extraction audit가 완료될 때까지 rule graph tier는 비활성입니다.
+extraction audit가 완료될 때까지 Rule graph tier는 비활성입니다.
 
 ## 요구 사항
 
@@ -142,20 +230,18 @@ Qdrant를 시작하고 정확한 allowlist 모델 snapshot을 준비한 뒤, 포
 ```bash
 docker compose up -d qdrant
 
-uv run python scripts/prepare_model.py --cache-dir models/minilm
-
-MODEL_SNAPSHOT="models/minilm/models--sentence-transformers--all-MiniLM-L6-v2/snapshots/b8903db39f65d93ae28d49a37c4f3fa90c5f94e0"
-
-uv run python scripts/ingest.py \
+uv run ragplan ingest \
   --input examples/sample_corpus.json \
   --corpus-version sample-stage3-v1 \
-  --model-snapshot "$MODEL_SNAPSHOT" \
+  --model-cache models/minilm \
   --stage-manifest artifacts/sample-stage3-vector.json \
   --chunks-output artifacts/sample-stage3-chunks.jsonl
+
+MODEL_SNAPSHOT="models/minilm/models--sentence-transformers--all-MiniLM-L6-v2/snapshots/b8903db39f65d93ae28d49a37c4f3fa90c5f94e0"
 ```
 
-모델 명령은 revision `b8903db39f65d93ae28d49a37c4f3fa90c5f94e0`의 manifest
-allowlist만 다운로드한 다음 모든 파일의 SHA-256을 검증합니다. ingest 명령은 모든 문서
+ingest 명령은 revision `b8903db39f65d93ae28d49a37c4f3fa90c5f94e0`의 manifest
+allowlist만 다운로드해 모든 SHA-256을 검증한 뒤 모든 문서
 청크를 하나의 batch로 임베딩하고, Qdrant schema, count, canonical-ID checksum을
 검증한 뒤 stage manifest를 원자적으로 기록합니다. 동일한 corpus version을 반복하는
 것은 멱등적인 no-op입니다. canonical ID 집합, embedding artifact 또는 embedding bytes의
@@ -166,12 +252,15 @@ artifact SHA-256 및 모든 canonical-ID/vector 쌍의 집계 checksum 모두에
 경로로 query를 실행합니다.
 
 ```bash
-uv run python scripts/search.py \
+RAGPLAN_STAGE3_MODEL_SNAPSHOT="$MODEL_SNAPSHOT" \
+RAGPLAN_STAGE3_VECTOR_STAGE_MANIFEST=artifacts/sample-stage3-vector.json \
+RAGPLAN_STAGE3_QDRANT_URL=http://127.0.0.1:6333 \
+RAGPLAN_STAGE3_QDRANT_COLLECTION_PREFIX=ragplan_chunks \
+uv run ragplan search \
   --query "Who wrote notes containing an algorithm for the Analytical Engine?" \
-  --stage-manifest artifacts/sample-stage3-vector.json \
-  --model-snapshot "$MODEL_SNAPSHOT" \
+  --planner vector \
   --top-k 3 \
-  --latency-budget-ms 5000
+  --budget-ms 5000
 ```
 
 응답은 순위가 매겨진 청크와 redacted trace를 포함한 JSON입니다. query hash 및

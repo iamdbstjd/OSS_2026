@@ -252,6 +252,7 @@ async def build_search_engine(
     config: Stage3RuntimeConfig,
     *,
     plan_catalog: PlanCatalog | None = None,
+    active_corpus: bool = False,
 ) -> SearchEngine:
     """Build one engine after verifying model, staging, and Qdrant provenance."""
 
@@ -287,6 +288,7 @@ async def build_search_engine(
             vector_backend=backend,
             plan_catalog=plan_catalog if plan_catalog is not None else load_default_plan_catalog(),
             vector_stage=verified_stage,
+            active_corpus=active_corpus,
         )
     except BaseException:
         await backend.close()
@@ -502,6 +504,7 @@ async def build_search_engine_from_environment(
                 collection_prefix=stage4_config.collection_prefix,
             ),
             plan_catalog=plan_catalog,
+            active_corpus=True,
         )
     if stage3_config is None:
         return None

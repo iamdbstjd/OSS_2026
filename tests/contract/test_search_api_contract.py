@@ -71,6 +71,34 @@ def test_openapi_exposes_the_frozen_search_request_response_and_trace() -> None:
     assert {"SearchRequest", "SearchResponse", "SearchTrace", "ErrorResponse"} <= set(
         component_schemas
     )
+    assert {"/health", "/ready", "/metrics", "/v1/search"} <= set(schema["paths"])
+    assert schema["paths"]["/ready"]["get"]["responses"]["200"]["content"]["application/json"][
+        "schema"
+    ] == {"$ref": "#/components/schemas/ReadinessResponse"}
+    assert schema["paths"]["/metrics"]["get"]["responses"]["200"]["content"]["application/json"][
+        "schema"
+    ] == {"$ref": "#/components/schemas/MetricsSnapshot"}
+
+
+def test_invalid_search_is_counted_without_query_derived_metric_labels() -> None:
+    app = create_app()
+
+    async def request() -> tuple[httpx.Response, httpx.Response]:
+        transport = httpx.ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://test") as client:
+            invalid = await client.post("/v1/search", json={"query": " "})
+            metrics = await client.get("/metrics")
+        return invalid, metrics
+
+    invalid, metrics = asyncio.run(request())
+    assert invalid.status_code == 422
+    body = metrics.json()
+    assert body["request_count"] == 1
+    assert body["error_count"] == 1
+    assert body["planner_distribution"] == {"invalid": 1}
+    assert body["error_distribution"] == {"INVALID_QUERY": 1}
+    assert "raw_query" not in metrics.text.casefold()
+    assert "entity" not in body["planner_distribution"]
 
 
 def test_unexpected_exception_is_redacted_to_stable_internal_error() -> None:

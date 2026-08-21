@@ -2,22 +2,109 @@
 
 # RAGPlan
 
-Latency-budget-aware execution planning for vector and graph retrieval.
+RAGPlan is a retrieval execution layer that selects vector, graph, or hybrid plans under a latency
+budget and returns ranked evidence with an explainable trace.
 
-RAGPlan is an experimental, local-first retrieval optimizer. It selects and
-executes vector, graph, fixed-hybrid, rule-based, or cost-aware retrieval plans
-and returns ranked evidence with an execution trace. Answer generation, agent
-loops, authentication, multi-tenancy, and production deployment are outside
-the MVP scope.
+It is not an end-user chatbot. RAGPlan sits in front of an existing LLM/RAG application and owns
+retrieval strategy, deadlines, parallel branches, and fallback. Stages 0–12 and the Stage 13 public
+surface are implemented. The learned cost-aware policy remains `research_only` after validation
+gate failures; the default online planner remains Rule.
 
-## Implemented foundation
+## Who it is for
 
-Stages 0, 1, 2, 3, 4, 5, 6, 7, 8, and 9 provide the reproducible bootstrap, shared runtime
-contracts, frozen benchmark truth, vector/graph retrieval, deterministic fixed-hybrid
-fusion, budget-aware parallel execution, and explainable rule planning:
+- RAG developers changing vector/graph strategy inside a latency SLO
+- AI infrastructure teams that need timeout, partial-result, and circuit-breaker semantics
+- researchers reproducing a query×plan matrix and Oracle@Budget
+
+The following are deliberately outside the current scope:
+
+- a complete question-answering UI or LLM answer generation
+- agent loops, authentication, multi-tenancy, or a distributed production control plane
+- claims that Rule automatically routes to graph without the human graph audit
+- public serving of the `research_only` cost model
+
+## One-minute planner demo after install — no DB or model
+
+```bash
+uv sync --frozen
+uv run ragplan demo-plan \
+  --query "Who founded Acme and who acquired it?" \
+  --budget-ms 100 \
+  --entity-count 2 \
+  --pretty
+
+uv run ragplan verify --pretty
+```
+
+`demo-plan` never invents embeddings or retrieval results. It uses a lightweight token count plus
+the caller-supplied entity count to explain `qf_v1` features and the Rule decision, and records
+`mode=planner_only_no_embedding` and `executes_retrieval=false`.
+
+## Infrastructure levels
+
+| Goal | Required components |
+|---|---|
+| Validate code or inspect planning | Python 3.12 + `uv`; no DB/model |
+| Vector sample ingest/search | Qdrant + MiniLM (checksum-pinned) |
+| Full vector/graph/hybrid runtime | Qdrant + Neo4j + active corpus |
+| Build a new graph corpus | The above + pinned spaCy `en_core_web_sm` |
+| Production auth, multi-tenancy, agents | Not supported |
+
+spaCy is required while extracting a new graph corpus, not while searching an existing vector-only
+corpus.
+
+## One sample ingest → search path
+
+The password in `.env.example` is only for an isolated local demo.
+
+```bash
+cp .env.example .env
+docker compose up -d qdrant
+uv run ragplan quickstart-vector --pretty
+```
+
+This downloads only the approved MiniLM revision, verifies every SHA-256, idempotently ingests the
+three-document sample into Qdrant, and executes one search through the production
+`VectorSearchEngine`. Use `ragplan ingest`, `ragplan search`, and
+`ragplan verify --configured-runtime` when running the steps separately.
+
+## REST status and metrics
+
+```bash
+curl --fail http://127.0.0.1:8000/health
+curl --silent --show-error http://127.0.0.1:8000/ready
+curl --silent --show-error http://127.0.0.1:8000/metrics
+```
+
+- `/health` checks process liveness only.
+- `/ready` reports corpus/backend capability and returns vector-only `degraded` when Neo4j fails.
+- `/metrics` exposes request/result/error/planner/latency JSON metrics without raw query/entity labels.
+
+## Hand results to an LLM
+
+RAGPlan does not own answer generation. The [generic handoff example](examples/llm_handoff.py)
+converts ranked `SearchResponse` chunks into provider-neutral messages without importing any LLM
+SDK.
+
+```bash
+uv run ragplan search \
+  --query "What did Ada Lovelace write about?" \
+  --planner vector \
+  --pretty > /tmp/ragplan-response.json
+
+uv run python examples/llm_handoff.py \
+  --response /tmp/ragplan-response.json \
+  --question "What did Ada Lovelace write about?"
+```
+
+## Detailed implementation status
+
+Stages 0–12 and the Stage 13 accessibility surface provide the reproducible bootstrap, shared
+runtime contracts, frozen benchmark truth, vector/graph retrieval, deterministic hybrid fusion,
+scheduling, Rule planning, research-only cost comparison, and public CLI/API surfaces:
 
 - Python 3.12 package and `ragplan` CLI
-- FastAPI liveness endpoint
+- FastAPI search, liveness, readiness, and privacy-safe JSON metrics endpoints
 - pinned dependency lockfile
 - local Qdrant and Neo4j services through Docker Compose
 - lint, type-check, and test configuration
@@ -52,9 +139,10 @@ fusion, budget-aware parallel execution, and explainable rule planning:
 - a rule planner selecting P0/P1/P4/P5/P6/P8 from remaining budget, graph safety, and static p95 profiles
 - a resumable, validated Stage 9 harness for the 224,640-row baseline matrix on one production engine
 
-The learned cost-aware planner remains a later stage. A Stage 3 corpus is deliberately `vector_staged`;
-only successful Stage 4 dual-store verification makes it `active`. The rule graph tier
-stays disabled until the human extraction audit is complete.
+The learned cost-aware planner reached offline comparison in Stages 11–12 but failed its model
+gates and runtime guard, so public API activation remains disabled. A Stage 3 corpus is deliberately
+`vector_staged`; only successful Stage 4 dual-store verification makes it `active`. The Rule graph
+tier stays disabled until the human extraction audit is complete.
 
 ## Requirements
 
@@ -144,22 +232,20 @@ included three-document corpus:
 ```bash
 docker compose up -d qdrant
 
-uv run python scripts/prepare_model.py --cache-dir models/minilm
-
-MODEL_SNAPSHOT="models/minilm/models--sentence-transformers--all-MiniLM-L6-v2/snapshots/b8903db39f65d93ae28d49a37c4f3fa90c5f94e0"
-
-uv run python scripts/ingest.py \
+uv run ragplan ingest \
   --input examples/sample_corpus.json \
   --corpus-version sample-stage3-v1 \
-  --model-snapshot "$MODEL_SNAPSHOT" \
+  --model-cache models/minilm \
   --stage-manifest artifacts/sample-stage3-vector.json \
   --chunks-output artifacts/sample-stage3-chunks.jsonl
+
+MODEL_SNAPSHOT="models/minilm/models--sentence-transformers--all-MiniLM-L6-v2/snapshots/b8903db39f65d93ae28d49a37c4f3fa90c5f94e0"
 ```
 
-The model command downloads only the manifest allowlist for revision
-`b8903db39f65d93ae28d49a37c4f3fa90c5f94e0`, then verifies every file SHA-256.
-The ingest command embeds all document chunks in one batch, verifies Qdrant's
-schema, count, canonical-ID checksum, and writes the stage manifest atomically.
+The ingest command downloads only the manifest allowlist for revision
+`b8903db39f65d93ae28d49a37c4f3fa90c5f94e0`, verifies every SHA-256, embeds all
+document chunks in one batch, and verifies Qdrant's
+schema, count, and canonical-ID checksum before writing the stage manifest atomically.
 Repeating the same corpus version is an idempotent no-op; changing its canonical
 ID set, embedding artifact, or embedding bytes is rejected before mutation.
 The `vector_staged` v2 manifest binds the corpus to both the exact model
@@ -169,12 +255,15 @@ Run a query through the same `VectorSearchEngine` path used by the injectable
 FastAPI search endpoint:
 
 ```bash
-uv run python scripts/search.py \
+RAGPLAN_STAGE3_MODEL_SNAPSHOT="$MODEL_SNAPSHOT" \
+RAGPLAN_STAGE3_VECTOR_STAGE_MANIFEST=artifacts/sample-stage3-vector.json \
+RAGPLAN_STAGE3_QDRANT_URL=http://127.0.0.1:6333 \
+RAGPLAN_STAGE3_QDRANT_COLLECTION_PREFIX=ragplan_chunks \
+uv run ragplan search \
   --query "Who wrote notes containing an algorithm for the Analytical Engine?" \
-  --stage-manifest artifacts/sample-stage3-vector.json \
-  --model-snapshot "$MODEL_SNAPSHOT" \
+  --planner vector \
   --top-k 3 \
-  --latency-budget-ms 5000
+  --budget-ms 5000
 ```
 
 The response is JSON with ranked chunks and a redacted trace. It contains the

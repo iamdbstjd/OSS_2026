@@ -87,6 +87,7 @@ async def test_injected_engine_serves_vector_search_and_lifespan_closes_it() -> 
     async with app.router.lifespan_context(app):
         transport = httpx.ASGITransport(app=app)
         async with httpx.AsyncClient(transport=transport, base_url="http://test") as http:
+            ready = await http.get("/ready")
             response = await http.post(
                 "/v1/search",
                 json={"query": "find evidence", "planner": "vector", "top_k": 1},
@@ -97,7 +98,13 @@ async def test_injected_engine_serves_vector_search_and_lifespan_closes_it() -> 
                 json={"query": "find evidence", "top_k": 1},
                 headers={"x-request-id": "stage8-default-rule-request"},
             )
+            metrics = await http.get("/metrics")
 
+        assert ready.status_code == 200
+        assert ready.json()["status"] == "ready"
+        assert ready.json()["runtime_profile"] == "vector_staged"
+        assert ready.json()["qdrant"] == {"status": "healthy"}
+        assert ready.json()["neo4j"] == {"status": "not_configured"}
         assert response.status_code == 200
         body = response.json()
         assert body["request_id"] == "stage3-http-request"
@@ -108,6 +115,12 @@ async def test_injected_engine_serves_vector_search_and_lifespan_closes_it() -> 
         assert rule_response.json()["planner_decision"]["mode"] == "rule"
         assert rule_response.json()["planner_decision"]["effective_mode"] == "vector"
         assert embedder.calls == 2
+        metrics_body = metrics.json()
+        assert metrics_body["request_count"] == 2
+        assert metrics_body["complete_count"] == 2
+        assert metrics_body["planner_distribution"] == {"rule": 1, "vector": 1}
+        assert metrics_body["vector_latency"]["count"] == 2
+        assert "query" not in metrics.text.casefold()
 
     health_after_shutdown = await backend.health()
     assert health_after_shutdown.available is False
