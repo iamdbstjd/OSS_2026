@@ -57,6 +57,7 @@ packages = ["src/ragplan"]
 "configs/rule_planner_v1.json" = "ragplan/resources/rule_planner_v1.json"
 "benchmark/configs/baseline_v1.yaml" = "ragplan/resources/benchmark/baseline_v1.yaml"
 "benchmark/configs/db_tuning_default_v1.json" = "ragplan/resources/benchmark/db_tuning_default_v1.json"
+"configs/skops_trusted_types_v1.json" = "ragplan/resources/skops_trusted_types_v1.json"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

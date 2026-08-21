@@ -472,6 +472,50 @@ complete plan rows whose measured p95 execution latency is within budget, breaki
 p95, lower graph depth, then lower plan ID. Timeouts, errors, and trace/hash mismatches are retained
 with explicit exclusion reasons.
 
+## Stage 11 cost-model training
+
+Stage 11 joins Stage 10 query/plan features into a deterministic numeric/one-hot schema and trains
+Recall@10 quality plus conditional-p95 execution-latency models without raw embeddings. Query-level
+train/validation separation is preserved and the held-out test split is never loaded.
+
+```bash
+uv run python scripts/train_cost_models.py \
+  --matrix benchmark/results/profile_plans_audit_bypass_20260820_r2/training_matrix.jsonl \
+  --profile-run-manifest benchmark/results/profile_plans_audit_bypass_20260820_r2/run_manifest.json \
+  --profile-environment benchmark/results/profile_plans_audit_bypass_20260820_r2/environment.json \
+  --oracle benchmark/results/profile_plans_audit_bypass_20260820_r2/oracle_at_budget.json \
+  --stage9-raw benchmark/results/baseline_audit_bypass_20260820_r2/raw_trials.jsonl \
+  --output-dir artifacts/cost_models/stage11_r2
+```
+
+Only checksum-first `.skops` artifacts are accepted. Types outside the repository allowlist,
+critical runtime mismatches, and corrupted checksums are rejected. Current R2 validation reached
+0.0092 quality MAE and 0.9284 latency coverage, but failed the 0.70 plan-pair ranking gate at
+0.6815, per-plan latency coverage because P0/P1 have no latency labels, and the 0.10 pinball
+improvement gate at 0.0479. The artifacts are therefore `research_only` and explicitly blocked from
+serving. See `docs/model_training.md` and
+`benchmark/manifests/stage11_model_evidence_r2.json`.
+
+## Stage 12 research-only/offline policy comparison
+
+Stage 12 scores all eight P0 plans only against validation evidence and does not connect the Stage
+11 R2 artifacts to public search. Because the Stage 11 schema requires dataset source and query
+tags that normal requests do not carry, `OfflineResearchContext` makes that dependency explicit;
+public `planner=cost_aware` continues to return `MODE_UNAVAILABLE`.
+
+```bash
+uv run python scripts/evaluate_cost_policy.py
+```
+
+The actual R2 comparison evaluated 3,840 candidates across 480 query-budget groups. The research
+policy produced Recall@10 +0.005507 versus Rule, +0.000726 versus BestFixed, and 0.002618 Oracle
+regret. However, 1,856 candidate predictions were outside their valid range and 120 groups had no
+predicted-feasible plan. The rolling calibration guard also disabled the artifact after the 319th
+evaluable observation when p95 underprediction reached 0.21, routing the remaining 422 groups to
+Rule. The model and result therefore remain `research_only`, not evidence for serving activation.
+See `docs/offline_cost_policy.md` and
+`benchmark/manifests/stage12_policy_evidence_r2.json` for the full contract and checksums.
+
 ## License
 
 RAGPlan is licensed under Apache License 2.0. Third-party software, models, and
