@@ -234,7 +234,7 @@ docker compose up -d qdrant
 
 uv run ragplan ingest \
   --input examples/sample_corpus.json \
-  --corpus-version sample-stage3-v1 \
+  --corpus-version sample-stage3-v2 \
   --model-cache models/minilm \
   --stage-manifest artifacts/sample-stage3-vector.json \
   --chunks-output artifacts/sample-stage3-chunks.jsonl
@@ -315,10 +315,10 @@ uv run python scripts/activate_corpus.py \
   --vector-stage-manifest artifacts/sample-stage3-vector.json \
   --graph-stage-manifest artifacts/sample-stage4-graph.json \
   --manifest-root artifacts/ingestion \
-  --ingestion-run-id sample-stage4-run-v1 \
+  --ingestion-run-id sample-stage4-run-v2 \
   --source-dataset ragplan-stage3-sample \
-  --source-version v1 \
-  --source-sha256 7d7b70f6ac6b6e9cd8053efec5526a797b57f482a678267f4faea66219cf54de
+  --source-version v2 \
+  --source-sha256 55689e27fe1bae8f409182b312263a25cf0f8904613d146b3bed4c2f7945013f
 ```
 
 The graph writer is an idempotent no-op for identical content under the same corpus
@@ -358,7 +358,7 @@ request above the preset candidate count is recorded as a request-floor override
 export RAGPLAN_GRAPH__PASSWORD=ragplan-demo-change-me
 
 uv run python scripts/search_graph.py \
-  --query "How is Apple related to Beats Electronics?" \
+  --query "Who collaborated with Ada Lovelace?" \
   --manifest-root artifacts/ingestion \
   --graph-stage-manifest artifacts/sample-stage4-graph.json \
   --extractor-lockfile uv.lock \
@@ -398,7 +398,7 @@ and the live stores all agree on corpus/count/checksum/model and extractor prove
 export RAGPLAN_GRAPH__PASSWORD=ragplan-demo-change-me
 
 uv run python scripts/search_hybrid.py \
-  --query "How is Apple related to Beats Electronics?" \
+  --query "Who collaborated with Ada Lovelace?" \
   --mode fixed_hybrid \
   --plan-id P5 \
   --model-snapshot "$MODEL_SNAPSHOT" \

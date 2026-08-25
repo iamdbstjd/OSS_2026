@@ -201,7 +201,7 @@ def quickstart_vector_command(
         Path("artifacts/quickstart-vector-stage.json"),
         "--stage-manifest",
     ),
-    corpus_version: str = typer.Option("ragplan-quickstart-v1", "--corpus-version"),
+    corpus_version: str = typer.Option("ragplan-quickstart-v2", "--corpus-version"),
     qdrant_url: str = typer.Option("http://127.0.0.1:6333", "--qdrant-url"),
     pretty: bool = typer.Option(False, "--pretty"),
 ) -> None:

@@ -4,7 +4,7 @@
   "documents": [
     {
       "source_document_id": "ada-lovelace",
-      "text": "Ada Lovelace wrote extensive notes about Charles Babbage's Analytical Engine. Her notes included an algorithm for computing Bernoulli numbers, and she is often described as an early computer programmer."
+      "text": "Ada Lovelace collaborated with Charles Babbage. She wrote extensive notes about his Analytical Engine. Her notes included an algorithm for computing Bernoulli numbers, and she is often described as an early computer programmer."
     },
     {
       "source_document_id": "qdrant",

@@ -112,7 +112,7 @@ def test_public_surface_is_ready_for_the_dual_store_demo(api_url: str) -> None:
 def test_fixed_hybrid_p5_is_real_parallel_retrieval_and_updates_metrics(api_url: str) -> None:
     query = os.environ.get(
         "RAGPLAN_QA_HYBRID_QUERY",
-        "How is Apple related to its founder?",
+        "Who collaborated with Ada Lovelace?",
     )
     payload: dict[str, object] = {
         "query": query,
