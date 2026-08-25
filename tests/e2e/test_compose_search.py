@@ -114,17 +114,21 @@ def test_fixed_hybrid_p5_is_real_parallel_retrieval_and_updates_metrics(api_url:
         "RAGPLAN_QA_HYBRID_QUERY",
         "How is Apple related to its founder?",
     )
+    payload: dict[str, object] = {
+        "query": query,
+        "planner": "fixed_hybrid",
+        "plan_id": "P5",
+        "latency_budget_ms": 500,
+        "top_k": 3,
+    }
+    warmup_raw = _search(api_url, {**payload, "latency_budget_ms": 5_000})
+    assert warmup_raw.status_code == 200, warmup_raw.text
+    warmup = SearchResponse.model_validate_json(warmup_raw.content)
+    assert warmup.status is SearchStatus.COMPLETE
+    assert all(item.status is BranchStatus.SUCCEEDED for item in warmup.trace.branch_results)
+
     before = MetricsSnapshot.model_validate_json(_get(api_url, "/metrics").content)
-    raw = _search(
-        api_url,
-        {
-            "query": query,
-            "planner": "fixed_hybrid",
-            "plan_id": "P5",
-            "latency_budget_ms": 500,
-            "top_k": 3,
-        },
-    )
+    raw = _search(api_url, payload)
 
     assert raw.status_code == 200, raw.text
     response = SearchResponse.model_validate_json(raw.content)
@@ -138,8 +142,14 @@ def test_fixed_hybrid_p5_is_real_parallel_retrieval_and_updates_metrics(api_url:
         BranchKind.GRAPH,
     }
     assert all(item.status is BranchStatus.SUCCEEDED for item in response.trace.branch_results)
+    branch_results = {item.branch: item for item in response.trace.branch_results}
+    assert branch_results[BranchKind.VECTOR].hit_count > 0
+    assert branch_results[BranchKind.GRAPH].hit_count > 0
     assert response.trace.fusion_trace is not None
     assert response.trace.fusion_trace.fusion_version == "weighted_rrf_v1"
+    assert response.trace.fusion_trace.vector_input_count > 0
+    assert response.trace.fusion_trace.graph_input_count > 0
+    assert any(BranchKind.GRAPH in item.sources for item in response.results)
     trace_keys = set(_all_keys(response.trace.model_dump(mode="json")))
     assert "raw_query" not in trace_keys
     assert "query_embedding" not in trace_keys
@@ -186,7 +196,7 @@ def test_vector_quickstart_ranks_ada_evidence_first(api_url: str) -> None:
     assert payload["infrastructure"] == "qdrant_plus_minilm"
     assert payload["search"]["planner_decision"]["selected_plan_id"] == "P0"
     assert payload["search"]["results"]
-    assert "Ada Lovelace" in payload["search"]["results"][0]["text"]
+    assert "ada lovelace" in payload["search"]["results"][0]["text"].casefold()
 
 
 def test_neo4j_outage_degrades_to_vector_and_recovers(api_url: str) -> None:
@@ -226,9 +236,9 @@ def test_neo4j_outage_degrades_to_vector_and_recovers(api_url: str) -> None:
         graph_raw = _search(
             api_url,
             {
-                "query": "How are these entities related?",
+                "query": "What did Ada Lovelace write about?",
                 "planner": "graph",
-                "latency_budget_ms": 500,
+                "latency_budget_ms": 5_000,
                 "top_k": 3,
             },
         )

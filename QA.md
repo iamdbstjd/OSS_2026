@@ -1,6 +1,6 @@
 # RAGPlan 오픈소스 대회 QA 계획서
 
-> 상태: QA 실행 계획 초안
+> 상태: QA 실행 중 — QA-BUG-002로 P0 시연 승인 차단
 > 범위: Stage 0~12 및 Stage 13 공개 기능
 > 주요 목표: 재현 가능한 3분 대회 시연
 
@@ -54,7 +54,7 @@ WSL Ubuntu와 `~/projects/OSS_2026` 저장소를 사용한다. `.env`, 자격 �
 | QA-004 | P0 | Stage 12 배포 주장 | `research_only`, 공개 제공 비활성화, guard 작동 | `tests/qa/test_demo_qa.py` |
 | QA-005 | P1 | 공급자 중립 LLM 전달 | 순위화된 근거 유지, 공급자 SDK 미사용 | `tests/qa/test_demo_qa.py` |
 | QA-101 | P0 | 공개 Compose 기능 | `/health`, `/ready`, `/metrics`가 v1 계약 충족 | `tests/e2e/test_compose_search.py` |
-| QA-102 | P0 | Fixed Hybrid P5 | vector와 graph 성공, `weighted_rrf_v1`, 결과 존재 | `tests/e2e/test_compose_search.py` |
+| QA-102 | P0 | Fixed Hybrid P5 | vector와 graph가 각각 근거를 반환하고 `weighted_rrf_v1` 결과에 실제 기여 | `tests/e2e/test_compose_search.py` |
 | QA-103 | P1 | 메트릭 집계 | 검색 후 요청·플래너·지연시간 카운터 증가 | `tests/e2e/test_compose_search.py` |
 | QA-104 | P0 | 공개 cost-aware 요청 | HTTP 503 `MODE_UNAVAILABLE` | `tests/e2e/test_compose_search.py` |
 | QA-105 | P0 | Vector quickstart | P0 결과에서 Ada Lovelace 근거가 1위 | `tests/e2e/test_compose_search.py` |
@@ -161,28 +161,44 @@ Stage 12 증거 매니페스트 체크섬
 
 ## 10. 현재 로컬 실행 기록
 
-날짜: 2026-08-23
-기준 커밋: `9ee5a55`
+날짜: 2026-08-25
+기준 커밋: `bef653f` (현재 QA 변경사항 커밋 전)
 
 | 검사 | 결과 | 증거 |
 |---|---|---|
-| 신규 빠른 QA | PASS | 5개 통과 |
+| Ruff 포맷 | PASS | 192개 파일 포맷 확인 |
+| Ruff 린트 | PASS | 모든 검사 통과 |
+| 타입 검사 | PASS | 88개 소스 파일에서 문제 없음 |
+| 신규 빠른 QA | PASS | 5개 통과, 413개 제외 |
 | 비통합 회귀 테스트 | PASS | 399개 통과, 1개 건너뜀, 18개 제외 |
-| QA 파일 포맷 및 린트 | PASS | 3개 파일 포맷 확인, Ruff 검사 통과 |
-| 라이브 E2E 안전장치 | PASS | 명시적 허용 없이 5개 건너뜀, 서비스 변경 없음 |
-| 타입 검사 | BLOCKED | QA-BUG-001 |
-| 라이브 Compose QA | BLOCKED | QA-ENV-001 |
+| 실제 백엔드 통합 테스트 | PASS | Qdrant, MiniLM, Neo4j, Hybrid 집중 검사 4개 통과 |
+| Docker 연결 및 Compose 상태 | PASS | API, Qdrant, Neo4j 모두 healthy |
+| API 준비 상태 | PASS | `ready`, `dual_store_active`, 활성 코퍼스 확인 |
+| 전체 라이브 E2E 기존 검사 | PASS | quickstart·장애 주입·복구 포함 5개 통과 |
+| Fixed Hybrid 실제 Graph 기여 강화 검사 | BLOCKED | vector 3개, graph 0개, fusion graph 입력 0개 |
 
-### QA-BUG-001 — Stage 11 `skops` mypy import 분류
+### QA-BUG-002 — 샘플 코퍼스에 실제 Graph 검색 기여가 없음 (OPEN, P0)
 
-`uv run mypy src`는 `src/ragplan/planner/artifacts.py:16`에서 오류 3개를 보고한다.
-설치된 `skops` 런타임과 관련 테스트는 정상 동작하지만, 소스는 `import-untyped`만
-무시하는 반면 mypy는 `import-not-found`를 보고한다. 이 기존 결함을 수정하고 검토하기
-전까지 전체 출시 판정은 차단된다.
+Fixed Hybrid P5 요청은 HTTP 200이고 vector와 graph branch가 모두 `succeeded`이지만,
+활성 `sample-stage3-v1` 코퍼스에서 vector는 3개, graph는 0개의 근거를 반환한다.
+`fusion_trace.graph_input_count`도 0이며 최종 결과의 기여 출처는 모두 vector뿐이다.
+따라서 현재 상태로는 “Vector와 Graph 결과를 Weighted RRF로 실제 결합한다”는 시연 주장을
+뒷받침할 수 없다.
 
-### QA-ENV-001 — 현재 WSL 배포판에서 Docker를 사용할 수 없음
+원인 분석에서 샘플 원문은 대문자 entity를 포함하지만, uncased MiniLM tokenizer의 token ID를
+decode해 chunk를 만들면서 본문이 소문자로 바뀌는 흐름을 확인했다. 이 텍스트를 spaCy에
+전달하면 entity와 relation이 충분히 추출되지 않아 활성 graph manifest의 relation 수가 0이
+된다. 로컬 MiniLM tokenizer는 원문 offset mapping을 제공하므로 원문 대소문자를 보존하는
+chunking 수정이 가능한 상태다.
 
-현재 WSL 셸은 `docker` 명령을 사용할 수 없다고 보고하며 Docker Desktop의 WSL 통합
-활성화를 권장한다. 따라서 Qdrant, Hybrid, 장애, 복구 라이브 QA를 실행하지 못했다.
-컨테이너를 중지하거나 변경하지는 않았다. 라이브 QA 또는 장애 주입 QA를 활성화하기 전에
-Docker 통합 문제를 해결하고 Stage 6 활성 코퍼스를 검증해야 한다.
+통과 조건은 원문 대소문자를 보존해 새 코퍼스 버전을 재수집·재활성화하고, QA-102에서 graph
+branch hit, fusion graph 입력, 최종 graph source contribution이 모두 1개 이상임을 확인하는
+것이다. 이 검사는 실제 결함이 해결될 때까지 완화하거나 제거하지 않는다.
+
+### 해결된 환경 및 도구 이슈
+
+- 이전 QA-BUG-001은 mypy 증분 캐시를 새로 만든 뒤 해소되었으며, 일반 `uv run mypy src`도
+  88개 소스 파일에서 통과했다.
+- 이전 QA-ENV-001은 WSL 사용자를 `docker` 그룹이 적용된 새 셸로 전환해 해소되었다.
+  `docker version`에서 Client와 Docker Desktop Server를 모두 확인했고 라이브 장애·복구
+  테스트까지 통과했다.
