@@ -145,6 +145,7 @@ def test_quickstart_command_runs_one_packaged_orchestration(
 
     async def fake_quickstart(**kwargs: object) -> FakeResult:
         assert kwargs["input_path"].name == "sample_corpus.json"  # type: ignore[union-attr]
+        assert kwargs["corpus_version"] == "ragplan-quickstart-v2"
         return FakeResult()
 
     monkeypatch.setattr(cli_module, "quickstart_vector", fake_quickstart)

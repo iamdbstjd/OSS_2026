@@ -11,6 +11,7 @@ from typing import Annotated, Any, Literal, Self, cast
 
 from pydantic import (
     AfterValidator,
+    AliasChoices,
     BaseModel,
     ConfigDict,
     Field,
@@ -382,12 +383,21 @@ class GraphPath(FrozenModel):
 
     entity_ids: tuple[NonEmptyString, ...] = Field(min_length=2, max_length=4)
     relations: tuple[Relation, ...] = Field(min_length=1, max_length=3)
+    validated_hop_count: Annotated[int, Field(ge=1, le=3)] | None = Field(
+        default=None,
+        validation_alias=AliasChoices("hop_count", "validated_hop_count"),
+        exclude=True,
+        repr=False,
+    )
     score: NonNegativeFloat = 0.0
 
     @model_validator(mode="after")
     def _check_path_shape(self) -> GraphPath:
         if len(self.entity_ids) != len(self.relations) + 1:
             raise ValueError("a graph path needs exactly one more entity than relations")
+        if self.validated_hop_count is not None and self.validated_hop_count != len(self.relations):
+            raise ValueError("graph path hop count must match its relations")
+        object.__setattr__(self, "validated_hop_count", None)
         if len(set(self.entity_ids)) != len(self.entity_ids):
             raise ValueError("a graph path cannot repeat an entity")
         for left, right, relation in zip(

@@ -7,7 +7,12 @@ from dataclasses import dataclass
 import pytest
 
 from ragplan.core.ids import canonical_document_id
-from ragplan.ingestion.chunker import ChunkerConfig, TokenEncoding, chunk_document
+from ragplan.ingestion.chunker import (
+    ChunkerConfig,
+    HuggingFaceTokenizerAdapter,
+    TokenEncoding,
+    chunk_document,
+)
 
 pytestmark = pytest.mark.unit
 
@@ -27,6 +32,54 @@ class FakeEncoding:
 class FakeTokenizer:
     def encode(self, text: str) -> TokenEncoding:
         return FakeEncoding(tuple(text.replace("\n", " ").split()))
+
+
+class FakeUncasedFastTokenizer:
+    is_fast = True
+
+    def encode(self, text: str, *, add_special_tokens: bool) -> list[int]:
+        assert add_special_tokens is False
+        return list(range(len(text.split())))
+
+    def decode(
+        self,
+        token_ids: list[int],
+        *,
+        skip_special_tokens: bool,
+        clean_up_tokenization_spaces: bool,
+    ) -> str:
+        assert skip_special_tokens is True
+        assert clean_up_tokenization_spaces is False
+        return " ".join(("ada", "lovelace", "wrote")[index] for index in token_ids)
+
+    def __call__(
+        self,
+        text: str,
+        *,
+        add_special_tokens: bool,
+        return_offsets_mapping: bool,
+    ) -> dict[str, list[int] | list[tuple[int, int]]]:
+        assert add_special_tokens is False
+        assert return_offsets_mapping is True
+        words = text.split()
+        offsets: list[tuple[int, int]] = []
+        cursor = 0
+        for word in words:
+            start = text.index(word, cursor)
+            end = start + len(word)
+            offsets.append((start, end))
+            cursor = end
+        return {"input_ids": list(range(len(words))), "offset_mapping": offsets}
+
+
+def test_hugging_face_adapter_preserves_source_case_with_fast_tokenizer_offsets() -> None:
+    tokenizer = HuggingFaceTokenizerAdapter.from_tokenizer(FakeUncasedFastTokenizer())
+
+    encoding = tokenizer.encode("Ada Lovelace wrote")
+
+    assert encoding.token_count == 3
+    assert encoding.decode(0, 3) == "Ada Lovelace wrote"
+    assert encoding.decode(1, 3) == "Lovelace wrote"
 
 
 def test_chunk_document_uses_token_windows_overlap_and_canonical_ids() -> None:

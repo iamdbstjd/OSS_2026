@@ -68,6 +68,7 @@ markers = [
     "integration: tests requiring external services",
     "e2e: end-to-end tests",
     "benchmark: performance or benchmark tests",
+    "qa: competition demo and release-quality assurance tests",
 ]
 
 [tool.ruff]

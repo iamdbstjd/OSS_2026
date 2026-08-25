@@ -381,7 +381,15 @@ def test_graph_path_rejects_cycles_and_disconnected_relations() -> None:
         source_chunk_id="chunk-1",
         extractor_version="v1",
     )
-    assert GraphPath(entity_ids=("entity-b", "entity-a"), relations=(relation,)).hop_count == 1
+    path = GraphPath(entity_ids=("entity-b", "entity-a"), relations=(relation,))
+    assert path.hop_count == 1
+    assert GraphPath.model_validate_json(path.model_dump_json()) == path
+    with pytest.raises(ValidationError, match="hop count"):
+        GraphPath(
+            entity_ids=("entity-b", "entity-a"),
+            relations=(relation,),
+            hop_count=2,
+        )
     with pytest.raises(ValidationError, match="repeat"):
         GraphPath(entity_ids=("entity-a", "entity-b", "entity-a"), relations=(relation, relation))
 

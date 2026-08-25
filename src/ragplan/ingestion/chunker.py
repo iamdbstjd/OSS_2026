@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Protocol
 
@@ -11,6 +11,8 @@ from ragplan.core.models import Chunk
 from ragplan.ingestion.normalize import normalize_text
 
 type TokenId = int
+type TokenOffset = tuple[int, int]
+type OffsetEncoder = Callable[[str], tuple[TokenOffset, ...]]
 
 
 class TokenEncoding(Protocol):
@@ -62,9 +64,11 @@ class HuggingFaceTokenizerAdapter:
         self,
         encode: Callable[[str], Sequence[TokenId]],
         decode: Callable[[Sequence[TokenId]], str],
+        encode_offsets: OffsetEncoder | None = None,
     ) -> None:
         self._encode = encode
         self._decode = decode
+        self._encode_offsets = encode_offsets
 
     @classmethod
     def from_tokenizer(cls, tokenizer: object) -> HuggingFaceTokenizerAdapter:
@@ -90,10 +94,44 @@ class HuggingFaceTokenizerAdapter:
                 raise TypeError("tokenizer.decode must return text")
             return result
 
-        return cls(encode=encode, decode=decode)
+        encode_offsets: OffsetEncoder | None = None
+        call_method = getattr(tokenizer, "__call__", None)
+        if getattr(tokenizer, "is_fast", False) is True and callable(call_method):
 
-    def encode(self, text: str) -> _TokenIdsEncoding:
+            def encode_offsets(text: str) -> tuple[TokenOffset, ...]:
+                result = call_method(
+                    text,
+                    add_special_tokens=False,
+                    return_offsets_mapping=True,
+                )
+                return _validated_offsets(result, text_length=len(text))
+
+        return cls(encode=encode, decode=decode, encode_offsets=encode_offsets)
+
+    def encode(self, text: str) -> TokenEncoding:
+        if self._encode_offsets is not None:
+            return _SourceOffsetEncoding(
+                source_text=text,
+                offsets=self._encode_offsets(text),
+            )
         return _TokenIdsEncoding(token_ids=tuple(self._encode(text)), decode_ids=self._decode)
+
+
+@dataclass(frozen=True, slots=True)
+class _SourceOffsetEncoding:
+    source_text: str
+    offsets: tuple[TokenOffset, ...]
+
+    @property
+    def token_count(self) -> int:
+        return len(self.offsets)
+
+    def decode(self, start: int, end: int) -> str:
+        if not 0 <= start <= end <= self.token_count:
+            raise ValueError("token range is outside the encoding")
+        if start == end:
+            return ""
+        return self.source_text[self.offsets[start][0] : self.offsets[end - 1][1]]
 
 
 @dataclass(frozen=True, slots=True)
@@ -107,6 +145,45 @@ class _TokenIdsEncoding:
 
     def decode(self, start: int, end: int) -> str:
         return self.decode_ids(self.token_ids[start:end])
+
+
+def _validated_offsets(value: object, *, text_length: int) -> tuple[TokenOffset, ...]:
+    if not isinstance(value, Mapping):
+        raise TypeError("fast tokenizer call must return a mapping")
+    token_ids = value.get("input_ids")
+    raw_offsets = value.get("offset_mapping")
+    if (
+        not isinstance(token_ids, Sequence)
+        or isinstance(token_ids, (str, bytes))
+        or not isinstance(raw_offsets, Sequence)
+        or isinstance(raw_offsets, (str, bytes))
+    ):
+        raise TypeError("fast tokenizer must return input_ids and offset_mapping sequences")
+    if len(token_ids) != len(raw_offsets):
+        raise ValueError("tokenizer input IDs and offsets must have equal lengths")
+
+    offsets: list[TokenOffset] = []
+    previous_end = 0
+    for raw_offset in raw_offsets:
+        if (
+            not isinstance(raw_offset, Sequence)
+            or isinstance(raw_offset, (str, bytes))
+            or len(raw_offset) != 2
+        ):
+            raise TypeError("each tokenizer offset must contain start and end integers")
+        start, end = raw_offset
+        if (
+            isinstance(start, bool)
+            or not isinstance(start, int)
+            or isinstance(end, bool)
+            or not isinstance(end, int)
+        ):
+            raise TypeError("each tokenizer offset must contain start and end integers")
+        if start < previous_end or not 0 <= start < end <= text_length:
+            raise ValueError("tokenizer offsets must be ordered non-empty source ranges")
+        offsets.append((start, end))
+        previous_end = end
+    return tuple(offsets)
 
 
 def chunk_document(
