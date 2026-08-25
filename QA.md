@@ -1,6 +1,6 @@
 # RAGPlan 오픈소스 대회 QA 계획서
 
-> 상태: QA 실행 중 — QA-BUG-002로 P0 시연 승인 차단
+> 상태: BLOCKED — 자동화 QA PASS, 수동 QA-201·QA-202 완료 전 시연 승인 보류
 > 범위: Stage 0~12 및 Stage 13 공개 기능
 > 주요 목표: 재현 가능한 3분 대회 시연
 
@@ -162,38 +162,53 @@ Stage 12 증거 매니페스트 체크섬
 ## 10. 현재 로컬 실행 기록
 
 날짜: 2026-08-25
-기준 커밋: `bef653f` (현재 QA 변경사항 커밋 전)
+기준 커밋: `9b6eb15`
 
 | 검사 | 결과 | 증거 |
 |---|---|---|
 | Ruff 포맷 | PASS | 192개 파일 포맷 확인 |
 | Ruff 린트 | PASS | 모든 검사 통과 |
 | 타입 검사 | PASS | 88개 소스 파일에서 문제 없음 |
-| 신규 빠른 QA | PASS | 5개 통과, 413개 제외 |
-| 비통합 회귀 테스트 | PASS | 399개 통과, 1개 건너뜀, 18개 제외 |
+| 신규 빠른 QA | PASS | 5개 통과, 414개 제외 |
+| 비통합 회귀 테스트 | PASS | 400개 통과, 1개 건너뜀, 18개 제외 |
 | 실제 백엔드 통합 테스트 | PASS | Qdrant, MiniLM, Neo4j, Hybrid 집중 검사 4개 통과 |
 | Docker 연결 및 Compose 상태 | PASS | API, Qdrant, Neo4j 모두 healthy |
-| API 준비 상태 | PASS | `ready`, `dual_store_active`, 활성 코퍼스 확인 |
-| 전체 라이브 E2E 기존 검사 | PASS | quickstart·장애 주입·복구 포함 5개 통과 |
-| Fixed Hybrid 실제 Graph 기여 강화 검사 | BLOCKED | vector 3개, graph 0개, fusion graph 입력 0개 |
+| API 준비 상태 | PASS | `ready`, `dual_store_active`, `sample-stage3-v2` 확인 |
+| 최종 image 라이브 E2E | PASS | quickstart·장애 주입·복구 포함 5개 통과 |
+| Fixed Hybrid 실제 Graph 기여 강화 검사 | PASS | vector 3개, graph 1개, fusion graph 입력 1개 |
+| Stage 13 OpenAPI 고정 계약 | PASS | image 내부 SHA-256이 승인값과 일치 |
+| 3분 촬영 리허설 | PENDING | QA-201 수동 스톱워치 필요 |
+| 영상 비밀정보 프레임 검토 | PENDING | QA-202 최종 영상 필요 |
 
-### QA-BUG-002 — 샘플 코퍼스에 실제 Graph 검색 기여가 없음 (OPEN, P0)
+### QA-BUG-002 — 샘플 코퍼스에 실제 Graph 검색 기여가 없음 (RESOLVED, P0)
 
-Fixed Hybrid P5 요청은 HTTP 200이고 vector와 graph branch가 모두 `succeeded`이지만,
-활성 `sample-stage3-v1` 코퍼스에서 vector는 3개, graph는 0개의 근거를 반환한다.
-`fusion_trace.graph_input_count`도 0이며 최종 결과의 기여 출처는 모두 vector뿐이다.
-따라서 현재 상태로는 “Vector와 Graph 결과를 Weighted RRF로 실제 결합한다”는 시연 주장을
-뒷받침할 수 없다.
+기존 `sample-stage3-v1`에서는 Fixed Hybrid P5의 vector와 graph branch가 모두
+`succeeded`였지만 graph 근거와 fusion graph 입력이 0개였다. 기존 E2E는 branch status만
+확인해 이 빈 성공을 통과시키고 있었다.
 
-원인 분석에서 샘플 원문은 대문자 entity를 포함하지만, uncased MiniLM tokenizer의 token ID를
-decode해 chunk를 만들면서 본문이 소문자로 바뀌는 흐름을 확인했다. 이 텍스트를 spaCy에
-전달하면 entity와 relation이 충분히 추출되지 않아 활성 graph manifest의 relation 수가 0이
-된다. 로컬 MiniLM tokenizer는 원문 offset mapping을 제공하므로 원문 대소문자를 보존하는
-chunking 수정이 가능한 상태다.
+원인은 uncased MiniLM tokenizer의 token ID를 decode해 chunk를 만들면서 원문 대소문자를
+잃고, spaCy entity/relation 추출 입력이 훼손되는 흐름이었다. 빠른 tokenizer의 offset mapping으로
+원문 표기를 보존하도록 chunker를 수정하고, 검증된
+`Ada Lovelace collaborated with Charles Babbage.` 관계 문장을 sample corpus에 반영했다.
 
-통과 조건은 원문 대소문자를 보존해 새 코퍼스 버전을 재수집·재활성화하고, QA-102에서 graph
-branch hit, fusion graph 입력, 최종 graph source contribution이 모두 1개 이상임을 확인하는
-것이다. 이 검사는 실제 결함이 해결될 때까지 완화하거나 제거하지 않는다.
+새 `sample-stage3-v2`는 Qdrant chunk 3개와 Neo4j entity 6개, mention 6개, relation 1개로
+staging·reconciliation·activation되었다. 최종 P5 응답은 vector 3개와 graph 1개를 입력받고,
+최상위 결과에 vector와 graph source contribution을 함께 보존한다. 강화된 QA-102는 이 조건을
+계속 강제한다.
+
+### QA-BUG-003 — GraphPath JSON round-trip 불일치 (RESOLVED, P1)
+
+Graph 결과가 처음 실제 응답에 포함되면서 computed field인 `hop_count`가 JSON에 직렬화되지만
+같은 strict 계약 모델이 이를 extra field로 거부하는 문제를 발견했다. 입력 `hop_count`를 숨김
+alias로 받아 relation 길이와 일치하는지 검증하고, 출력은 기존 computed field를 유지하도록
+수정했다. Stage 13 OpenAPI SHA-256은
+`c25657b5ca93d3b2523c0f47ba0cb7a6d7e71fd454acbd12ae2010f7b0db2c53`으로 변하지 않았다.
+
+### 남은 수동 승인 항목
+
+- QA-201: 실제 화면 전환과 내레이션을 포함한 3분 리허설을 아직 측정하지 않았다.
+- QA-202: 최종 녹화물이 없으므로 `.env`, 비밀번호, 토큰, 개인 경로 노출 여부를 프레임별로
+  검토하지 않았다.
 
 ### 해결된 환경 및 도구 이슈
 
