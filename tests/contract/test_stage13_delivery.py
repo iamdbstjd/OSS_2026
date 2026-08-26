@@ -18,8 +18,11 @@ def test_stage13_accessibility_files_are_present() -> None:
     required = (
         "src/ragplan/api/readiness.py",
         "src/ragplan/observability/metrics.py",
+        "src/ragplan/observability/tracing.py",
         "src/ragplan/cli/services.py",
         "src/ragplan/ingestion/service.py",
+        "src/ragplan/resources/sample_corpus.json",
+        "scripts/verify_clean_wheel.py",
         "examples/llm_handoff.py",
         "examples/README.md",
         "tests/unit/test_readiness.py",
@@ -53,7 +56,15 @@ def test_cli_exposes_demo_search_ingest_verify_and_vector_quickstart() -> None:
     help_result = CliRunner().invoke(app, ["--help"])
 
     assert help_result.exit_code == 0
-    for command in ("demo-plan", "search", "ingest", "verify", "quickstart-vector"):
+    for command in (
+        "demo-plan",
+        "search",
+        "ingest",
+        "verify",
+        "quickstart-vector",
+        "download-model",
+        "qa",
+    ):
         assert command in help_result.stdout
 
 

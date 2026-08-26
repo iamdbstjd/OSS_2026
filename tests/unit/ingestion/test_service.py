@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import hashlib
+import json
 from collections.abc import Sequence
+from importlib.resources import files
 from pathlib import Path
 
 import pytest
@@ -84,6 +86,13 @@ def test_packaged_corpus_loader_is_strict_and_accepts_sample(tmp_path: Path) -> 
     with pytest.raises(RAGPlanError) as captured:
         load_corpus_file(duplicate)
     assert captured.value.code is ErrorCode.INVALID_REQUEST
+
+
+def test_packaged_sample_matches_the_documented_repository_example() -> None:
+    packaged = files("ragplan.resources").joinpath("sample_corpus.json").read_text(encoding="utf-8")
+    documented = Path("examples/sample_corpus.json").read_text(encoding="utf-8")
+
+    assert json.loads(packaged) == json.loads(documented)
 
 
 @pytest.mark.asyncio

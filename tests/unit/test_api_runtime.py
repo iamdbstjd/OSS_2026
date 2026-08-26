@@ -152,7 +152,7 @@ async def test_runtime_bootstrap_verifies_packaged_model_and_vector_stage(
             events.append(f"client:{url}")
 
     class FakeManager:
-        def __init__(self, client: object, config: object) -> None:
+        def __init__(self, client: object, config: object, **kwargs: object) -> None:
             events.append("manager")
 
         async def verify_stage(self, stage: VectorStageManifest) -> VectorStageManifest:
@@ -215,7 +215,7 @@ async def test_runtime_closes_qdrant_backend_when_stage_verification_fails(
         def __init__(self, **kwargs: object) -> None: ...
 
     class FakeManager:
-        def __init__(self, client: object, config: object) -> None: ...
+        def __init__(self, client: object, config: object, **kwargs: object) -> None: ...
 
         async def verify_stage(self, stage: VectorStageManifest) -> VectorStageManifest:
             raise RAGPlanError(ErrorCode.CORPUS_INCONSISTENT, "inconsistent")
@@ -445,7 +445,7 @@ async def test_stage6_runtime_verifies_both_live_stores_before_shared_engine(
             events.append("qdrant-client")
 
     class FakeManager:
-        def __init__(self, client: object, config: object) -> None:
+        def __init__(self, client: object, config: object, **kwargs: object) -> None:
             events.append("qdrant-manager")
 
         async def verify_stage(self, stage: VectorStageManifest) -> VectorStageManifest:

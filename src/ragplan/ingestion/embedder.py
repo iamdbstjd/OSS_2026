@@ -6,7 +6,7 @@ import asyncio
 import importlib
 import math
 from collections.abc import Iterable, Mapping, Sequence
-from concurrent.futures import Executor
+from concurrent.futures import Executor, ThreadPoolExecutor
 from pathlib import Path
 from typing import Protocol, cast
 
@@ -106,6 +106,7 @@ class SentenceTransformerEmbedder:
         self._batch_size = batch_size
         self._tokenizer = tokenizer
         self._executor = executor
+        self._owns_executor = False
 
     @classmethod
     def from_local_snapshot(
@@ -201,10 +202,34 @@ class SentenceTransformerEmbedder:
         return await self._embed(materialized)
 
     async def _embed(self, texts: tuple[str, ...]) -> tuple[EmbeddingVector, ...]:
-        if self._executor is None:
-            return self._encode_sync(texts)
+        executor = self._ensure_executor()
         loop = asyncio.get_running_loop()
-        return await loop.run_in_executor(self._executor, self._encode_sync, texts)
+        return await loop.run_in_executor(executor, self._encode_sync, texts)
+
+    def _ensure_executor(self) -> Executor:
+        """Return an off-loop executor so model.encode never blocks the event loop.
+
+        Encoding one MiniLM batch takes ~10-15ms of CPU-bound work; running it
+        inline stalls every concurrent request sharing the loop (deadline
+        cancellations, head-of-line blocking). Callers may inject their own
+        executor; otherwise a single dedicated worker is provisioned lazily.
+        """
+
+        if self._executor is None:
+            self._executor = ThreadPoolExecutor(
+                max_workers=1,
+                thread_name_prefix="ragplan-embed",
+            )
+            self._owns_executor = True
+        return self._executor
+
+    def aclose(self) -> None:
+        """Shut down a lazily provisioned executor; injected ones are untouched."""
+
+        if self._owns_executor and self._executor is not None:
+            self._executor.shutdown(wait=False)
+        self._executor = None
+        self._owns_executor = False
 
     def _encode_sync(self, texts: tuple[str, ...]) -> tuple[EmbeddingVector, ...]:
         try:

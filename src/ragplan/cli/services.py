@@ -6,7 +6,10 @@ import hashlib
 import json
 import re
 from collections.abc import Mapping
+from enum import StrEnum
+from importlib.resources import as_file, files
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from typing import Annotated, Literal
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
@@ -36,7 +39,11 @@ from ragplan.core.models import (
 from ragplan.ingestion.audit import load_graph_tier_policy
 from ragplan.ingestion.model_manifest import load_default_model_artifact_manifest
 from ragplan.ingestion.normalize import normalize_text
-from ragplan.ingestion.service import VectorIngestResult, ingest_vector_corpus
+from ragplan.ingestion.service import (
+    VectorIngestResult,
+    ingest_vector_corpus,
+    prepare_pinned_model,
+)
 from ragplan.planner.catalog import load_default_plan_catalog
 from ragplan.planner.features import extract_query_features, load_default_query_feature_config
 from ragplan.planner.rule import RulePlanner, load_default_rule_planner_config
@@ -81,6 +88,35 @@ class QuickstartVectorResult(FrozenModel):
     vector_stage_manifest: str
     corpus_version: str
     search: SearchResponse
+
+
+class DownloadModelResult(FrozenModel):
+    schema_version: Literal["download_model_v1"] = "download_model_v1"
+    status: Literal["ready"] = "ready"
+    model_id: str
+    revision: str
+    artifact_manifest_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    snapshot_path: str
+
+
+class QALevel(StrEnum):
+    SMOKE = "smoke"
+    VECTOR = "vector"
+    FULL = "full"
+
+
+class QACheck(FrozenModel):
+    name: str
+    status: Literal["passed", "failed"]
+    detail: str
+
+
+class QAResult(FrozenModel):
+    schema_version: Literal["qa_v1"] = "qa_v1"
+    status: Literal["passed", "failed"]
+    level: QALevel
+    checks: tuple[QACheck, ...] = Field(min_length=1)
+    held_out_test_accessed: Literal[False] = False
 
 
 def explain_plan(
@@ -252,12 +288,52 @@ async def verify_installation(
 async def quickstart_vector(
     *,
     query: str,
-    input_path: Path,
+    input_path: Path | None,
     model_cache: Path,
     stage_manifest_path: Path,
     corpus_version: str,
     qdrant_url: str,
     collection_prefix: str = DEFAULT_COLLECTION_PREFIX,
+) -> QuickstartVectorResult:
+    if input_path is None:
+        resource = files("ragplan.resources").joinpath("sample_corpus.json")
+        try:
+            with as_file(resource) as packaged_sample:
+                return await _quickstart_vector_with_input(
+                    query=query,
+                    input_path=packaged_sample,
+                    model_cache=model_cache,
+                    stage_manifest_path=stage_manifest_path,
+                    corpus_version=corpus_version,
+                    qdrant_url=qdrant_url,
+                    collection_prefix=collection_prefix,
+                )
+        except (FileNotFoundError, ModuleNotFoundError, OSError) as exc:
+            raise RAGPlanError(
+                ErrorCode.INVALID_REQUEST,
+                "packaged quickstart corpus is unavailable",
+                retryable=False,
+            ) from exc
+    return await _quickstart_vector_with_input(
+        query=query,
+        input_path=input_path,
+        model_cache=model_cache,
+        stage_manifest_path=stage_manifest_path,
+        corpus_version=corpus_version,
+        qdrant_url=qdrant_url,
+        collection_prefix=collection_prefix,
+    )
+
+
+async def _quickstart_vector_with_input(
+    *,
+    query: str,
+    input_path: Path,
+    model_cache: Path,
+    stage_manifest_path: Path,
+    corpus_version: str,
+    qdrant_url: str,
+    collection_prefix: str,
 ) -> QuickstartVectorResult:
     ingested = await ingest_vector_corpus(
         input_path=input_path,
@@ -290,6 +366,169 @@ async def quickstart_vector(
     )
 
 
+def download_pinned_model(cache_dir: Path) -> DownloadModelResult:
+    manifest = load_default_model_artifact_manifest()
+    snapshot = prepare_pinned_model(cache_dir, manifest=manifest)
+    return DownloadModelResult(
+        model_id=manifest.model_id,
+        revision=manifest.revision,
+        artifact_manifest_sha256=manifest.sha256,
+        snapshot_path=str(snapshot),
+    )
+
+
+async def run_qa(
+    level: QALevel,
+    *,
+    model_cache: Path = Path("models/minilm"),
+    qdrant_url: str = "http://127.0.0.1:6333",
+    api_url: str | None = None,
+    environment: Mapping[str, str] | None = None,
+) -> QAResult:
+    """Run only fixed Stage 13 fixtures; benchmark test queries are never loaded."""
+
+    checks: list[QACheck] = []
+    try:
+        verified = await verify_installation(configured_runtime=False, environment=environment)
+        checks.append(
+            QACheck(
+                name="packaged_contracts",
+                status="passed",
+                detail=f"catalog={verified.plan_catalog_sha256[:12]}",
+            )
+        )
+        demo = explain_plan(
+            query="Who founded Acme and who acquired it?",
+            latency_budget_ms=100,
+            entity_count=2,
+        )
+        checks.append(
+            QACheck(
+                name="planner_only_demo",
+                status="passed",
+                detail=f"selected={demo.decision.selected_plan_id};retrieval=false",
+            )
+        )
+        _verify_packaged_sample()
+        checks.append(
+            QACheck(
+                name="packaged_sample_corpus",
+                status="passed",
+                detail="schema=v1;documents=3",
+            )
+        )
+        _verify_openapi_surface()
+        checks.append(
+            QACheck(
+                name="openapi_surface",
+                status="passed",
+                detail="health,ready,metrics,search",
+            )
+        )
+    except Exception as exc:
+        checks.append(_failed_check("smoke", exc))
+        return QAResult(status="failed", level=level, checks=tuple(checks))
+
+    if level is QALevel.VECTOR:
+        try:
+            with TemporaryDirectory(prefix="ragplan-qa-vector-") as directory:
+                result = await quickstart_vector(
+                    query="What did Ada Lovelace write about?",
+                    input_path=None,
+                    model_cache=model_cache,
+                    stage_manifest_path=Path(directory) / "vector-stage.json",
+                    corpus_version="ragplan-qa-vector-v1",
+                    qdrant_url=qdrant_url,
+                )
+            if not result.search.results or result.search.status.value != "complete":
+                raise ValueError("vector QA returned no complete evidence")
+            checks.append(
+                QACheck(
+                    name="vector_e2e",
+                    status="passed",
+                    detail=(
+                        f"plan={result.search.planner_decision.selected_plan_id};"
+                        f"results={len(result.search.results)}"
+                    ),
+                )
+            )
+        except Exception as exc:
+            checks.append(_failed_check("vector_e2e", exc))
+
+    if level is QALevel.FULL:
+        try:
+            request = SearchRequest(
+                query="What is a vector database?",
+                planner=PlannerMode.RULE,
+                top_k=1,
+                latency_budget_ms=500,
+            )
+            if api_url is None:
+                verified = await verify_installation(
+                    configured_runtime=True,
+                    environment=environment,
+                )
+                readiness = verified.readiness
+                response = await search_configured_runtime(
+                    request,
+                    request_id="qa-full-v1",
+                    environment=environment,
+                )
+            else:
+                readiness = fetch_http_readiness(api_url)
+                response = search_http_api(
+                    request,
+                    request_id="qa-full-v1",
+                    api_url=api_url,
+                )
+            if (
+                readiness is None
+                or readiness.status.value != "ready"
+                or readiness.runtime_profile != "dual_store_active"
+                or not readiness.graph_modes_available
+            ):
+                raise ValueError("full QA requires one healthy dual-store active runtime")
+            if not response.results or response.status.value != "complete":
+                raise ValueError("full QA returned no complete evidence")
+            checks.append(
+                QACheck(
+                    name="full_dual_store_e2e",
+                    status="passed",
+                    detail=(
+                        f"profile={readiness.runtime_profile};"
+                        f"plan={response.planner_decision.selected_plan_id};"
+                        f"results={len(response.results)}"
+                    ),
+                )
+            )
+        except Exception as exc:
+            checks.append(_failed_check("full_dual_store_e2e", exc))
+
+    status: Literal["passed", "failed"] = (
+        "failed" if any(item.status == "failed" for item in checks) else "passed"
+    )
+    return QAResult(status=status, level=level, checks=tuple(checks))
+
+
+def fetch_http_readiness(api_url: str, *, timeout_seconds: float = 10.0) -> ReadinessResponse:
+    endpoint = _api_endpoint(api_url, "/ready")
+    try:
+        with urlopen(endpoint, timeout=timeout_seconds) as response:  # noqa: S310
+            payload = response.read()
+    except (HTTPError, OSError, URLError) as exc:
+        raise RAGPlanError(
+            ErrorCode.DEPENDENCY_UNAVAILABLE,
+            "RAGPlan readiness endpoint is unavailable",
+        ) from exc
+    try:
+        return ReadinessResponse.model_validate_json(payload)
+    except ValueError as exc:
+        raise RAGPlanError(
+            ErrorCode.DEPENDENCY_UNAVAILABLE,
+            "RAGPlan readiness endpoint returned an invalid response",
+        ) from exc
+
+
 def ingest_result_payload(result: VectorIngestResult) -> dict[str, object]:
     return {
         "schema_version": "cli_ingest_result_v1",
@@ -300,6 +539,10 @@ def ingest_result_payload(result: VectorIngestResult) -> dict[str, object]:
 
 
 def _search_endpoint(api_url: str) -> str:
+    return _api_endpoint(api_url, "/v1/search")
+
+
+def _api_endpoint(api_url: str, suffix: str) -> str:
     parsed = urlparse(api_url)
     if (
         parsed.scheme not in {"http", "https"}
@@ -315,7 +558,30 @@ def _search_endpoint(api_url: str) -> str:
             retryable=False,
         )
     base = api_url.rstrip("/")
-    return base if parsed.path.rstrip("/").endswith("/v1/search") else f"{base}/v1/search"
+    return base if parsed.path.rstrip("/").endswith(suffix) else f"{base}{suffix}"
+
+
+def _verify_packaged_sample() -> None:
+    from ragplan.ingestion.service import load_corpus_file
+
+    resource = files("ragplan.resources").joinpath("sample_corpus.json")
+    with as_file(resource) as path:
+        corpus = load_corpus_file(path)
+    if corpus.schema_version != "v1" or len(corpus.documents) != 3:
+        raise ValueError("packaged sample corpus contract changed")
+
+
+def _verify_openapi_surface() -> None:
+    from ragplan.api.server import create_app
+
+    paths = set(create_app().openapi()["paths"])
+    if paths != {"/health", "/ready", "/metrics", "/v1/search"}:
+        raise ValueError("public OpenAPI surface changed")
+
+
+def _failed_check(name: str, error: Exception) -> QACheck:
+    detail = error.code.value if isinstance(error, RAGPlanError) else "unexpected_failure"
+    return QACheck(name=name, status="failed", detail=detail)
 
 
 def json_line(payload: object) -> str:
@@ -329,13 +595,20 @@ def json_line(payload: object) -> str:
 
 
 __all__ = [
+    "DownloadModelResult",
     "PlannerDemoResult",
+    "QACheck",
+    "QALevel",
+    "QAResult",
     "QuickstartVectorResult",
     "VerifyResult",
+    "download_pinned_model",
     "explain_plan",
+    "fetch_http_readiness",
     "ingest_result_payload",
     "json_line",
     "quickstart_vector",
+    "run_qa",
     "search_configured_runtime",
     "search_http_api",
     "verify_installation",

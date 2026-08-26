@@ -22,6 +22,11 @@ from ragplan.core.errors import ErrorCode, ErrorResponse, RAGPlanError
 from ragplan.core.models import SearchRequest, SearchResponse
 from ragplan.ingestion.audit import load_graph_tier_policy
 from ragplan.observability.metrics import MetricsRegistry, MetricsSnapshot
+from ragplan.observability.tracing import (
+    RedactedTraceWriter,
+    TraceLoggingConfig,
+    TraceWriter,
+)
 from ragplan.planner.catalog import load_default_plan_catalog, load_plan_catalog
 from ragplan.scheduler.cancellation import run_until_disconnect
 
@@ -57,6 +62,8 @@ def create_app(
     search_engine: SearchEngine | None = None,
     runtime_factory: Callable[[], Awaitable[SearchEngine | None]] | None = None,
     metrics_registry: MetricsRegistry | None = None,
+    trace_writer: TraceWriter | None = None,
+    trace_config: TraceLoggingConfig | None = None,
 ) -> FastAPI:
     """Create the local single-process RAGPlan API application."""
 
@@ -65,10 +72,24 @@ def create_app(
         if plan_catalog_path is not None
         else load_default_plan_catalog()
     )
+    selected_metrics = metrics_registry if metrics_registry is not None else MetricsRegistry()
+    selected_trace_config = (
+        trace_config if trace_config is not None else TraceLoggingConfig.from_environment()
+    )
+    selected_trace_writer = (
+        trace_writer
+        if trace_writer is not None
+        else RedactedTraceWriter(
+            selected_trace_config,
+            on_failure=selected_metrics.record_trace_write_failure,
+            on_drop=selected_metrics.record_trace_drop,
+        )
+    )
 
     @asynccontextmanager
     async def lifespan(api: FastAPI) -> AsyncIterator[None]:
         owned_engine: SearchEngine | None = None
+        await _safe_trace_start(api)
         try:
             if api.state.search_engine is None:
                 if runtime_factory is not None:
@@ -80,17 +101,21 @@ def create_app(
                 api.state.search_engine = owned_engine
             yield
         finally:
-            if owned_engine is not None:
-                await owned_engine.close()
-                api.state.search_engine = None
-            elif search_engine is not None:
-                await search_engine.close()
+            try:
+                if owned_engine is not None:
+                    await owned_engine.close()
+                    api.state.search_engine = None
+                elif search_engine is not None:
+                    await search_engine.close()
+            finally:
+                await _safe_trace_close(api)
 
     api = FastAPI(title="RAGPlan", version=__version__, lifespan=lifespan)
     api.add_middleware(RequestBodyLimitMiddleware)
     api.state.plan_catalog = plan_catalog
     api.state.search_engine = search_engine
-    api.state.metrics = metrics_registry if metrics_registry is not None else MetricsRegistry()
+    api.state.metrics = selected_metrics
+    api.state.trace_writer = selected_trace_writer
     api.state.graph_tier_policy = load_graph_tier_policy()
 
     @api.exception_handler(RAGPlanError)
@@ -165,6 +190,7 @@ def create_app(
         registry = cast(MetricsRegistry, api.state.metrics)
         registry.record_request(search_request.planner)
         request.scope["ragplan_metrics_counted"] = True
+        request.scope["ragplan_requested_planner"] = search_request.planner.value
         engine = cast(SearchEngine | None, api.state.search_engine)
         if engine is None:
             raise RAGPlanError(ErrorCode.NOT_READY, "search engine is not initialized")
@@ -176,6 +202,7 @@ def create_app(
             wait_for_disconnect=lambda: _wait_for_http_disconnect(request),
         )
         registry.record_success(response)
+        _safe_trace_search(api, response)
         return response
 
     return api
@@ -189,6 +216,38 @@ def _record_error_metric(request: Request, code: ErrorCode) -> None:
         registry.record_request(None)
         request.scope["ragplan_metrics_counted"] = True
     registry.record_error(code)
+    if not request.scope.get("ragplan_trace_error_recorded"):
+        writer = cast(TraceWriter, request.app.state.trace_writer)
+        try:
+            writer.record_error(
+                request_id=request_id_from_scope(request.scope),
+                error_code=code,
+                requested_planner=request.scope.get("ragplan_requested_planner"),
+            )
+        except Exception:
+            registry.record_trace_write_failure()
+        request.scope["ragplan_trace_error_recorded"] = True
+
+
+def _safe_trace_search(api: FastAPI, response: SearchResponse) -> None:
+    try:
+        cast(TraceWriter, api.state.trace_writer).record_search(response)
+    except Exception:
+        cast(MetricsRegistry, api.state.metrics).record_trace_write_failure()
+
+
+async def _safe_trace_start(api: FastAPI) -> None:
+    try:
+        await cast(TraceWriter, api.state.trace_writer).start()
+    except Exception:
+        cast(MetricsRegistry, api.state.metrics).record_trace_write_failure()
+
+
+async def _safe_trace_close(api: FastAPI) -> None:
+    try:
+        await cast(TraceWriter, api.state.trace_writer).close()
+    except Exception:
+        cast(MetricsRegistry, api.state.metrics).record_trace_write_failure()
 
 
 app = create_app()

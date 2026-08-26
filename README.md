@@ -1,61 +1,120 @@
-**한국어** | [English](README_EN.md)
+<p align="center">
+  <strong>한국어</strong> · <a href="README_EN.md">English</a>
+</p>
 
-# RAGPlan
+<h1 align="center">RAGPlan</h1>
 
-검색 품질과 지연 시간 예산 사이에서 vector·graph·hybrid 실행 계획을 선택하고, 순위화된
-근거와 설명 가능한 trace를 반환하는 retrieval execution layer입니다.
+<p align="center">
+  <strong>질문마다 알맞은 검색 계획을, 주어진 latency budget 안에서.</strong><br>
+  Vector · Graph · Hybrid retrieval을 선택하고 실행하는 오픈소스 retrieval control plane
+</p>
 
-RAGPlan은 최종 답변을 만드는 chatbot이 아닙니다. 기존 LLM/RAG 애플리케이션 앞에서 검색
-전략, deadline, 병렬 branch, fallback을 담당합니다. Stage 0~12와 Stage 13 public surface가
-구현됐으며, 학습 기반 cost-aware 정책은 validation gate 실패로 `research_only`입니다.
-기본 online planner는 계속 `rule`입니다.
+<p align="center">
+  <a href="https://github.com/iamdbstjd/OSS_2026/actions/workflows/ci.yml"><img src="https://github.com/iamdbstjd/OSS_2026/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-2563EB.svg" alt="Apache-2.0"></a>
+  <img src="https://img.shields.io/badge/Python-3.12-3776AB.svg?logo=python&logoColor=white" alt="Python 3.12">
+  <img src="https://img.shields.io/badge/version-v0.1.0-0EA5E9.svg" alt="v0.1.0">
+  <img src="https://img.shields.io/badge/cost--aware-research__only-F59E0B.svg" alt="Cost-aware research only">
+</p>
 
-## 누구를 위한 도구인가
+<p align="center">
+  <a href="#빠른-시작">빠른 시작</a> ·
+  <a href="#작동-방식">작동 방식</a> ·
+  <a href="#검색-모드">검색 모드</a> ·
+  <a href="#cli">CLI</a> ·
+  <a href="#검증-결과">검증 결과</a> ·
+  <a href="#기여하기">기여하기</a>
+</p>
 
-- latency SLO 안에서 vector/graph 검색 전략을 바꾸려는 RAG 개발자
-- timeout, partial result, circuit breaker가 필요한 AI infrastructure 팀
-- 동일 query×plan matrix와 Oracle@Budget을 재현하려는 연구자
+<p align="center">
+  <img src="image/4.png" width="100%" alt="RAGPlan이 질문과 200ms 예산에 맞춰 vector, graph 또는 hybrid 검색을 선택하고 근거를 반환하는 모습">
+</p>
 
-다음 용도는 현재 범위가 아닙니다.
+<p align="center">
+  <em>RAGPlan은 또 하나의 RAG 챗봇이 아닙니다. LLM이 어떤 근거를 받을지 결정하고, 실행하고, 검증합니다.</em>
+</p>
 
-- 완성형 질문답변 UI 또는 LLM answer generation
-- agent loop, 인증, 멀티테넌시, 분산 production control plane
-- human graph audit 없이 Rule이 graph를 자동 선택한다는 주장
-- `research_only` cost model의 public serving
+---
 
-## 설치 후 1분 planner demo — DB와 모델 불필요
+## RAGPlan이 하는 일
+
+RAGPlan은 질문과 latency budget을 입력받아 검색 계획을 선택하고, Qdrant와 Neo4j를
+deadline 안에서 실행한 뒤 순위화된 근거와 설명 가능한 trace를 반환합니다.
+
+답변 생성은 특정 LLM에 종속시키지 않습니다. OpenAI, 로컬 모델 또는 기존 RAG 파이프라인
+앞에 배치하여 **검색 전략·deadline·병렬 branch·fallback**을 담당합니다.
+
+```text
+Question + latency budget
+          │
+          ▼
+   Query Analyzer ──► Rule Planner
+                          │
+                          ▼
+                Deadline-aware Scheduler
+                    ┌─────┴─────┐
+                    ▼           ▼
+            MiniLM + Qdrant   Neo4j Graph
+                    └─────┬─────┘
+                          ▼
+                    Weighted RRF
+                          ▼
+              Ranked Evidence + Redacted Trace
+                          ▼
+                       Any LLM
+```
+
+## What You Get
+
+| 기능 | 제공하는 것 |
+|---|---|
+| Budget-aware planning | 남은 시간, 질의 특성, backend 상태에 따라 실행 가능한 plan 선택 |
+| Vector · Graph · Hybrid | MiniLM 의미 검색, bounded graph traversal, 병렬 검색과 Weighted RRF |
+| Deadline semantics | 요청 ingress부터 응답 완성까지 하나의 monotonic absolute deadline 적용 |
+| Graceful degradation | 한 backend가 실패해도 성공한 branch의 검색 결과를 보존 |
+| Fail-closed model serving | 검증 gate를 통과하지 못한 학습 모델을 public runtime에서 차단 |
+| Evidence-first observability | 선택 이유, branch별 latency, fallback과 provenance를 redacted trace로 기록 |
+| Reproducible evaluation | 고정 query·plan·budget matrix, Oracle@Budget, checksum 기반 evidence |
+
+## 빠른 시작
+
+### 1분 planner-only 데모
+
+DB, embedding model, Docker가 필요하지 않습니다.
 
 ```bash
+git clone https://github.com/iamdbstjd/OSS_2026.git
+cd OSS_2026
+
 uv sync --frozen
 uv run ragplan demo-plan \
   --query "Who founded Acme and who acquired it?" \
   --budget-ms 100 \
   --entity-count 2 \
   --pretty
-
-uv run ragplan verify --pretty
 ```
 
-`demo-plan`은 embedding이나 검색 결과를 가장하지 않습니다. lightweight token count와 사용자가
-전달한 entity count로 `qf_v1` feature와 Rule decision만 설명하며
-`mode=planner_only_no_embedding`, `executes_retrieval=false`를 기록합니다.
+출력에서 선택된 plan, 후보별 예상 p95, 제외 사유와 실제 검색 실행 여부를 확인할 수 있습니다.
 
-## 필요한 인프라 수준
+```json
+{
+  "mode": "planner_only_no_embedding",
+  "executes_retrieval": false,
+  "decision": {
+    "selected_plan_id": "P1",
+    "effective_mode": "vector",
+    "fallback_reason": "graph_audit_gate:human review and adjudication are incomplete"
+  }
+}
+```
 
-| 하고 싶은 일 | 필요한 구성 |
-|---|---|
-| 코드 검증·planner 맛보기 | Python 3.12 + `uv`; DB/모델 불필요 |
-| Vector sample ingest/search | Qdrant + MiniLM (checksum-pinned) |
-| Full vector/graph/hybrid runtime | Qdrant + Neo4j + active corpus |
-| 새 graph corpus 생성 | 위 구성 + pinned spaCy `en_core_web_sm` |
-| 운영 인증·멀티테넌시·agent | 현재 비지원 |
+`demo-plan`은 embedding이나 검색 결과를 꾸며내지 않습니다. 가벼운 query feature만 분석하며
+`executes_retrieval=false`를 명시합니다.
 
-spaCy는 graph corpus를 새로 추출할 때 필요하며, 이미 생성된 vector-only corpus를 검색하는 데는
-필요하지 않습니다.
+### 실제 Vector 검색
 
-## Sample ingest → search 한 경로
-
-`.env.example`의 비밀번호는 격리된 로컬 demo 전용입니다.
+Qdrant 하나만 시작하면 checksum으로 고정된 MiniLM을 준비하고, 포함된 sample corpus를
+적재한 다음 production vector engine으로 검색합니다.
 
 ```bash
 cp .env.example .env
@@ -63,11 +122,126 @@ docker compose up -d qdrant
 uv run ragplan quickstart-vector --pretty
 ```
 
-이 명령은 허용된 MiniLM revision만 내려받아 SHA-256을 검증하고, 세 문서 sample을 Qdrant에
-idempotent ingest한 다음 production `VectorSearchEngine`으로 한 번 검색합니다. 개별 명령이
-필요하면 `ragplan ingest`, `ragplan search`, `ragplan verify --configured-runtime`을 사용하세요.
+이 경로는 다음 작업을 한 명령으로 수행합니다.
 
-## REST 상태와 metrics
+1. 허용된 `all-MiniLM-L6-v2` revision 다운로드
+2. 모델 파일별 SHA-256 검증
+3. sample corpus의 결정론적 chunking과 Qdrant ingest
+4. canonical ID·count·schema 검증
+5. 실제 vector search와 redacted trace 반환
+
+### 설치 검증
+
+```bash
+uv run ragplan verify --pretty
+uv run ragplan qa --level smoke --pretty
+```
+
+실행 범위에 따라 QA 수준을 높일 수 있습니다.
+
+```bash
+# Qdrant + MiniLM + sample ingest/search
+uv run ragplan qa --level vector --pretty
+
+# 활성화된 dual-store API
+uv run ragplan qa \
+  --level full \
+  --api-url http://127.0.0.1:8000 \
+  --pretty
+```
+
+모든 QA report는 `held_out_test_accessed=false`를 기록합니다.
+
+## 작동 방식
+
+### 1. Analyze
+
+`qf_v1` analyzer가 token 수, entity 밀도, 관계·비교·multi-hop·aggregation signal을 한 번만
+계산합니다. Service trace에는 raw query와 embedding을 남기지 않습니다.
+
+### 2. Plan
+
+Rule planner는 남은 예산, 정적 p95 profile, graph audit와 circuit 상태를 이용해 P0–P8
+카탈로그에서 실행 가능한 plan을 고릅니다. 선택값과 예측값은 immutable plan definition과
+분리됩니다.
+
+### 3. Execute
+
+Vector와 Graph branch는 같은 absolute deadline 아래에서 병렬 실행됩니다. Scheduler는
+응답 조립을 위해 `min(20ms, max(5ms, budget × 5%))`의 finalization reserve를 확보합니다.
+
+### 4. Fuse and explain
+
+Hybrid 결과는 canonical chunk ID로 중복을 제거하고 `weighted_rrf_v1`으로 융합합니다.
+최종 결과에는 source별 rank, score, contribution, graph path와 fallback 사유가 남습니다.
+
+## 검색 모드
+
+| Planner | 동작 | 현재 상태 |
+|---|---|---|
+| `vector` | MiniLM + Qdrant 의미 검색 | 사용 가능 |
+| `graph` | Neo4j 1–3 hop bounded traversal | 활성 corpus에서 명시적 비교 mode로 사용 가능 |
+| `fixed_hybrid` | Vector·Graph 병렬 실행 + Weighted RRF | 활성 dual-store에서 사용 가능 |
+| `rule` | 질의·예산·backend 상태에 따른 규칙 기반 선택 | 기본 online planner |
+| `cost_aware` | 학습된 quality·latency model 기반 선택 | `research_only`, public API 비활성 |
+
+> [!IMPORTANT]
+> 100문장 human graph audit이 아직 완료되지 않아 `graph_tier_enabled=false`입니다.
+> 따라서 기본 Rule planner는 안전하게 vector-only로 동작합니다. Graph와 Hybrid는 검증된
+> active corpus에서 명시적으로 요청할 수 있습니다.
+
+## CLI
+
+| 명령 | 용도 | 필요한 인프라 |
+|---|---|---|
+| `ragplan demo-plan` | 검색 없이 Rule 결정 설명 | Python만 |
+| `ragplan download-model` | pinned MiniLM 다운로드·checksum 검증 | 네트워크 |
+| `ragplan quickstart-vector` | sample ingest부터 실제 vector search까지 | Qdrant |
+| `ragplan ingest` | 사용자 corpus를 idempotent하게 Qdrant에 staging | Qdrant + MiniLM |
+| `ragplan search` | 로컬 runtime 또는 REST API 검색 | 구성된 runtime |
+| `ragplan verify` | package·config·선택적 live dependency 검증 | 선택 사항 |
+| `ragplan qa` | `smoke`, `vector`, `full` 수준별 QA | 수준별 상이 |
+| `ragplan benchmark` | Stage 9 baseline과 Stage 10 profiler | 전용 dual-store 환경 |
+
+```bash
+uv run ragplan --help
+uv run ragplan search --help
+```
+
+## 필요한 인프라
+
+처음부터 Qdrant와 Neo4j를 모두 설치할 필요는 없습니다.
+
+| 하고 싶은 일 | 필요한 구성 |
+|---|---|
+| 코드와 planner 맛보기 | Python 3.12 + `uv` |
+| 실제 vector demo | Qdrant + checksum-pinned MiniLM |
+| Full vector·graph·hybrid | Qdrant + Neo4j + active corpus |
+| 새 graph corpus 생성 | 위 구성 + pinned spaCy `en_core_web_sm` |
+| 인증·멀티테넌시·agent loop | 현재 비지원 |
+
+### Full dual-store 준비
+
+Full runtime은 두 저장소가 존재한다는 이유만으로 활성화되지 않습니다.
+
+1. `ragplan ingest`로 Qdrant corpus와 vector stage manifest 생성
+2. `scripts/ingest_graph.py`로 동일 chunk를 Neo4j에 inactive ingest
+3. `scripts/activate_corpus.py`로 count와 canonical-ID checksum reconciliation
+4. 검증 성공 시에만 active corpus pointer 교체
+5. `.env.example`의 Stage 6 runtime 변수를 설정하고 API 시작
+
+```bash
+cp .env.example .env
+# .env에 Stage 6 runtime 변수와 demo가 아닌 Neo4j 비밀번호를 먼저 설정하세요.
+docker compose up -d --build
+uv run ragplan verify --configured-runtime --pretty
+```
+
+부분 구성, model checksum 불일치 또는 Qdrant·Neo4j ID 불일치는 fail-closed로 거부됩니다.
+세부 ingest와 benchmark 계약은 [stage.md](stage.md)와 [benchmark 문서](docs/benchmark.md)를
+참조하세요.
+
+## REST API
 
 ```bash
 curl --fail http://127.0.0.1:8000/health
@@ -75,15 +249,30 @@ curl --silent --show-error http://127.0.0.1:8000/ready
 curl --silent --show-error http://127.0.0.1:8000/metrics
 ```
 
-- `/health`: process liveness만 확인
-- `/ready`: corpus/backend capability를 확인하고 Neo4j 장애 시 vector-only `degraded` 반환
-- `/metrics`: request/result/error/planner/latency JSON metrics; raw query/entity label 없음
+| Endpoint | 의미 |
+|---|---|
+| `GET /health` | process liveness |
+| `GET /ready` | corpus와 backend capability; Neo4j 장애 시 `degraded` |
+| `GET /metrics` | request, result, error, planner, latency와 trace writer 지표 |
+| `POST /v1/search` | strict `SearchRequest` 기반 검색 |
 
-## LLM에 결과 넘기기
+구성된 API에는 CLI를 그대로 연결할 수 있습니다.
 
-RAGPlan은 answer generation을 소유하지 않습니다. [generic handoff 예제](examples/llm_handoff.py)는
-`SearchResponse`의 ranked chunk를 provider-neutral message로 바꾸며 어떤 LLM SDK도 import하지
-않습니다.
+```bash
+uv run ragplan search \
+  --api-url http://127.0.0.1:8000 \
+  --query "What did Ada Lovelace write about?" \
+  --planner rule \
+  --budget-ms 500 \
+  --top-k 3 \
+  --pretty
+```
+
+## LLM에 근거 전달하기
+
+RAGPlan은 answer generation을 소유하지 않습니다. [generic LLM handoff 예제](examples/llm_handoff.py)는
+`SearchResponse`의 ranked chunk를 provider-neutral message로 변환하며 특정 LLM SDK를
+import하지 않습니다.
 
 ```bash
 uv run ragplan search \
@@ -96,502 +285,140 @@ uv run python examples/llm_handoff.py \
   --question "What did Ada Lovelace write about?"
 ```
 
-## 상세 구현 현황
+## 장애 대응과 privacy
 
-Stage 0~12와 Stage 13 accessibility surface는 재현 가능한 부트스트랩, 공통 runtime 계약,
-동결된 benchmark truth, vector/graph 검색, deterministic hybrid fusion, scheduler, Rule planning,
-research-only cost comparison과 public CLI/API를 제공합니다.
+- 최대 32개 in-flight request, queue 없는 admission control
+- backend별 연속 5회 실패 시 30초 circuit open, half-open probe 1개
+- 요청 내부 retry 없음
+- 한 branch 실패 시 성공 branch 결과를 보존하는 typed partial response
+- client disconnect 시 모든 child task cancel·await
+- `RAGPLAN_FORCE_VECTOR_ONLY`와 `RAGPLAN_DISABLE_COST_AWARE` kill switch
+- parameterized Cypher와 32KiB request 제한
+- raw query, embedding, 전체 문서와 임의 metadata를 제외한 redacted trace
+- 10MiB 단위 회전, 현재 파일 포함 최대 5개의 trace file
+- trace queue overflow와 filesystem 오류를 검색 실패로 전파하지 않음
 
-- Python 3.12 패키지 및 `ragplan` CLI
-- FastAPI search, liveness, readiness 및 privacy-safe JSON metrics 엔드포인트
-- 고정된 의존성 lockfile
-- Docker Compose를 통한 로컬 Qdrant 및 Neo4j 서비스
-- lint, 타입 검사 및 테스트 구성
-- 오픈 소스 기여, 보안 및 라이선스 파일
-- 동결된 Pydantic 도메인/요청/응답/추적 계약
-- 결정론적인 표준 문서, 청크, 엔터티 및 Qdrant ID
-- 표준 SHA-256 식별자를 갖는 검증된 P0–P8 계획 카탈로그
-- ADR-010 reserve를 갖는 하나의 주입 가능한 단조 절대 deadline
-- 안정적인 오류/HTTP 매핑 및 분리된 런타임/수집 백엔드 프로토콜
-- 결정론적 Unicode 정규화 및 40-token overlap을 갖는 220-token 청크
-- 고정 revision에서 체크섬을 검증하는 로컬 전용 `all-MiniLM-L6-v2` 임베딩
-- UUIDv5 포인트 및 정확한 reconciliation을 갖는 corpus-version 분리 Qdrant collection
-- 분석, 임베딩, Qdrant, 전체 지연 시간 trace를 제공하는 명시적 벡터 모드 실행
-- 재현 가능한 모델 준비, 샘플 수집 및 검색 명령
-- `adaptive_rag_bench_v1`의 고정 600-query manifest와 360/120/120 group split
-- 운영 220/40 청커로 생성한 graded chunk qrels 및 순수 Recall/MRR/nDCG 함수
-- checksum·license·attribution audit와 별도 100-query synthetic graph fixture
-- 고정 spaCy NER와 deterministic SVO/passive/copular/appositional 관계 추출
-- parameterized Cypher, 멱등적 batch write 및 transaction timeout을 적용한 Neo4j writer
-- Qdrant/Neo4j 실측 ID reconciliation 뒤에만 전환되는 원자적 active corpus pointer
-- 100개 train 문장 human-review queue와 fail-closed rule graph-tier 정책
-- exact normalized seed, 1–3 hop `RELATES_TO` traversal 및 별도 `MENTIONS` chunk recovery
-- 5 seed/seed당 50 path/500 entity/100 chunk hard cap과 deadline-bound Neo4j transaction
-- 방향을 보존하는 path provenance, Graph Score V0 contribution 및 세부 graph phase trace
-- canonical chunk ID deduplication과 source별 rank/score/contribution을 갖는 `weighted_rrf_v1`
-- P4/P5/P6/P8 및 기본 P5를 실행하는 동일 vector/graph/fixed-hybrid engine
-- `runtime_semantics_version=v1` 상태 추적을 갖는 최대 두 branch 병렬 scheduler
-- 한 branch 실패 시 성공 branch 순위를 보존하는 typed partial response와 graceful degradation
-- 32-request admission, backend별 5-failure/30-second circuit breaker 및 ingress kill-switch snapshot
-- backend-client timeout과 application deadline을 구분하고 client disconnect 시 child task를 정리하는 trace
-- 동결된 `qf_v1` feature schema와 versioned regex/keyword config를 사용하는 단일-pass query analyzer
-- remaining budget, graph audit/circuit 상태 및 정적 p95 profile로 P0/P1/P4/P5/P6/P8을 선택하는 rule planner
-- 동일 production engine의 224,640-row baseline matrix를 재개·검증·집계하는 Stage 9 harness
+Service mode는 `RAGPLAN_LOGGING__MODE=redacted`만 허용하고 다른 모든 값을 startup에서
+거부합니다. Drop과 write failure는 `/metrics`의 `trace_dropped_count`,
+`trace_write_failure_count`에 반영됩니다.
 
-학습 기반 cost-aware planner는 Stage 11·12에서 offline 비교까지 구현됐지만 model gate와
-runtime guard를 통과하지 못해 public API에서는 비활성입니다. Stage 3 corpus는 의도적으로
-`vector_staged`이며, Stage 4의 두 저장소 검증이 성공해야만 `active`가 됩니다. Human
-extraction audit가 완료될 때까지 Rule graph tier는 비활성입니다.
+## 검증 결과
 
-## 요구 사항
+RAGPlan은 성공한 결과만 골라서 보고하지 않습니다. Timeout, backend error, partial과 zero-hit도
+raw evidence와 평가 분모에 유지합니다.
+
+| Evidence | 규모·결과 |
+|---|---|
+| Frozen benchmark | 600 query, train/validation/test = 360/120/120 group split |
+| Active dual-store corpus | Qdrant와 Neo4j 각각 8,604 canonical chunk |
+| Stage 9 baseline | 224,640 raw trial rows |
+| Stage 10 profiler | 199,680 raw trial rows |
+| 전체 실행 기록 | 424,320 rows |
+| Training matrix | 15,360 rows |
+| Oracle@Budget | 1,920 labels |
+| Quality model | validation MAE 0.009219 |
+| Latency model | overall p95 coverage 0.928368 |
+
+학습 모델은 일부 지표를 통과했지만 plan-pair ranking, plan별 latency coverage와 pinball
+improvement gate를 모두 통과하지 못했습니다. Stage 12 runtime guard도 p95 underprediction
+rate 0.21에서 모델을 비활성화했습니다.
+
+따라서 현재 상태는 다음과 같습니다.
+
+```text
+Online default      rule
+Rule graph routing  disabled until human audit
+Cost-aware serving  disabled
+Cost-aware status   research_only / offline comparison only
+```
+
+실패한 모델을 숨기지 않고 public serving을 차단한 것이 RAGPlan의 MLOps 안전 계약입니다.
+
+## 대상 사용자와 범위
+
+### 이런 팀에 적합합니다
+
+- latency SLO 안에서 vector·graph 전략을 조정하는 RAG 개발팀
+- timeout, circuit breaker와 partial result가 필요한 AI infrastructure 팀
+- query×plan×budget matrix와 Oracle@Budget을 재현하는 연구자
+- 생성 모델과 독립된 ranked evidence layer가 필요한 서비스
+
+### 현재 제공하지 않습니다
+
+- 완성형 질문답변 UI 또는 LLM answer generation
+- 인증, 멀티테넌시와 분산 production control plane
+- agent loop와 tool orchestration
+- 사람 검토 없이 자동 graph 품질을 보장한다는 주장
+- `research_only` cost model의 public serving
+
+## 개발
+
+### 요구 사항
 
 - Python 3.12
 - [uv](https://docs.astral.sh/uv/)
-- Docker Engine with Docker Compose v2
+- Docker Engine + Docker Compose v2 — integration 작업에만 필요
 
-## 로컬 설정
+### 품질 검사
 
 ```bash
-cp .env.example .env
 uv sync --frozen
-uv run ragplan --version
-```
-
-`.env.example`의 값은 격리된 로컬 데모 전용입니다. 공유 환경에서 사용하기 전에
-Neo4j 비밀번호를 변경하고, `.env`는 절대로 커밋하지 마세요.
-
-## 로컬 스택 시작
-
-```bash
-docker compose config --quiet
-docker compose up -d --build
-curl --fail http://127.0.0.1:8000/health
-```
-
-API는 기본적으로 `127.0.0.1`에 바인딩됩니다. 제공된 Compose 구성에서 Qdrant와
-Neo4j도 loopback에만 노출됩니다.
-
-## 품질 검사
-
-```bash
 uv run ruff format --check .
 uv run ruff check .
 uv run mypy src
 uv run pytest -m "not integration and not e2e"
 ```
 
-로컬 Qdrant 서비스가 정상인 경우 실제 Qdrant 벡터 통합을 실행할 수 있습니다.
+실제 backend 통합 test는 환경이 준비된 경우에만 실행합니다.
 
 ```bash
-RAGPLAN_TEST_QDRANT_URL=http://127.0.0.1:6333 \
-RAGPLAN_TEST_MODEL_SNAPSHOT="$PWD/models/minilm/models--sentence-transformers--all-MiniLM-L6-v2/snapshots/b8903db39f65d93ae28d49a37c4f3fa90c5f94e0" \
-uv run pytest \
-  tests/integration/test_qdrant_vector_backend.py \
-  tests/integration/test_vector_vertical_slice.py
-```
-
-## 구성
-
-비밀이 아닌 기본값은 `configs/default.yaml`에 있습니다. 환경변수는 `RAGPLAN_`
-접두사와 이중 밑줄을 사용해 중첩 키를 재정의합니다. 예:
-
-```text
-server.port       -> RAGPLAN_SERVER__PORT
-vector.url        -> RAGPLAN_VECTOR__URL
-graph.password    -> RAGPLAN_GRAPH__PASSWORD
-```
-
-비밀번호와 기타 비밀값은 환경변수 또는 외부 secret manager로 제공해야 합니다.
-커밋된 YAML 파일에 포함하면 안 됩니다.
-
-## Stage 1 계약
-
-정적 검색 계획은 `configs/plans.yaml`에 정의되어 있습니다. P7은 P1 reranker
-계획으로 유지되지만 기본 P0 계획 공간에서는 제외됩니다. 로더는 API application을
-생성하기 전에 알 수 없거나 누락된 필드, 중복 ID 및 branch/weight/depth/rerank
-invariant 위반을 거부합니다.
-
-요청은 명시적인 planner mode인 `vector`, `graph`, `fixed_hybrid`, `rule`,
-`cost_aware`를 사용합니다. `adaptive`는 alias가 아닙니다. Query text는 앞뒤
-공백이 제거되고 1–4096 Unicode code point로 제한됩니다. Request body는 32 KiB,
-top-k는 1–50, latency budget은 25–5000 ms로 제한됩니다. P0 cost-aware 요청은
-top-k 10이 필요합니다.
-
-모든 온라인 Stage는 동일한 단조 `Deadline`을 받습니다. Branch 작업은 절대 deadline에서
-`min(20 ms, max(5 ms, budget * 0.05))`를 뺀 시점에 중지되며, 숨겨진 grace interval은
-없습니다. 기본 trace는 raw query 또는 query embedding을 저장하지 않고 query SHA-256 및
-feature summary만 저장합니다.
-
-## Stage 3 벡터 데모
-
-Qdrant를 시작하고 정확한 allowlist 모델 snapshot을 준비한 뒤, 포함된 세 문서 corpus를
-수집합니다.
-
-```bash
-docker compose up -d qdrant
-
-uv run ragplan ingest \
-  --input examples/sample_corpus.json \
-  --corpus-version sample-stage3-v2 \
-  --model-cache models/minilm \
-  --stage-manifest artifacts/sample-stage3-vector.json \
-  --chunks-output artifacts/sample-stage3-chunks.jsonl
-
 MODEL_SNAPSHOT="models/minilm/models--sentence-transformers--all-MiniLM-L6-v2/snapshots/b8903db39f65d93ae28d49a37c4f3fa90c5f94e0"
-```
 
-ingest 명령은 revision `b8903db39f65d93ae28d49a37c4f3fa90c5f94e0`의 manifest
-allowlist만 다운로드해 모든 SHA-256을 검증한 뒤 모든 문서
-청크를 하나의 batch로 임베딩하고, Qdrant schema, count, canonical-ID checksum을
-검증한 뒤 stage manifest를 원자적으로 기록합니다. 동일한 corpus version을 반복하는
-것은 멱등적인 no-op입니다. canonical ID 집합, embedding artifact 또는 embedding bytes의
-변경은 mutation 전에 거부됩니다. `vector_staged` v2 manifest는 corpus를 정확한 모델
-artifact SHA-256 및 모든 canonical-ID/vector 쌍의 집계 checksum 모두에 연결합니다.
+RAGPLAN_TEST_QDRANT_URL=http://127.0.0.1:6333 \
+RAGPLAN_TEST_MODEL_SNAPSHOT="$MODEL_SNAPSHOT" \
+uv run pytest -q tests/integration/test_qdrant_vector_backend.py
 
-주입 가능한 FastAPI search endpoint가 사용하는 것과 동일한 `VectorSearchEngine`
-경로로 query를 실행합니다.
-
-```bash
-RAGPLAN_STAGE3_MODEL_SNAPSHOT="$MODEL_SNAPSHOT" \
-RAGPLAN_STAGE3_VECTOR_STAGE_MANIFEST=artifacts/sample-stage3-vector.json \
-RAGPLAN_STAGE3_QDRANT_URL=http://127.0.0.1:6333 \
-RAGPLAN_STAGE3_QDRANT_COLLECTION_PREFIX=ragplan_chunks \
-uv run ragplan search \
-  --query "Who wrote notes containing an algorithm for the Analytical Engine?" \
-  --planner vector \
-  --top-k 3 \
-  --budget-ms 5000
-```
-
-응답은 순위가 매겨진 청크와 redacted trace를 포함한 JSON입니다. query hash 및
-analysis/embedding/vector/total timing은 포함하지만 raw query 또는 query embedding은
-포함하지 않습니다.
-
-검증된 Stage를 Docker가 제공하는 API로 노출하려면 `.env`의 선택적 Stage 3 값 네 개를
-container path로 모두 설정한 뒤 API를 재시작합니다.
-
-```text
-RAGPLAN_STAGE3_MODEL_SNAPSHOT=/opt/ragplan/models/minilm/models--sentence-transformers--all-MiniLM-L6-v2/snapshots/b8903db39f65d93ae28d49a37c4f3fa90c5f94e0
-RAGPLAN_STAGE3_VECTOR_STAGE_MANIFEST=/opt/ragplan/artifacts/sample-stage3-vector.json
-RAGPLAN_STAGE3_QDRANT_URL=http://qdrant:6333
-RAGPLAN_STAGE3_QDRANT_COLLECTION_PREFIX=ragplan_chunks
-```
-
-```bash
-docker compose up -d --build api
-
-curl --fail --show-error http://127.0.0.1:8000/v1/search \
-  --header 'content-type: application/json' \
-  --data '{"query":"Who wrote the first computer algorithm?","planner":"vector","top_k":3,"latency_budget_ms":5000}'
-```
-
-네 값이 모두 없으면 기본 application은 `NOT_READY` 상태로 유지됩니다. 부분적이거나
-유효하지 않은 명시적 구성은 startup에 실패합니다. 구성된 startup은 서비스를 제공하기
-전에 로컬 모델 checksum과 Qdrant schema, count, ID, embedding provenance를 검증합니다.
-벡터 전용 staging evidence를 dual-store active pointer로 승격하지 않습니다.
-
-## Stage 4 그래프 수집과 활성화
-
-Stage 3가 기록한 정확한 chunk JSONL을 pinned spaCy pipeline으로 처리하고 Neo4j에 inactive
-graph version으로 적재합니다. 비밀번호는 command argument가 아닌 환경변수로만 전달합니다.
-
-```bash
-docker compose up -d neo4j
-uv sync --frozen --group graph-extraction
-
-export RAGPLAN_GRAPH__PASSWORD=ragplan-demo-change-me
-
-uv run python scripts/ingest_graph.py \
-  --chunks artifacts/sample-stage3-chunks.jsonl \
-  --vector-stage-manifest artifacts/sample-stage3-vector.json \
-  --graph-stage-manifest artifacts/sample-stage4-graph.json
-
-uv run python scripts/activate_corpus.py \
-  --vector-stage-manifest artifacts/sample-stage3-vector.json \
-  --graph-stage-manifest artifacts/sample-stage4-graph.json \
-  --manifest-root artifacts/ingestion \
-  --ingestion-run-id sample-stage4-run-v2 \
-  --source-dataset ragplan-stage3-sample \
-  --source-version v2 \
-  --source-sha256 55689e27fe1bae8f409182b312263a25cf0f8904613d146b3bed4c2f7945013f
-```
-
-Graph writer는 같은 corpus version과 동일 content에서는 멱등적인 no-op이며, 입력 graph
-checksum이 달라지면 쓰기 전에 거부합니다. Activation은 두 backend를 다시 읽어 chunk count와
-canonical-ID checksum을 비교하고 성공 시에만 local active pointer를 원자적으로 교체합니다.
-어느 한쪽 실패 시 이전 active version이 유지되며 검증된 과거 run으로 rollback할 수 있습니다.
-동일 입력으로 `ingest_graph.py`를 다시 실행하면 failed partial batch를 멱등적으로 재시도하며,
-명시적인 rollback/record 또는 inactive store 폐기는 `scripts/manage_ingestion.py`를 사용합니다.
-
-활성화된 corpus를 API의 vector 경로로 제공하려면 Stage 3 환경변수를 모두 비우고 `.env`의
-Stage 4 값 다섯 개를 설정합니다. Startup은 active pointer와 immutable run manifest가 지정한
-corpus/count/checksum/model revision이 vector stage와 정확히 일치하지 않으면 실패합니다.
-
-실제 Stage 2 train passage에서 SHA-256 순으로 고정한 100문장 audit queue는
-`benchmark/audits/graph_extraction_v1/`에 있습니다. 현재 human review와 20문장 이중 검토가
-완료되지 않았으므로 `configs/graph_tier_policy.json`은 의도적으로 graph tier를 비활성화합니다.
-검토자가 `reviews_v1.jsonl`을 완료하기 전에는 이 상태를 통과로 바꾸면 안 됩니다.
-완료 후 `uv run python scripts/evaluate_graph_audit.py`로 metrics와 정책을 재계산합니다.
-
-## Stage 5 bounded graph 검색
-
-명시적 `graph` 비교 모드는 atomically activated corpus에서만 실행됩니다. Query seed는
-수집과 동일한 pinned spaCy/normalization pipeline으로 생성되고, 저장소 lookup은 UUID와
-exact normalized alias가 모두 일치할 때만 성공합니다. Traversal은 `RELATES_TO`만 양방향으로
-발견하되 반환 relation의 원래 방향을 유지합니다. `MENTIONS`는 traversal이 끝난 뒤 active
-corpus chunk를 복구할 때만 사용합니다.
-
-CLI에서 graph-only 경로를 실행할 수 있습니다. 비밀번호는 command argument가 아니라
-환경변수로만 전달합니다. `top-k <= 20`은 P2 depth 1, 더 큰 값은 P3 depth 3을 선택하며,
-요청값이 preset candidate 수를 넘으면 trace에 request-floor override가 기록됩니다.
-
-```bash
-export RAGPLAN_GRAPH__PASSWORD=ragplan-demo-change-me
-
-uv run python scripts/search_graph.py \
-  --query "Who collaborated with Ada Lovelace?" \
-  --manifest-root artifacts/ingestion \
-  --graph-stage-manifest artifacts/sample-stage4-graph.json \
-  --extractor-lockfile uv.lock \
-  --top-k 21 \
-  --latency-budget-ms 500
-```
-
-API graph-only profile은 `.env.example`의 Stage 5 환경변수 여섯 개를 함께 설정하고 Stage 3/4
-runtime 값을 비워야 합니다. Startup은 active manifest, graph-stage evidence, extractor version,
-Neo4j marker의 corpus/count/checksum을 모두 다시 검증합니다. Unsupported-language graph 요청은
-안전하게 거부되며 향후 rule planner가 vector-only plan으로 처리합니다. Human audit가 pending인
-동안에도 명시적 비교 mode는 사용할 수 있지만 rule planner의 자동 graph tier는 계속 꺼져 있습니다.
-
-실제 Neo4j에 대한 1/2/3-hop, cycle, 방향 및 provenance 검증은 다음과 같이 실행합니다.
-
-```bash
 RAGPLAN_TEST_NEO4J_URI=bolt://127.0.0.1:7687 \
 RAGPLAN_TEST_NEO4J_USER=neo4j \
 RAGPLAN_TEST_NEO4J_PASSWORD=ragplan-demo-change-me \
 uv run pytest -q tests/integration/test_graph_retrieval.py
 ```
 
-## Stage 6 fixed hybrid와 fusion
+## 문서
 
-`BaselineSearchEngine` 하나가 같은 active corpus에서 명시적 `vector`, `graph`,
-`fixed_hybrid`를 실행합니다. Fixed hybrid는 P4/P5/P6/P8 중 하나를 사용하며 생략 시 P5를
-선택합니다. Vector와 graph 후보는 canonical chunk ID로만 deduplicate하고
-`weight / (60 + 1-based rank)`를 source별로 합산합니다. 동점은 canonical ID 오름차순으로
-결정하며 final hit은 각 source의 원래 rank/score, weight, RRF contribution, source metadata와
-graph path를 보존합니다. 같은 ID의 text, document ID 또는 공통 document metadata가 다르면
-응답을 만들지 않고 corpus consistency 오류로 종료합니다.
+- [Benchmark protocol과 Stage 9·10 evidence](docs/benchmark.md)
+- [Stage 11 model training과 validation gate](docs/model_training.md)
+- [Stage 12 offline cost policy](docs/offline_cost_policy.md)
+- [구현 Stage와 요구사항](stage.md)
+- [LLM handoff와 활용 예제](examples/README.md)
+- [제3자 소프트웨어·모델·데이터 라이선스](THIRD_PARTY_LICENSES.md)
+- [보안 정책](SECURITY.md)
 
-명시적 비교 CLI는 active pointer와 양쪽 stage manifest 및 실제 두 저장소의
-corpus/count/checksum/model·extractor provenance가 모두 일치하는지 먼저 검증합니다.
+## 기여하기
 
-```bash
-export RAGPLAN_GRAPH__PASSWORD=ragplan-demo-change-me
-
-uv run python scripts/search_hybrid.py \
-  --query "Who collaborated with Ada Lovelace?" \
-  --mode fixed_hybrid \
-  --plan-id P5 \
-  --model-snapshot "$MODEL_SNAPSHOT" \
-  --vector-stage-manifest artifacts/sample-stage3-vector.json \
-  --graph-stage-manifest artifacts/sample-stage4-graph.json \
-  --manifest-root artifacts/ingestion \
-  --extractor-lockfile uv.lock \
-  --top-k 10 \
-  --latency-budget-ms 5000
-```
-
-API에서는 `.env.example`의 Stage 6 환경변수 열 개를 모두 설정하고 Stage 3/4/5 profile을
-비웁니다. Human graph audit가 pending인 동안에도 이 명시적 comparison mode는 사용할 수
-있지만 rule planner의 자동 graph 선택은 계속 비활성입니다. Stage 7 scheduler는 활성
-branch를 같은 absolute deadline 아래에서 동시에 실행합니다.
-
-실제 두 저장소를 함께 사용하는 vertical test는 다음과 같습니다.
+Issue와 pull request를 환영합니다. 변경하기 전에 [CONTRIBUTING.md](CONTRIBUTING.md)의
+개발 환경, test, privacy와 artifact 계약을 확인해 주세요.
 
 ```bash
-RAGPLAN_TEST_QDRANT_URL=http://127.0.0.1:6333 \
-RAGPLAN_TEST_NEO4J_URI=bolt://127.0.0.1:7687 \
-RAGPLAN_TEST_NEO4J_USER=neo4j \
-RAGPLAN_TEST_NEO4J_PASSWORD=ragplan-demo-change-me \
-uv run pytest -q tests/integration/test_fixed_hybrid.py
+git clone https://github.com/iamdbstjd/OSS_2026.git
+cd OSS_2026
+uv sync --frozen
+uv run pytest -m "not integration and not e2e"
 ```
 
-## Stage 7 scheduler, deadline 및 graceful degradation
-
-Stage 6 dual-store profile은 이제 모든 명시적 mode를 공통 scheduler로 실행합니다. 요청은
-`received → analyzing → planning → executing → fusing → complete|partial` 상태를 기록하고,
-각 branch는 시작·종료 시각, 남은 예산, cancel reason, timeout origin 및 circuit state를
-남깁니다. 두 branch가 성공하면 Weighted RRF를 적용하고, 하나만 성공하면 그 branch의 원래
-순위를 유지한 HTTP 200 `partial` 응답을 반환합니다. 둘 다 deadline에 실패하면 504, 둘 다
-backend 오류면 503입니다. 정상적인 zero-hit 성공은 HTTP 200 `complete` empty 결과입니다.
-
-Scheduler는 process당 in-flight 요청을 32개로 제한하고 queue 없이 초과 요청을
-`OVERLOADED`로 거부합니다. Backend별 circuit은 연속 transport/client-timeout 5회 뒤 30초
-열리고 하나의 half-open probe만 허용합니다. Application deadline cancellation은 circuit
-failure로 세지 않으며 요청 내부 retry는 없습니다. Qdrant/Neo4j client timeout 상한은
-30초이며 더 짧은 transaction/request cutoff를 포함한 25–5000ms 예산은 scheduler의 같은
-absolute deadline에서 파생합니다.
-
-`RAGPLAN_FORCE_VECTOR_ONLY=true`는 ingress에서 graph/cost-aware 경로를 우회하고,
-`RAGPLAN_DISABLE_COST_AWARE=true`는 cost model 선택을 차단합니다. 두 값은 요청마다 한 번만
-snapshot되어 trace에 기록됩니다. HTTP client disconnect 또는 parent cancellation은 모든
-backend child task를 cancel한 뒤 await하여 orphan task를 남기지 않습니다.
-
-## Stage 8 query analyzer 및 rule planner
-
-`planner=rule` 요청은 고정된 `query_features_v1.json`에 따라 normalized query, 언어 지원
-여부, token/entity 수, seed entity와 `qf_v1` signal을 한 번 생성하고 query embedding도 한
-번만 계산합니다. Raw query와 embedding은 trace에 저장하지 않습니다. Rule planner는 분석
-후 남은 branch budget과 `rule_planner_v1.json`의 정적 p95 profile을 사용합니다. 관계형
-질의는 예산에 따라 P4/P5/P6, multi-hop 질의는 P6/P8을 선호하며, 낮은 예산과 지원하지 않는
-언어는 P0으로 안전하게 축소됩니다. Threshold provenance는 `validation`으로 고정되어 test
-split을 tuning에 사용하는 설정을 허용하지 않습니다.
-
-`configs/graph_tier_policy.json`의 human audit gate가 실패했거나 graph circuit이 열려 있으면
-graph-enabled 후보는 feasibility 목록에서 명시적으로 제외되고 P0/P1만 실행됩니다. 현재
-저장소의 audit 상태는 의도적으로 pending이므로 기본 rule 요청은 vector-only입니다. 모든
-결정은 selected plan, matched rules, 분석 후 remaining budget, 후보별 feasibility, fallback
-reason, feature/config version과 선택 이유를 trace에 남깁니다.
-
-## Stage 2 benchmark 재현
-
-원천 데이터는 저장소에 포함되지 않습니다. 다음 명령은 고정 URL에서 다운로드를
-재개하고 크기와 SHA-256을 검증한 뒤, upstream train pool 전체에서
-`SHA256(source_dataset + ":" + source_query_id + ":20260809)`가 작은 순서로 정확히
-600개를 선택합니다.
-
-```bash
-uv sync --frozen --group benchmark --group graph-extraction
-uv run python scripts/prepare_model.py --cache-dir models/minilm
-
-MODEL_SNAPSHOT="models/minilm/models--sentence-transformers--all-MiniLM-L6-v2/snapshots/b8903db39f65d93ae28d49a37c4f3fa90c5f94e0"
-
-uv run python scripts/prepare_benchmark.py \
-  --download \
-  --model-snapshot "$MODEL_SNAPSHOT"
-
-uv run pytest -q tests/benchmark
-```
-
-Primary manifest는 NQ 200, Hotpot bridge 200, Hotpot comparison 100, MuSiQue
-3-hop 100으로 구성됩니다. 분할은 source quota와 document/entity group을 보존하며,
-test ID는 별도 immutable manifest로 고정됩니다. Synthetic graph 100개는 cycle, hub,
-disconnected 및 1/2/3-hop 검증 전용이고 primary aggregate에는 포함되지 않습니다.
-원천 라이선스와 checksum은 `benchmark/manifests/licenses.yaml`, exact/near-duplicate
-정책은 `benchmark/manifests/corpus_policy_v1.json`에 기록됩니다. 핵심 Stage 2 데이터·계약
-산출물 15개의 크기와 SHA-256은 마지막에 기록되는
-`benchmark/manifests/artifact_set_v1.json`으로 한 세대에 묶입니다.
-
-## Stage 9 baseline benchmark
-
-Stage 9은 frozen train/validation 480개만 동일한 active corpus와 production engine에서
-비교합니다. 실행 matrix는 vector, graph depth 1/2/3, fixed P4/P5/P6/P8, rule에 대해
-50/100/200/500ms 예산, cold sweep 1회, warmup 2회, measured 10회를 사용합니다. Held-out
-test 120개는 Stage 14 전까지 로드하지 않습니다. Timeout, backend error, partial fallback,
-zero-result도 삭제하지 않고 raw row 및 latency/rate 분모에 남습니다.
-
-먼저 전용 CPU host와 container 제한을 기록합니다. 이어서 `.env.example`의 Stage 6
-변수 전체가 정확한 `adaptive_rag_bench_v1-corpus-v1` active corpus를 가리키는 상태에서
-재개 가능한 run을 시작합니다.
-
-```bash
-uv run ragplan benchmark capture-environment \
-  --output artifacts/benchmark_environment.json \
-  --container-resource-limits "qdrant=2cpu,4GiB;neo4j=2cpu,4GiB" \
-  --confirm-dedicated
-
-docker compose --profile benchmark build benchmark
-
-docker compose --profile benchmark run --rm benchmark run \
-  --run-id baseline_20260813 \
-  --environment-manifest /opt/ragplan/artifacts/benchmark_environment.json \
-  --confirm-dedicated
-
-docker compose --profile benchmark run --rm benchmark aggregate \
-  --run-id baseline_20260813
-```
-
-Runner는 configuration 또는 hardware/DB tuning drift, held-out test 접근, corpus/count/ID
-checksum 불일치, 동시 writer와 다른 내용의 run ID 재사용을 fail-closed로 거부합니다.
-완료 시 `benchmark/results/<run_id>/`에 append-only JSONL, raw/aggregate CSV, aggregate JSON,
-validation-only BestFixed lock, environment/run/protocol manifest와 checksum을 생성합니다.
-집계는 type-7 p50/p95/p99와 query-cluster paired bootstrap 10,000회(seed 20260809)를
-사용하며 outlier를 제거하지 않습니다. 상세 계약은 `docs/benchmark.md`에 있습니다.
-
-저장소에는 실제 480-query 측정값을 꾸며 넣지 않습니다. 위 run은 frozen corpus가 두
-DB에 수집·활성화되고 전용 측정 환경이 준비된 뒤 실행해야 하며, 대용량 raw 결과는
-기본적으로 Git에서 제외됩니다.
-
-## Stage 10 offline plan profiler
-
-Stage 10은 train/validation 480개 각각에 대해 P0-enabled P0/P1/P2/P3/P4/P5/P6/P8을
-50/100/200/500ms에서 전수 실행합니다. 각 query-plan-budget은 cold 1회, warmup 2회,
-measured 10회를 유지하며 held-out test split은 loader와 runner 양쪽에서 거부됩니다. 공개
-API의 plan 계약은 확장하지 않고, benchmark 전용 진입점이 production analyzer, absolute
-deadline, Stage 7 scheduler, fallback, fusion 경로를 그대로 사용합니다.
-
-Stage 9과 동일한 전용 환경 manifest 및 Stage 6 active corpus 설정을 사용합니다.
-
-```bash
-docker compose --profile benchmark run --rm benchmark profile \
-  --run-id plans_20260819 \
-  --environment-manifest /opt/ragplan/artifacts/benchmark_environment.json \
-  --confirm-dedicated
-
-docker compose --profile benchmark run --rm benchmark profile-aggregate \
-  --run-id plans_20260819
-```
-
-완료 시 `benchmark/results/profile_<run_id>/`에 append-only raw trial, 평탄화된 query/plan
-feature CSV와 canonical JSONL training matrix, budget별 Oracle label/distribution, environment와
-모든 derived artifact checksum이 생성됩니다. Oracle은 measured p95 execution latency가
-budget 이하인 완전한 plan row 중 Recall@10 최대값을 선택하며, 동률은 낮은 p95, 낮은 graph
-depth, 낮은 plan ID 순으로 해소합니다. Timeout/error와 trace/hash 불일치는 삭제하지 않고
-명시적인 exclusion reason으로 남깁니다.
-
-## Stage 11 cost model 학습
-
-Stage 11은 Stage 10 matrix에서 query/plan feature를 deterministic numeric/one-hot schema로
-결합하고 raw embedding 없이 Recall@10 quality model과 conditional p95 execution-latency
-model을 학습합니다. Query 단위 train/validation 분리를 유지하며 held-out test는 읽지 않습니다.
-
-```bash
-uv run python scripts/train_cost_models.py \
-  --matrix benchmark/results/profile_plans_audit_bypass_20260820_r2/training_matrix.jsonl \
-  --profile-run-manifest benchmark/results/profile_plans_audit_bypass_20260820_r2/run_manifest.json \
-  --profile-environment benchmark/results/profile_plans_audit_bypass_20260820_r2/environment.json \
-  --oracle benchmark/results/profile_plans_audit_bypass_20260820_r2/oracle_at_budget.json \
-  --stage9-raw benchmark/results/baseline_audit_bypass_20260820_r2/raw_trials.jsonl \
-  --output-dir artifacts/cost_models/stage11_r2
-```
-
-Artifact는 checksum을 먼저 검증하는 `.skops` 형식만 허용하고 repository의 trusted-type
-allowlist 밖 type, critical runtime mismatch, 손상된 checksum을 거부합니다. 현재 R2 validation은
-quality MAE 0.0092와 latency coverage 0.9284를 달성했지만 plan-pair ranking 0.6815, plan별
-latency coverage(P0/P1 label 없음), pinball 개선 0.0479가 gate를 통과하지 못했습니다. 따라서
-artifact는 `research_only`이며 serving에서 명시적으로 차단됩니다. 자세한 내용은
-`docs/model_training.md`와 `benchmark/manifests/stage11_model_evidence_r2.json`에 있습니다.
-
-## Stage 12 research-only/offline 정책 비교
-
-Stage 12는 Stage 11 R2 artifact를 공개 검색 경로에 연결하지 않고 validation evidence에서만
-8개 P0 plan을 전수 점수화합니다. Stage 11 schema가 일반 요청에는 없는 dataset source와 query
-tag를 요구하므로 `OfflineResearchContext`로 그 의존성을 명시하며, 공개
-`planner=cost_aware`는 계속 `MODE_UNAVAILABLE`입니다.
-
-```bash
-uv run python scripts/evaluate_cost_policy.py
-```
-
-실제 R2 비교는 480 query-budget 그룹의 3,840 candidate를 평가했습니다. Cost-aware 연구 정책은
-Rule 대비 Recall@10 +0.005507, BestFixed 대비 +0.000726, Oracle regret 0.002618이었지만, 1,856개
-candidate prediction이 유효 범위를 벗어났고 120개 그룹에는 feasible plan이 없었습니다. 또한
-rolling calibration guard가 319번째 유효 관측 후 p95 underprediction rate 0.21로 artifact를
-disable하여 이후 422개 그룹을 Rule로 보냈습니다. 따라서 결과와 모델은 여전히
-`research_only`이며 serving 활성화 근거가 아닙니다. 상세 계약과 checksum은
-`docs/offline_cost_policy.md` 및 `benchmark/manifests/stage12_policy_evidence_r2.json`에 있습니다.
+버그를 공개 Issue로 보고하기 곤란한 경우 [Security Policy](SECURITY.md)의 private advisory
+절차를 이용해 주세요.
 
 ## 라이선스
 
-RAGPlan은 Apache License 2.0으로 배포됩니다. 제3자 소프트웨어, 모델 및 dataset은
-각자의 라이선스를 유지합니다. `THIRD_PARTY_LICENSES.md`를 참조하세요.
+RAGPlan의 자체 코드는 [Apache License 2.0](LICENSE)으로 배포됩니다.
+
+Qdrant, Neo4j, Sentence Transformers, MiniLM, spaCy와 benchmark dataset은 각각의 원래
+라이선스를 유지합니다. 정확한 revision, image digest, checksum과 attribution은
+[THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md)에 기록되어 있습니다.
+
+---
+
+<p align="center">
+  Built by <strong>ProSheet</strong> · Evidence before claims · Fail closed, recover gracefully
+</p>

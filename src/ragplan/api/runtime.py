@@ -193,12 +193,15 @@ class Stage6RuntimeConfig:
     neo4j_user: str
     neo4j_password: str = field(repr=False)
     neo4j_database: str = "neo4j"
+    qdrant_hnsw_ef: int | None = None
 
     @classmethod
     def from_environment(
         cls, environment: Mapping[str, str] | None = None
     ) -> Stage6RuntimeConfig | None:
         source = os.environ if environment is None else environment
+        hnsw_ef_raw = (source.get("RAGPLAN_STAGE6_QDRANT_HNSW_EF", "") or "").strip()
+        hnsw_ef = int(hnsw_ef_raw) if hnsw_ef_raw else None
         values = {
             key: value.strip()
             for key in _STAGE6_CONFIGURATION_KEYS
@@ -221,6 +224,7 @@ class Stage6RuntimeConfig:
             neo4j_user=values["RAGPLAN_STAGE6_NEO4J_USER"],
             neo4j_password=password,
             neo4j_database=values["RAGPLAN_STAGE6_NEO4J_DATABASE"],
+            qdrant_hnsw_ef=hnsw_ef,
         )
 
 
@@ -277,6 +281,10 @@ async def build_search_engine(
                 timeout=BACKEND_CLIENT_TIMEOUT_SECONDS,
             ),
             QdrantVectorConfig(collection_prefix=config.collection_prefix),
+            client_factory=lambda: AsyncQdrantClient(
+                url=config.qdrant_url,
+                timeout=BACKEND_CLIENT_TIMEOUT_SECONDS,
+            ),
         )
     except ValueError as exc:
         raise _configuration_error("Stage 3 Qdrant configuration is invalid") from exc
@@ -411,7 +419,14 @@ async def build_baseline_search_engine(
         )
         manager = QdrantCollectionManager(
             qdrant_client,
-            QdrantVectorConfig(collection_prefix=config.collection_prefix),
+            QdrantVectorConfig(
+                collection_prefix=config.collection_prefix,
+                hnsw_ef=config.qdrant_hnsw_ef,
+            ),
+            client_factory=lambda: AsyncQdrantClient(
+                url=config.qdrant_url,
+                timeout=BACKEND_CLIENT_TIMEOUT_SECONDS,
+            ),
         )
     except ValueError as exc:
         if qdrant_client is not None:

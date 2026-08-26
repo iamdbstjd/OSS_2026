@@ -108,6 +108,7 @@ services:
       RAGPLAN_GRAPH__USER: "${NEO4J_USER:-neo4j}"
       RAGPLAN_GRAPH__PASSWORD: "${NEO4J_PASSWORD:?Set NEO4J_PASSWORD in .env or the environment}"
       RAGPLAN_LOGGING__MODE: redacted
+      RAGPLAN_LOGGING__PATH: /tmp/ragplan/ragplan-trace.jsonl
       RAGPLAN_DISABLE_COST_AWARE: "${RAGPLAN_DISABLE_COST_AWARE:-false}"
       RAGPLAN_FORCE_VECTOR_ONLY: "${RAGPLAN_FORCE_VECTOR_ONLY:-false}"
     healthcheck:
