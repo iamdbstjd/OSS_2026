@@ -12,6 +12,7 @@ from ragplan.core.models import (
     BranchResult,
     BranchStatus,
     Chunk,
+    ChunkerVersion,
     GraphPath,
     GraphSeedMatch,
     IngestionManifest,
@@ -27,6 +28,7 @@ from ragplan.core.models import (
     SearchResponse,
     SearchStatus,
     SearchTrace,
+    VectorStageManifest,
 )
 
 pytestmark = pytest.mark.unit
@@ -43,6 +45,26 @@ def features() -> QueryFeatures:
         aggregation_signal=0.0,
         global_signal=0.0,
         final_top_k=10,
+    )
+
+
+def test_vector_stage_defaults_legacy_evidence_to_chunker_v1_and_accepts_v2() -> None:
+    values = {
+        "corpus_version": "fixture",
+        "collection_name": "fixture_collection",
+        "chunk_count": 0,
+        "canonical_id_checksum": "a" * 64,
+        "embedding_set_checksum": "b" * 64,
+        "embedding_artifact_manifest_sha256": "c" * 64,
+    }
+
+    assert VectorStageManifest(**values).chunker_version is ChunkerVersion.TOKEN_DECODE_V1
+    assert (
+        VectorStageManifest(
+            **values,
+            chunker_version=ChunkerVersion.SOURCE_OFFSETS_V2,
+        ).chunker_version
+        is ChunkerVersion.SOURCE_OFFSETS_V2
     )
 
 

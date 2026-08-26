@@ -77,12 +77,11 @@ def test_local_stage12_outputs_match_their_evidence_when_available() -> None:
     assert "normalized_query" not in serialized
 
 
-def test_readmes_share_the_offline_command_and_public_boundary() -> None:
-    korean = (ROOT / "README.md").read_text(encoding="utf-8")
-    english = (ROOT / "README_EN.md").read_text(encoding="utf-8")
+def test_offline_policy_documentation_contains_command_and_public_boundary() -> None:
+    documentation = (ROOT / "docs/offline_cost_policy.md").read_text(encoding="utf-8")
     command = "uv run python scripts/evaluate_cost_policy.py"
-    assert command in korean and command in english
-    assert "MODE_UNAVAILABLE" in korean and "MODE_UNAVAILABLE" in english
+    assert command in documentation
+    assert "MODE_UNAVAILABLE" in documentation
 
 
 def _sha256(path: Path) -> str:

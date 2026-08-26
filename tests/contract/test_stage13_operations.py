@@ -48,3 +48,15 @@ def test_qa_source_has_no_benchmark_split_or_query_loader_dependency() -> None:
     assert "load_training_matrix" not in source
     assert "SplitName.TEST" not in source
     assert "test_ids_v1" not in source
+
+
+def test_submission_and_internal_planning_documents_are_not_public_artifacts() -> None:
+    private_paths = (
+        "QA.md",
+        "adaptive_rag_query_optimizer_PRD.md",
+        "adaptive_rag_query_optimizer_PRD_addendum.md",
+        "stage.md",
+    )
+
+    assert all(not (ROOT / path).exists() for path in private_paths)
+    assert "/submission/" in (ROOT / ".gitignore").read_text(encoding="utf-8")

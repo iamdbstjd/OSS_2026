@@ -7,7 +7,7 @@ from typer.testing import CliRunner
 from ragplan import __version__
 from ragplan.cli import app as cli_module
 from ragplan.cli.app import app
-from ragplan.core.models import VectorStageManifest
+from ragplan.core.models import ChunkerVersion, VectorStageManifest
 from ragplan.ingestion.service import VectorIngestResult
 
 pytestmark = pytest.mark.unit
@@ -115,6 +115,7 @@ def test_ingest_command_reuses_packaged_service(
 
     async def fake_ingest(**kwargs: object) -> VectorIngestResult:
         assert kwargs["input_path"] == corpus
+        assert kwargs["chunker_version"] is ChunkerVersion.TOKEN_DECODE_V1
         return VectorIngestResult(
             stage=stage,
             model_snapshot=tmp_path / "snapshot",

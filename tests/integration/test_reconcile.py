@@ -8,6 +8,7 @@ import pytest
 from ragplan.core.errors import ErrorCode, RAGPlanError
 from ragplan.core.models import (
     ActivationStatus,
+    ChunkerVersion,
     GraphStageManifest,
     IngestionStoreStatus,
     VectorStageManifest,
@@ -18,7 +19,12 @@ from ragplan.ingestion.reconcile import ActivationCoordinator, IngestionSource
 pytestmark = pytest.mark.integration
 
 
-def _vector(version: str, checksum: str = "a" * 64) -> VectorStageManifest:
+def _vector(
+    version: str,
+    checksum: str = "a" * 64,
+    *,
+    chunker_version: ChunkerVersion = ChunkerVersion.TOKEN_DECODE_V1,
+) -> VectorStageManifest:
     return VectorStageManifest(
         corpus_version=version,
         collection_name=f"ragplan_{version}",
@@ -26,6 +32,7 @@ def _vector(version: str, checksum: str = "a" * 64) -> VectorStageManifest:
         canonical_id_checksum=checksum,
         embedding_set_checksum="b" * 64,
         embedding_artifact_manifest_sha256="c" * 64,
+        chunker_version=chunker_version,
     )
 
 
@@ -144,3 +151,21 @@ async def test_id_checksum_mismatch_rejects_activation(tmp_path: Path) -> None:
     assert failed.activation_status is ActivationStatus.FAILED
     assert failed.qdrant_status is IngestionStoreStatus.SUCCEEDED
     assert failed.neo4j_status is IngestionStoreStatus.SUCCEEDED
+
+
+@pytest.mark.asyncio
+async def test_chunker_v2_cannot_be_activated_as_frozen_v1_evidence(tmp_path: Path) -> None:
+    with pytest.raises(RAGPlanError) as caught:
+        await _coordinator(tmp_path).activate(
+            ingestion_run_id="run-wrong-chunker",
+            source=_source(),
+            vector=_vector(
+                "corpus-v2",
+                chunker_version=ChunkerVersion.SOURCE_OFFSETS_V2,
+            ),
+            graph=_graph("corpus-v2"),
+        )
+
+    assert caught.value.code is ErrorCode.CORPUS_INCONSISTENT
+    failed = ManifestRepository(tmp_path).load_run("run-wrong-chunker")
+    assert failed.activation_status is ActivationStatus.FAILED

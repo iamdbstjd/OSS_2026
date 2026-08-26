@@ -26,7 +26,7 @@ from ragplan.backends.base import (
 from ragplan.core.deadline import Deadline
 from ragplan.core.errors import ErrorCode, RAGPlanError, TimeoutOrigin
 from ragplan.core.ids import qdrant_point_id
-from ragplan.core.models import Chunk, RetrievalHit, VectorStageManifest
+from ragplan.core.models import Chunk, ChunkerVersion, RetrievalHit, VectorStageManifest
 
 VECTOR_SIZE: Final = 384
 DEFAULT_BATCH_SIZE: Final = 64
@@ -503,6 +503,7 @@ class QdrantVectorWriter:
         corpus_version: str,
         *,
         embedding_artifact_manifest_sha256: str,
+        chunker_version: ChunkerVersion = ChunkerVersion.TOKEN_DECODE_V1,
     ) -> VectorStageManifest:
         """Write chunks and return verified evidence suitable for engine startup."""
 
@@ -528,6 +529,7 @@ class QdrantVectorWriter:
                 }
             ),
             embedding_artifact_manifest_sha256=embedding_artifact_manifest_sha256,
+            chunker_version=chunker_version,
         )
         return await self._collections.verify_stage(manifest)
 

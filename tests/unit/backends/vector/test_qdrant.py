@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import asyncio
 import hashlib
-from types import SimpleNamespace
 import math
 from collections.abc import Sequence
+from types import SimpleNamespace
 from uuid import UUID
 
 import httpx
@@ -703,7 +703,9 @@ async def test_require_collection_caches_validation_round_trips() -> None:
             return SimpleNamespace(
                 config=SimpleNamespace(
                     params=SimpleNamespace(
-                        vectors=models.VectorParams(size=VECTOR_SIZE, distance=models.Distance.COSINE),
+                        vectors=models.VectorParams(
+                            size=VECTOR_SIZE, distance=models.Distance.COSINE
+                        ),
                     ),
                     metadata={
                         "ragplan_schema": "vector-v2",

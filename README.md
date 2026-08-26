@@ -130,6 +130,10 @@ uv run ragplan quickstart-vector --pretty
 4. canonical ID·count·schema 검증
 5. 실제 vector search와 redacted trace 반환
 
+Quickstart의 sample-v2는 원문 대소문자를 보존하는
+`token-window-220-overlap-40-v2`를 명시적으로 기록합니다. 기존 benchmark와 active corpus의
+`token-window-220-overlap-40-v1`은 token-ID decode 계약과 checksum을 그대로 유지합니다.
+
 ### 설치 검증
 
 ```bash
@@ -230,6 +234,9 @@ Full runtime은 두 저장소가 존재한다는 이유만으로 활성화되지
 4. 검증 성공 시에만 active corpus pointer 교체
 5. `.env.example`의 Stage 6 runtime 변수를 설정하고 API 시작
 
+Activation의 `--chunker-version`은 vector stage manifest와 정확히 같아야 하며, v2 corpus를
+v1 evidence로 표시하려는 시도는 거부됩니다.
+
 ```bash
 cp .env.example .env
 # .env에 Stage 6 runtime 변수와 demo가 아닌 Neo4j 비밀번호를 먼저 설정하세요.
@@ -238,8 +245,8 @@ uv run ragplan verify --configured-runtime --pretty
 ```
 
 부분 구성, model checksum 불일치 또는 Qdrant·Neo4j ID 불일치는 fail-closed로 거부됩니다.
-세부 ingest와 benchmark 계약은 [stage.md](stage.md)와 [benchmark 문서](docs/benchmark.md)를
-참조하세요.
+세부 평가 계약은 [benchmark 문서](docs/benchmark.md), 실행 인자는 각 CLI와
+`scripts/ingest_graph.py --help`, `scripts/activate_corpus.py --help`에서 확인할 수 있습니다.
 
 ## REST API
 
@@ -386,10 +393,10 @@ uv run pytest -q tests/integration/test_graph_retrieval.py
 
 ## 문서
 
+- [Graph·Hybrid·Scheduler·Rule runtime 운영](docs/runtime.md)
 - [Benchmark protocol과 Stage 9·10 evidence](docs/benchmark.md)
 - [Stage 11 model training과 validation gate](docs/model_training.md)
 - [Stage 12 offline cost policy](docs/offline_cost_policy.md)
-- [구현 Stage와 요구사항](stage.md)
 - [LLM handoff와 활용 예제](examples/README.md)
 - [제3자 소프트웨어·모델·데이터 라이선스](THIRD_PARTY_LICENSES.md)
 - [보안 정책](SECURITY.md)

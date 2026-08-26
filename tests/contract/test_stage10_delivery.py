@@ -63,11 +63,10 @@ def test_stage10_oracle_tie_break_is_explicit_and_ordered() -> None:
     assert recall_position < latency_position < depth_position < plan_position
 
 
-def test_stage10_commands_are_documented_in_both_languages() -> None:
-    korean = (ROOT / "README.md").read_text(encoding="utf-8")
-    english = (ROOT / "README_EN.md").read_text(encoding="utf-8")
+def test_stage10_commands_are_documented_in_benchmark_operations() -> None:
+    operations = (ROOT / "docs/benchmark.md").read_text(encoding="utf-8")
     commands = (
         "benchmark run --rm benchmark profile",
         "benchmark run --rm benchmark profile-aggregate",
     )
-    assert all(command in korean and command in english for command in commands)
+    assert all(command in operations for command in commands)

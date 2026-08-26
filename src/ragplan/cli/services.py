@@ -28,6 +28,7 @@ from ragplan.core.deadline import Deadline
 from ragplan.core.engine import SearchEngine
 from ragplan.core.errors import ErrorCode, ErrorResponse, RAGPlanError
 from ragplan.core.models import (
+    ChunkerVersion,
     FrozenModel,
     PlannerDecision,
     PlannerMode,
@@ -342,6 +343,7 @@ async def _quickstart_vector_with_input(
         model_cache=model_cache,
         qdrant_url=qdrant_url,
         collection_prefix=collection_prefix,
+        chunker_version=ChunkerVersion.SOURCE_OFFSETS_V2,
     )
     engine = await build_search_engine(
         Stage3RuntimeConfig(

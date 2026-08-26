@@ -24,7 +24,7 @@ from ragplan.cli.services import (
     verify_installation,
 )
 from ragplan.core.errors import ErrorCode, RAGPlanError
-from ragplan.core.models import PlannerMode, SearchRequest
+from ragplan.core.models import ChunkerVersion, PlannerMode, SearchRequest
 from ragplan.ingestion.service import ingest_vector_corpus
 
 app = typer.Typer(add_completion=False, no_args_is_help=True)
@@ -143,6 +143,11 @@ def ingest(
     chunks_output: Path | None = typer.Option(None, "--chunks-output"),
     qdrant_url: str = typer.Option("http://127.0.0.1:6333", "--qdrant-url"),
     collection_prefix: str = typer.Option(DEFAULT_COLLECTION_PREFIX, "--collection-prefix"),
+    chunker_version: ChunkerVersion = typer.Option(
+        ChunkerVersion.TOKEN_DECODE_V1,
+        "--chunker-version",
+        help="Use v1 for frozen evidence or v2 for source-case-preserving graph corpora.",
+    ),
     pretty: bool = typer.Option(False, "--pretty"),
 ) -> None:
     """Chunk, embed, and idempotently stage a strict corpus in Qdrant."""
@@ -160,6 +165,7 @@ def ingest(
                     chunks_output=chunks_output,
                     qdrant_url=qdrant_url,
                     collection_prefix=collection_prefix,
+                    chunker_version=chunker_version,
                 )
             )
         ),

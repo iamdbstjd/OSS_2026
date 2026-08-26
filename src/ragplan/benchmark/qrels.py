@@ -17,7 +17,7 @@ from ragplan.benchmark.contracts import (
 from ragplan.benchmark.selection import document_namespace
 from ragplan.benchmark.sources import NormalizedQuery, SourceParagraph
 from ragplan.core.ids import canonical_document_id
-from ragplan.core.models import Chunk
+from ragplan.core.models import Chunk, ChunkerVersion
 from ragplan.ingestion.chunker import ChunkerConfig, Tokenizer, chunk_document
 from ragplan.ingestion.normalize import normalize_text
 
@@ -61,6 +61,7 @@ def build_corpus_and_qrels(
             text=state.text,
             tokenizer=tokenizer,
             config=ChunkerConfig(window_size=220, overlap=40),
+            chunker_version=ChunkerVersion.TOKEN_DECODE_V1,
         )
         if not chunks:
             raise ValueError(f"document produced no chunks: {document_id}")

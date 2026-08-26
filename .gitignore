@@ -49,6 +49,7 @@ benchmark/results/*
 !/artifacts/.gitkeep
 /models/*
 !/models/.gitkeep
+/submission/
 *.skops
 *.safetensors
 *.pt

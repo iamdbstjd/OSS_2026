@@ -132,6 +132,10 @@ This single command performs the following steps:
 4. Verify canonical IDs, count, and schema
 5. Execute a real vector search and return a redacted trace
 
+The quickstart sample-v2 explicitly records the source-case-preserving
+`token-window-220-overlap-40-v2` contract. Existing benchmark and active-corpus evidence retains
+the original `token-window-220-overlap-40-v1` token-ID decode contract and checksums.
+
 ### Verify the installation
 
 ```bash
@@ -232,6 +236,9 @@ The full runtime does not activate merely because two databases are running.
 4. Replace the active-corpus pointer only after successful verification
 5. Configure the Stage 6 runtime variables from `.env.example`, then start the API
 
+The activation `--chunker-version` must exactly match the vector-stage manifest. RAGPlan rejects
+any attempt to label a v2 corpus as frozen v1 evidence.
+
 ```bash
 cp .env.example .env
 # Configure the Stage 6 runtime variables and a non-demo Neo4j password first.
@@ -239,9 +246,9 @@ docker compose up -d --build
 uv run ragplan verify --configured-runtime --pretty
 ```
 
-Partial configuration, model checksum drift, and Qdrant·Neo4j ID mismatch all fail closed. See
-[stage.md](stage.md) and the [benchmark documentation](docs/benchmark.md) for the complete ingestion
-and evaluation contracts.
+Partial configuration, model checksum drift, and Qdrant·Neo4j ID mismatch all fail closed. See the
+[benchmark documentation](docs/benchmark.md) for evaluation contracts and run
+`scripts/ingest_graph.py --help` or `scripts/activate_corpus.py --help` for ingestion arguments.
 
 ## REST API
 
@@ -389,10 +396,10 @@ uv run pytest -q tests/integration/test_graph_retrieval.py
 
 ## Documentation
 
+- [Graph, Hybrid, Scheduler, and Rule runtime operations](docs/runtime.md)
 - [Benchmark protocol and Stage 9·10 evidence](docs/benchmark.md)
 - [Stage 11 model training and validation gates](docs/model_training.md)
 - [Stage 12 offline cost policy](docs/offline_cost_policy.md)
-- [Implementation stages and requirements](stage.md)
 - [LLM handoff and usage examples](examples/README.md)
 - [Third-party software, model, and dataset licenses](THIRD_PARTY_LICENSES.md)
 - [Security policy](SECURITY.md)

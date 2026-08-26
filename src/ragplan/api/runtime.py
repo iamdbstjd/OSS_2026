@@ -394,6 +394,7 @@ async def build_baseline_search_engine(
         and vector_stage.chunk_count == active.qdrant_count
         and vector_stage.canonical_id_checksum == active.qdrant_id_checksum
         and vector_stage.embedding_model_revision == active.embedding_model_revision
+        and vector_stage.chunker_version.value == active.chunker_version
     )
     graph_matches = (
         graph_stage.corpus_version == active.corpus_version
@@ -505,6 +506,7 @@ async def build_search_engine_from_environment(
             or vector_stage.chunk_count != active_manifest.qdrant_count
             or vector_stage.canonical_id_checksum != active_manifest.qdrant_id_checksum
             or vector_stage.embedding_model_revision != active_manifest.embedding_model_revision
+            or vector_stage.chunker_version.value != active_manifest.chunker_version
         ):
             raise RAGPlanError(
                 ErrorCode.CORPUS_INCONSISTENT,

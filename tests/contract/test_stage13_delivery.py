@@ -68,14 +68,15 @@ def test_cli_exposes_demo_search_ingest_verify_and_vector_quickstart() -> None:
         assert command in help_result.stdout
 
 
-def test_readme_first_screen_matches_current_scope_and_infrastructure_levels() -> None:
+def test_readme_landing_pages_match_current_scope_and_infrastructure_levels() -> None:
     korean = (ROOT / "README.md").read_text(encoding="utf-8")
     english = (ROOT / "README_EN.md").read_text(encoding="utf-8")
 
-    assert "Stage 0~12" in korean
-    assert "Stages 0–12" in english
-    assert "학습 기반 cost-aware planner는 이후 Stage" not in korean
-    assert "learned cost-aware planner remains a later stage" not in english.casefold()
+    assert '<img src="image/4.png"' in korean
+    assert '<img src="image/4.png"' in english
+    assert 'href="README_EN.md"' in korean
+    assert 'href="README.md"' in english
+    assert "retrieval control plane" in korean and "retrieval control plane" in english
     for token in (
         "demo-plan",
         "quickstart-vector",

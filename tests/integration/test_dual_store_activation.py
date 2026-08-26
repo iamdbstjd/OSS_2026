@@ -14,7 +14,7 @@ from ragplan.backends.vector.qdrant import (
     QdrantVectorWriter,
 )
 from ragplan.core.ids import canonical_chunk_id, canonical_document_id
-from ragplan.core.models import Chunk
+from ragplan.core.models import Chunk, ChunkerVersion
 from ragplan.ingestion.entities import EntityExtractor
 from ragplan.ingestion.manifest import ActiveCorpusResolver, ManifestRepository
 from ragplan.ingestion.pipeline import extract_graph
@@ -105,7 +105,7 @@ async def test_real_dual_store_reconciliation_atomically_activates(tmp_path: Pat
                 source_dataset="stage4-dual-fixture",
                 source_version="v1",
                 source_sha256="b" * 64,
-                chunker_version="fixture-v1",
+                chunker_version=ChunkerVersion.TOKEN_DECODE_V1.value,
             ),
             vector=vector_stage,
             graph=graph_stage,

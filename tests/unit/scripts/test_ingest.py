@@ -12,7 +12,7 @@ import pytest
 
 from ragplan.backends.vector.qdrant import canonical_id_checksum
 from ragplan.core.errors import ErrorCode, RAGPlanError
-from ragplan.core.models import Chunk, VectorStageManifest
+from ragplan.core.models import Chunk, ChunkerVersion, VectorStageManifest
 from ragplan.ingestion.chunker import TokenEncoding, Tokenizer
 from ragplan.ingestion.embedder import EmbeddingVector
 
@@ -75,6 +75,7 @@ class _FakeWriter:
         corpus_version: str,
         *,
         embedding_artifact_manifest_sha256: str,
+        chunker_version: ChunkerVersion,
     ) -> VectorStageManifest:
         self.chunks = tuple(chunks)
         self.embeddings = tuple(embeddings)
@@ -87,6 +88,7 @@ class _FakeWriter:
             ),
             embedding_set_checksum="c" * 64,
             embedding_artifact_manifest_sha256=embedding_artifact_manifest_sha256,
+            chunker_version=chunker_version,
         )
 
 
@@ -155,6 +157,7 @@ async def test_ingest_uses_220_by_40_chunker_one_embed_batch_and_stage_writer() 
     assert len(writer.embeddings) == 2
     assert stage.status == "vector_staged"
     assert stage.embedding_artifact_manifest_sha256 == manifest_hash
+    assert stage.chunker_version is ChunkerVersion.TOKEN_DECODE_V1
 
 
 def test_stage_manifest_write_is_complete_and_never_active(tmp_path: Path) -> None:
