@@ -326,9 +326,6 @@ raw evidence와 평가 분모에 유지합니다.
 | Quality model | validation MAE 0.009219 |
 | Latency model | overall p95 coverage 0.928368 |
 
-학습 모델은 일부 지표를 통과했지만 plan-pair ranking, plan별 latency coverage와 pinball
-improvement gate를 모두 통과하지 못했습니다. Stage 12 runtime guard도 p95 underprediction
-rate 0.21에서 모델을 비활성화했습니다.
 
 따라서 현재 상태는 다음과 같습니다.
 
@@ -338,8 +335,6 @@ Rule graph routing  disabled until human audit
 Cost-aware serving  disabled
 Cost-aware status   research_only / offline comparison only
 ```
-
-실패한 모델을 숨기지 않고 public serving을 차단한 것이 RAGPlan의 MLOps 안전 계약입니다.
 
 ## 대상 사용자와 범위
 
