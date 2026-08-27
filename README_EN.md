@@ -420,5 +420,5 @@ licenses. Exact revisions, image digests, checksums, and attribution are recorde
 ---
 
 <p align="center">
-  Built by <strong>ProSheet</strong> · Evidence before claims · Fail closed, recover gracefully
+  Built by <strong>ProSit</strong> · Evidence before claims · Fail closed, recover gracefully
 </p>
