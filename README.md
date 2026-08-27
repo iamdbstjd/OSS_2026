@@ -189,10 +189,6 @@ Hybrid 결과는 canonical chunk ID로 중복을 제거하고 `weighted_rrf_v1`�
 | `rule` | 질의·예산·backend 상태에 따른 규칙 기반 선택 | 기본 online planner |
 | `cost_aware` | 학습된 quality·latency model 기반 선택 | `research_only`, public API 비활성 |
 
-> [!IMPORTANT]
-> 100문장 human graph audit이 아직 완료되지 않아 `graph_tier_enabled=false`입니다.
-> 따라서 기본 Rule planner는 안전하게 vector-only로 동작합니다. Graph와 Hybrid는 검증된
-> active corpus에서 명시적으로 요청할 수 있습니다.
 
 ## CLI
 
