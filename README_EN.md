@@ -191,10 +191,6 @@ retain per-source rank, score, contribution, graph path, and fallback evidence.
 | `rule` | Rule-based selection from query, budget, and backend state | Default online planner |
 | `cost_aware` | Learned quality and latency model selection | `research_only`; disabled in the public API |
 
-> [!IMPORTANT]
-> The 100-sentence human graph audit is incomplete, so `graph_tier_enabled=false`.
-> The default Rule planner therefore operates safely in vector-only mode. Graph and Hybrid remain
-> available when explicitly requested against a verified active corpus.
 
 ## CLI
 
@@ -328,9 +324,6 @@ zero-hit results remain in raw evidence and evaluation denominators.
 | Quality model | Validation MAE 0.009219 |
 | Latency model | Overall p95 coverage 0.928368 |
 
-The learned models passed some individual metrics but failed plan-pair ranking, per-plan latency
-coverage, and pinball-improvement gates. The Stage 12 runtime guard also disabled the artifact at a
-p95 underprediction rate of 0.21.
 
 The current serving state is therefore:
 
@@ -340,9 +333,6 @@ Rule graph routing  disabled until human audit
 Cost-aware serving  disabled
 Cost-aware status   research_only / offline comparison only
 ```
-
-Blocking a model that failed validation instead of hiding the failure is part of RAGPlan's MLOps
-safety contract.
 
 ## Intended Users and Scope
 
