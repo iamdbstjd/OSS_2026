@@ -7,6 +7,7 @@ import hashlib
 import math
 import re
 import struct
+from collections import deque
 from collections.abc import Awaitable, Callable, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Final, cast
@@ -25,7 +26,7 @@ from ragplan.backends.base import (
 from ragplan.core.deadline import Deadline
 from ragplan.core.errors import ErrorCode, RAGPlanError, TimeoutOrigin
 from ragplan.core.ids import qdrant_point_id
-from ragplan.core.models import Chunk, RetrievalHit, VectorStageManifest
+from ragplan.core.models import Chunk, ChunkerVersion, RetrievalHit, VectorStageManifest
 
 VECTOR_SIZE: Final = 384
 DEFAULT_BATCH_SIZE: Final = 64
@@ -56,6 +57,7 @@ class QdrantVectorConfig:
     vector_size: int = VECTOR_SIZE
     batch_size: int = DEFAULT_BATCH_SIZE
     require_payload_indexes: bool = True
+    hnsw_ef: int | None = None
 
     def __post_init__(self) -> None:
         if _COLLECTION_PREFIX_PATTERN.fullmatch(self.collection_prefix) is None:
@@ -67,6 +69,8 @@ class QdrantVectorConfig:
             raise ValueError(f"vector_size must be exactly {VECTOR_SIZE}")
         if isinstance(self.batch_size, bool) or self.batch_size < 1:
             raise ValueError("batch_size must be a positive integer")
+        if self.hnsw_ef is not None and (isinstance(self.hnsw_ef, bool) or self.hnsw_ef < 1):
+            raise ValueError("hnsw_ef must be a positive integer when provided")
 
 
 @dataclass(frozen=True, slots=True)
@@ -110,13 +114,43 @@ class QdrantCollectionManager:
         self,
         client: AsyncQdrantClient,
         config: QdrantVectorConfig | None = None,
+        *,
+        client_factory: Callable[[], AsyncQdrantClient] | None = None,
     ) -> None:
         self._client = client
         self._config = config if config is not None else QdrantVectorConfig()
+        self._client_factory = client_factory
+        self._validated_versions: set[str] = set()
 
     @property
     def client(self) -> AsyncQdrantClient:
         return self._client
+
+    async def recycle_client(self) -> None:
+        """Discard a possibly-poisoned HTTP connection pool and rebuild the client.
+
+        Cancelling a request while httpx is establishing its connection leaks one
+        pool slot permanently (httpx 0.28), so any application-deadline
+        cancellation that interrupted an in-flight backend call must be followed
+        by a pool rebuild to keep later requests from blocking forever.
+        """
+
+        if self._client_factory is None:
+            return
+        replacement = self._client_factory()
+        previous, self._client = self._client, replacement
+        try:
+            await previous.close()
+        except Exception:  # noqa: BLE001 - the old pool is being discarded anyway
+            pass
+
+    def invalidate_validation(self, corpus_version: str | None = None) -> None:
+        """Forget cached collection validation (e.g., after a 404 from the store)."""
+
+        if corpus_version is None:
+            self._validated_versions.clear()
+        else:
+            self._validated_versions.discard(corpus_version)
 
     @property
     def config(self) -> QdrantVectorConfig:
@@ -168,6 +202,7 @@ class QdrantCollectionManager:
 
             info = await self._client.get_collection(collection_name)
             self._validate_collection_info(info, corpus_version=corpus_version)
+            self._validated_versions.add(corpus_version)
             return collection_name
         except RAGPlanError:
             raise
@@ -186,16 +221,26 @@ class QdrantCollectionManager:
     async def require_collection(
         self,
         corpus_version: str,
+        *,
+        use_cache: bool = True,
     ) -> str:
-        """Validate a collection without creating or repairing online state."""
+        """Validate a collection without creating or repairing online state.
+
+        Successful validation is cached per corpus version so the serving path
+        performs zero metadata round trips; ``use_cache=False`` forces a fresh
+        read (boot-time verification and post-invalidation re-checks).
+        """
 
         collection_name = self.collection_name(corpus_version)
+        if use_cache and corpus_version in self._validated_versions:
+            return collection_name
         try:
             exists = await self._client.collection_exists(collection_name)
             if not exists:
                 raise RAGPlanError(ErrorCode.DEPENDENCY_UNAVAILABLE, _COLLECTION_MESSAGE)
             info = await self._client.get_collection(collection_name)
             self._validate_collection_info(info, corpus_version=corpus_version)
+            self._validated_versions.add(corpus_version)
             return collection_name
         except RAGPlanError:
             raise
@@ -267,6 +312,7 @@ class QdrantCollectionManager:
         """Delete one explicit immutable collection; never called implicitly."""
 
         collection_name = self.collection_name(corpus_version)
+        self.invalidate_validation(corpus_version)
         try:
             if await self._client.collection_exists(collection_name):
                 deleted = await self._client.delete_collection(collection_name)
@@ -457,6 +503,7 @@ class QdrantVectorWriter:
         corpus_version: str,
         *,
         embedding_artifact_manifest_sha256: str,
+        chunker_version: ChunkerVersion = ChunkerVersion.TOKEN_DECODE_V1,
     ) -> VectorStageManifest:
         """Write chunks and return verified evidence suitable for engine startup."""
 
@@ -482,6 +529,7 @@ class QdrantVectorWriter:
                 }
             ),
             embedding_artifact_manifest_sha256=embedding_artifact_manifest_sha256,
+            chunker_version=chunker_version,
         )
         return await self._collections.verify_stage(manifest)
 
@@ -536,9 +584,14 @@ class QdrantVectorWriter:
         return await self._read_vector_provenance(collection_name, corpus_version)
 
     async def close(self) -> None:
-        if not self._closed:
-            self._closed = True
-            await self._collections.client.close()
+        """Release writer state only.
+
+        The underlying ``AsyncQdrantClient`` is owned by the collection manager
+        and shared with the search backend, so the writer must never close it;
+        doing so poisoned every later search in the same process.
+        """
+
+        self._closed = True
 
 
 class QdrantVectorBackend:
@@ -547,6 +600,7 @@ class QdrantVectorBackend:
     def __init__(self, collection_manager: QdrantCollectionManager) -> None:
         self._collections = collection_manager
         self._closed = False
+        self._inflight: deque[asyncio.Task[object]] = deque()
 
     async def search(
         self,
@@ -559,19 +613,31 @@ class QdrantVectorBackend:
         _validate_top_k(top_k)
         _validate_corpus_version(corpus_version)
 
-        collection_name = await _within_deadline(
-            deadline,
-            lambda: self._collections.require_collection(corpus_version),
-        )
-        response = await _within_deadline(
-            deadline,
-            lambda: self._query(
-                collection_name=collection_name,
-                vector=vector,
-                top_k=top_k,
-                corpus_version=corpus_version,
-            ),
-        )
+        try:
+            collection_name = await _within_deadline(
+                deadline,
+                lambda: cast(
+                    "Awaitable[str]",
+                    self._collections.require_collection(corpus_version),
+                ),
+                inflight=self._inflight,
+            )
+            response = await _within_deadline(
+                deadline,
+                lambda: self._query(
+                    collection_name=collection_name,
+                    vector=vector,
+                    top_k=top_k,
+                    corpus_version=corpus_version,
+                ),
+                inflight=self._inflight,
+            )
+        except RAGPlanError as exc:
+            if exc.code is ErrorCode.DEPENDENCY_UNAVAILABLE and not exc.retryable:
+                # A cached validation can go stale only when the store lost the
+                # collection; force a fresh metadata read on the next request.
+                self._collections.invalidate_validation(corpus_version)
+            raise
 
         try:
             return tuple(
@@ -599,6 +665,11 @@ class QdrantVectorBackend:
                 limit=top_k,
                 with_payload=True,
                 with_vectors=False,
+                search_params=(
+                    models.SearchParams(hnsw_ef=self._collections.config.hnsw_ef)
+                    if self._collections.config.hnsw_ef is not None
+                    else None
+                ),
             )
         except RAGPlanError:
             raise
@@ -630,10 +701,39 @@ class QdrantVectorBackend:
             await self._collections.client.close()
 
 
+_MAX_ABANDONED_BACKEND_TASKS: Final = 64
+
+
+def _consume_finished_task(task: asyncio.Task[object]) -> None:
+    """Retrieve the outcome of an abandoned backend task.
+
+    Detached tasks that outlive their request finish later on their own; their
+    result is intentionally discarded, but the exception must still be
+    retrieved to keep asyncio from logging "exception was never retrieved".
+    """
+
+    if not task.cancelled() and task.exception() is not None:
+        pass  # expected: client-side timeouts of requests we already gave up on
+
+
 async def _within_deadline[T](
     deadline: Deadline,
-    operation: Callable[[], Awaitable[T]],
+    operation_factory: Callable[[], Awaitable[T]],
+    *,
+    inflight: deque[asyncio.Task[object]] | None = None,
 ) -> T:
+    """Run one backend operation bounded by the application deadline.
+
+    On deadline exhaustion the operation task is deliberately NOT cancelled:
+    cancelling qdrant-client while httpx is establishing its connection
+    permanently leaks one connection-pool slot (httpx 0.28), and enough leaked
+    slots wedge every later request until the process restarts — the Stage 9
+    r2 incident where all vector traffic stopped mid-run. Instead the detached
+    task unwinds on qdrant-client's own client timeout (a clean error path),
+    its outcome is consumed by a done callback, and this call raises
+    ``DEADLINE_EXCEEDED`` immediately so the caller stays fail-closed.
+    """
+
     remaining_seconds = deadline.remaining_seconds(reserve_finalization=True)
     if remaining_seconds <= 0:
         raise RAGPlanError(
@@ -641,15 +741,28 @@ async def _within_deadline[T](
             _DEADLINE_MESSAGE,
             timeout_origin=TimeoutOrigin.APPLICATION_DEADLINE,
         )
+    if inflight is not None:
+        while len(inflight) >= _MAX_ABANDONED_BACKEND_TASKS:
+            stale = inflight.popleft()
+            stale.cancel()
+
+    task: asyncio.Task[T] = asyncio.create_task(operation_factory())  # type: ignore[arg-type]
     try:
-        async with asyncio.timeout(remaining_seconds):
-            return await operation()
-    except TimeoutError as exc:
+        done, _pending = await asyncio.wait({task}, timeout=remaining_seconds)
+    except BaseException:
+        # The caller itself was cancelled (request teardown): keep nothing dangling.
+        task.cancel()
+        raise
+    if not done:
+        if inflight is not None:
+            inflight.append(cast("asyncio.Task[object]", task))
+            task.add_done_callback(_consume_finished_task)
         raise RAGPlanError(
             ErrorCode.DEADLINE_EXCEEDED,
             _DEADLINE_MESSAGE,
             timeout_origin=TimeoutOrigin.APPLICATION_DEADLINE,
-        ) from exc
+        )
+    return task.result()
 
 
 def _is_qdrant_client_timeout(error: Exception) -> bool:

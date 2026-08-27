@@ -11,7 +11,7 @@ from ragplan.backends.vector.qdrant import QdrantVectorWriter
 from ragplan.benchmark.artifacts import load_chunk_index, load_chunks
 from ragplan.benchmark.records import BenchmarkProtocolConfig
 from ragplan.core.errors import ErrorCode, RAGPlanError
-from ragplan.core.models import Chunk, VectorStageManifest
+from ragplan.core.models import Chunk, ChunkerVersion, VectorStageManifest
 from ragplan.ingestion.embedder import Embedder, EmbeddingVector
 
 ProgressReporter = Callable[[int, int], None]
@@ -104,6 +104,7 @@ async def stage_frozen_chunks(
         embeddings,
         protocol.corpus_version,
         embedding_artifact_manifest_sha256=embedding_artifact_manifest_sha256,
+        chunker_version=ChunkerVersion.TOKEN_DECODE_V1,
     )
 
 

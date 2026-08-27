@@ -228,6 +228,18 @@ class ActivationStatus(StrEnum):
     FAILED = "failed"
 
 
+class ChunkerVersion(StrEnum):
+    """Immutable chunk-text reconstruction contracts.
+
+    V1 preserves the original benchmark/corpus evidence produced by decoding
+    model token IDs. V2 reconstructs windows from fast-tokenizer source offsets
+    so case-sensitive graph extraction receives the original spelling.
+    """
+
+    TOKEN_DECODE_V1 = "token-window-220-overlap-40-v1"
+    SOURCE_OFFSETS_V2 = "token-window-220-overlap-40-v2"
+
+
 class VectorStageManifest(FrozenModel):
     """Verified Qdrant-only staging evidence; never a dual-store active pointer."""
 
@@ -238,6 +250,7 @@ class VectorStageManifest(FrozenModel):
     chunk_count: Annotated[int, Field(ge=0)]
     canonical_id_checksum: Sha256Hex
     embedding_set_checksum: Sha256Hex
+    chunker_version: ChunkerVersion = ChunkerVersion.TOKEN_DECODE_V1
     embedding_model_id: Literal["sentence-transformers/all-MiniLM-L6-v2"] = EMBEDDING_MODEL_ID
     embedding_model_revision: Literal["b8903db39f65d93ae28d49a37c4f3fa90c5f94e0"] = (
         EMBEDDING_MODEL_REVISION
@@ -245,6 +258,18 @@ class VectorStageManifest(FrozenModel):
     embedding_artifact_manifest_sha256: Sha256Hex
     embedding_dimension: Literal[384] = EMBEDDING_DIMENSION
     distance: Literal["cosine"] = "cosine"
+
+    @field_validator("chunker_version", mode="before")
+    @classmethod
+    def _parse_chunker_version(cls, value: object) -> ChunkerVersion:
+        if isinstance(value, ChunkerVersion):
+            return value
+        if isinstance(value, str):
+            try:
+                return ChunkerVersion(value)
+            except ValueError as exc:
+                raise ValueError("unsupported chunker version") from exc
+        raise TypeError("chunker version must be a string")
 
 
 class Chunk(FrozenModel):

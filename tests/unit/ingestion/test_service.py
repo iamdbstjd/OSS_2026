@@ -1,14 +1,16 @@
 from __future__ import annotations
 
 import hashlib
+import json
 from collections.abc import Sequence
+from importlib.resources import files
 from pathlib import Path
 
 import pytest
 
 from ragplan.backends.vector.qdrant import canonical_id_checksum
 from ragplan.core.errors import ErrorCode, RAGPlanError
-from ragplan.core.models import Chunk, VectorStageManifest
+from ragplan.core.models import Chunk, ChunkerVersion, VectorStageManifest
 from ragplan.ingestion.chunker import TokenEncoding, Tokenizer
 from ragplan.ingestion.embedder import EmbeddingVector
 from ragplan.ingestion.service import (
@@ -59,6 +61,7 @@ class _Writer:
         corpus_version: str,
         *,
         embedding_artifact_manifest_sha256: str,
+        chunker_version: ChunkerVersion,
     ) -> VectorStageManifest:
         self.chunks = tuple(chunks)
         assert len(embeddings) == len(chunks)
@@ -69,6 +72,7 @@ class _Writer:
             canonical_id_checksum=canonical_id_checksum(tuple(item.id for item in chunks)),
             embedding_set_checksum="c" * 64,
             embedding_artifact_manifest_sha256=embedding_artifact_manifest_sha256,
+            chunker_version=chunker_version,
         )
 
 
@@ -84,6 +88,13 @@ def test_packaged_corpus_loader_is_strict_and_accepts_sample(tmp_path: Path) -> 
     with pytest.raises(RAGPlanError) as captured:
         load_corpus_file(duplicate)
     assert captured.value.code is ErrorCode.INVALID_REQUEST
+
+
+def test_packaged_sample_matches_the_documented_repository_example() -> None:
+    packaged = files("ragplan.resources").joinpath("sample_corpus.json").read_text(encoding="utf-8")
+    documented = Path("examples/sample_corpus.json").read_text(encoding="utf-8")
+
+    assert json.loads(packaged) == json.loads(documented)
 
 
 @pytest.mark.asyncio
@@ -111,3 +122,4 @@ async def test_packaged_ingest_service_uses_production_220_by_40_chunking() -> N
     assert [item.token_count for item in chunks] == [220, 41]
     assert writer.chunks == chunks
     assert stage.embedding_artifact_manifest_sha256 == manifest_sha256
+    assert stage.chunker_version is ChunkerVersion.TOKEN_DECODE_V1

@@ -7,7 +7,7 @@ from typer.testing import CliRunner
 from ragplan import __version__
 from ragplan.cli import app as cli_module
 from ragplan.cli.app import app
-from ragplan.core.models import VectorStageManifest
+from ragplan.core.models import ChunkerVersion, VectorStageManifest
 from ragplan.ingestion.service import VectorIngestResult
 
 pytestmark = pytest.mark.unit
@@ -35,7 +35,15 @@ def test_accessibility_commands_are_exposed() -> None:
     result = CliRunner().invoke(app, ["--help"])
 
     assert result.exit_code == 0
-    for command in ("demo-plan", "search", "ingest", "verify", "quickstart-vector"):
+    for command in (
+        "demo-plan",
+        "search",
+        "ingest",
+        "verify",
+        "quickstart-vector",
+        "download-model",
+        "qa",
+    ):
         assert command in result.stdout
 
 
@@ -107,6 +115,7 @@ def test_ingest_command_reuses_packaged_service(
 
     async def fake_ingest(**kwargs: object) -> VectorIngestResult:
         assert kwargs["input_path"] == corpus
+        assert kwargs["chunker_version"] is ChunkerVersion.TOKEN_DECODE_V1
         return VectorIngestResult(
             stage=stage,
             model_snapshot=tmp_path / "snapshot",
@@ -144,7 +153,7 @@ def test_quickstart_command_runs_one_packaged_orchestration(
             }
 
     async def fake_quickstart(**kwargs: object) -> FakeResult:
-        assert kwargs["input_path"].name == "sample_corpus.json"  # type: ignore[union-attr]
+        assert kwargs["input_path"] is None
         assert kwargs["corpus_version"] == "ragplan-quickstart-v2"
         return FakeResult()
 
@@ -153,6 +162,45 @@ def test_quickstart_command_runs_one_packaged_orchestration(
 
     assert result.exit_code == 0
     assert json.loads(result.stdout)["infrastructure"] == "qdrant_plus_minilm"
+
+
+def test_download_model_command_reuses_checksum_verified_service(
+    tmp_path,
+    monkeypatch: pytest.MonkeyPatch,  # type: ignore[no-untyped-def]
+) -> None:
+    class FakeResult:
+        def model_dump(self, *, mode: str) -> dict[str, object]:
+            assert mode == "json"
+            return {"status": "ready", "snapshot_path": str(tmp_path / "snapshot")}
+
+    def fake_download(cache_dir: object) -> FakeResult:
+        assert cache_dir == tmp_path / "cache"
+        return FakeResult()
+
+    monkeypatch.setattr(cli_module, "download_pinned_model", fake_download)
+    result = CliRunner().invoke(
+        app,
+        ["download-model", "--cache-dir", str(tmp_path / "cache")],
+    )
+
+    assert result.exit_code == 0
+    assert json.loads(result.stdout)["status"] == "ready"
+
+
+def test_smoke_qa_is_repository_safe_and_never_accesses_held_out_queries() -> None:
+    result = CliRunner().invoke(app, ["qa", "--level", "smoke"])
+
+    assert result.exit_code == 0
+    payload = json.loads(result.stdout)
+    assert payload["status"] == "passed"
+    assert payload["level"] == "smoke"
+    assert payload["held_out_test_accessed"] is False
+    assert {item["name"] for item in payload["checks"]} == {
+        "packaged_contracts",
+        "planner_only_demo",
+        "packaged_sample_corpus",
+        "openapi_surface",
+    }
 
 
 def test_primary_benchmark_requires_dedicated_environment_confirmation(tmp_path) -> None:  # type: ignore[no-untyped-def]

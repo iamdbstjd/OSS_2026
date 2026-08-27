@@ -32,6 +32,18 @@ labels, so their per-plan coverage is explicitly zero rather than silently omitt
 - Policy simulation uses `predicted_p95 + finalization_reserve <= budget`, falls back to P0 when no
   plan is predicted feasible, and compares with measured Rule and Oracle evidence.
 
+## Run
+
+```bash
+uv run python scripts/train_cost_models.py \
+  --matrix benchmark/results/profile_plans_audit_bypass_20260820_r2/training_matrix.jsonl \
+  --profile-run-manifest benchmark/results/profile_plans_audit_bypass_20260820_r2/run_manifest.json \
+  --profile-environment benchmark/results/profile_plans_audit_bypass_20260820_r2/environment.json \
+  --oracle benchmark/results/profile_plans_audit_bypass_20260820_r2/oracle_at_budget.json \
+  --stage9-raw benchmark/results/baseline_audit_bypass_20260820_r2/raw_trials.jsonl \
+  --output-dir artifacts/cost_models/stage11_r2
+```
+
 ## Artifact safety
 
 Only `.skops` is supported. Loading performs, in order:

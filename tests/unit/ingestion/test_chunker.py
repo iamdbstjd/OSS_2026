@@ -7,6 +7,7 @@ from dataclasses import dataclass
 import pytest
 
 from ragplan.core.ids import canonical_document_id
+from ragplan.core.models import ChunkerVersion
 from ragplan.ingestion.chunker import (
     ChunkerConfig,
     HuggingFaceTokenizerAdapter,
@@ -72,14 +73,35 @@ class FakeUncasedFastTokenizer:
         return {"input_ids": list(range(len(words))), "offset_mapping": offsets}
 
 
-def test_hugging_face_adapter_preserves_source_case_with_fast_tokenizer_offsets() -> None:
+def test_source_case_change_is_explicitly_isolated_to_chunker_v2() -> None:
     tokenizer = HuggingFaceTokenizerAdapter.from_tokenizer(FakeUncasedFastTokenizer())
 
-    encoding = tokenizer.encode("Ada Lovelace wrote")
+    legacy = tokenizer.encode("Ada Lovelace wrote")
+    source_case = tokenizer.encode_for_chunker(
+        "Ada Lovelace wrote",
+        chunker_version=ChunkerVersion.SOURCE_OFFSETS_V2,
+    )
 
-    assert encoding.token_count == 3
-    assert encoding.decode(0, 3) == "Ada Lovelace wrote"
-    assert encoding.decode(1, 3) == "Lovelace wrote"
+    assert legacy.decode(0, 3) == "ada lovelace wrote"
+    assert source_case.token_count == 3
+    assert source_case.decode(0, 3) == "Ada Lovelace wrote"
+    assert source_case.decode(1, 3) == "Lovelace wrote"
+
+    arguments = {
+        "source_dataset": "fixture",
+        "source_document_id": "ada",
+        "corpus_version": "sample",
+        "text": "Ada Lovelace wrote",
+        "tokenizer": tokenizer,
+    }
+    v1 = chunk_document(**arguments)
+    v2 = chunk_document(
+        **arguments,
+        chunker_version=ChunkerVersion.SOURCE_OFFSETS_V2,
+    )
+    assert v1[0].text == "ada lovelace wrote"
+    assert v2[0].text == "Ada Lovelace wrote"
+    assert v1[0].id != v2[0].id
 
 
 def test_chunk_document_uses_token_windows_overlap_and_canonical_ids() -> None:
@@ -101,6 +123,18 @@ def test_chunk_document_uses_token_windows_overlap_and_canonical_ids() -> None:
     document_id = canonical_document_id("dataset", "document-1")
     assert all(chunk.document_id == document_id for chunk in chunks)
     assert chunks[0].id != chunks[1].id
+
+
+def test_chunker_v2_rejects_tokenizers_without_source_offsets() -> None:
+    with pytest.raises(ValueError, match="source-offset"):
+        chunk_document(
+            source_dataset="dataset",
+            source_document_id="document-1",
+            corpus_version="v2",
+            text="Ada Lovelace wrote",
+            tokenizer=FakeTokenizer(),
+            chunker_version=ChunkerVersion.SOURCE_OFFSETS_V2,
+        )
 
 
 def test_chunk_document_removes_duplicate_windows_before_assigning_positions() -> None:

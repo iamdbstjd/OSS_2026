@@ -93,6 +93,21 @@ runner는 Compose의 `benchmark` profile에서 Qdrant/Neo4j와 같은 local Dock
 API network round trip 없이 production engine을 직접 호출한다. Corpus 또는 backend evidence가
 config와 다르면 첫 query 전에 종료한다.
 
+```bash
+uv run ragplan benchmark capture-environment \
+  --output artifacts/benchmark_environment.json \
+  --container-resource-limits "qdrant=2cpu,4GiB;neo4j=2cpu,4GiB" \
+  --confirm-dedicated
+
+docker compose --profile benchmark build benchmark
+docker compose --profile benchmark run --rm benchmark run \
+  --run-id baseline_20260813 \
+  --environment-manifest /opt/ragplan/artifacts/benchmark_environment.json \
+  --confirm-dedicated
+docker compose --profile benchmark run --rm benchmark aggregate \
+  --run-id baseline_20260813
+```
+
 ## Stage 10 profiler extension
 
 Stage 10은 baseline method 이름 대신 immutable plan ID를 축으로 사용한다. Production 실행은
@@ -122,6 +137,15 @@ feature schema, plan catalog, runtime semantics를 다시 검증한다. Training
 Oracle@Budget은 완전한 measured execution label의 type-7 p95가 budget 이하인 plan 중 mean
 Recall@10이 가장 높은 plan이다. 동률은 낮은 p95, 낮은 graph depth, 낮은 숫자 plan ID 순이다.
 Feasible plan이 없는 query-budget도 삭제하지 않고 `oracle_plan_id=null`로 distribution에 포함한다.
+
+```bash
+docker compose --profile benchmark run --rm benchmark profile \
+  --run-id plans_20260819 \
+  --environment-manifest /opt/ragplan/artifacts/benchmark_environment.json \
+  --confirm-dedicated
+docker compose --profile benchmark run --rm benchmark profile-aggregate \
+  --run-id plans_20260819
+```
 
 ```text
 benchmark/results/profile_<run_id>/

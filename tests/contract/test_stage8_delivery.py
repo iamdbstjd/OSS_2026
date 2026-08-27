@@ -69,11 +69,9 @@ def test_public_trace_exposes_features_and_deterministic_rule_explanation() -> N
 
 
 def test_bilingual_docs_describe_stage8_safety_boundary() -> None:
-    korean = (REPOSITORY_ROOT / "README.md").read_text(encoding="utf-8")
-    english = (REPOSITORY_ROOT / "README_EN.md").read_text(encoding="utf-8")
+    runtime_docs = (REPOSITORY_ROOT / "docs/runtime.md").read_text(encoding="utf-8")
 
-    for document in (korean, english):
-        assert "Stage 8" in document
-        assert "qf_v1" in document
-        assert "rule_planner_v1.json" in document
-        assert "vector-only" in document
+    assert "Stage 8" in runtime_docs
+    assert "qf_v1" in runtime_docs
+    assert "rule_planner_v1.json" in runtime_docs
+    assert "vector-only" in runtime_docs

@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import asyncio
 import hashlib
 import math
 from collections.abc import Sequence
+from types import SimpleNamespace
 from uuid import UUID
 
 import httpx
@@ -591,10 +593,14 @@ async def test_qdrant_transport_timeout_is_typed_as_backend_client_timeout() -> 
 
     class OnlineManager:
         client = TimeoutClient()
+        config = QdrantVectorConfig()
 
         async def require_collection(self, corpus_version: str) -> str:
             del corpus_version
             return "collection"
+
+        async def recycle_client(self) -> None:
+            return None
 
     backend = QdrantVectorBackend(OnlineManager())  # type: ignore[arg-type]
 
@@ -603,3 +609,152 @@ async def test_qdrant_transport_timeout_is_typed_as_backend_client_timeout() -> 
 
     assert captured.value.code is ErrorCode.DEADLINE_EXCEEDED
     assert captured.value.timeout_origin is TimeoutOrigin.BACKEND_CLIENT
+
+
+@pytest.mark.asyncio
+async def test_deadline_expiration_does_not_cancel_the_inflight_backend_task() -> None:
+    """Detached execution: deadline misses must never cancel qdrant-client.
+
+    Cancelling httpx during connection setup permanently leaks a connection
+    pool slot, which is how Stage 9 r2 wedged all vector traffic; the backend
+    must instead detach the task and fail closed immediately.
+    """
+
+    outcomes: list[str] = []
+
+    class HangingClient:
+        async def query_points(self, **kwargs: object) -> object:
+            try:
+                await asyncio.sleep(0.3)
+                outcomes.append("completed-cleanly")
+                return models.QueryResponse(points=[], scored_points=[])
+            except asyncio.CancelledError:
+                outcomes.append("cancelled")
+                raise
+
+    class HangingManager:
+        config = QdrantVectorConfig()
+        client = HangingClient()
+
+        async def require_collection(self, corpus_version: str) -> str:
+            del corpus_version
+            return "collection"
+
+    backend = QdrantVectorBackend(HangingManager())  # type: ignore[arg-type]
+
+    with pytest.raises(RAGPlanError) as captured:
+        await backend.search(_vector(), 1, "corpus-v1", Deadline.start(40))
+
+    assert captured.value.code is ErrorCode.DEADLINE_EXCEEDED
+    assert captured.value.timeout_origin is TimeoutOrigin.APPLICATION_DEADLINE
+    await asyncio.sleep(0.4)
+    assert outcomes == ["completed-cleanly"]
+
+
+@pytest.mark.asyncio
+async def test_abandoned_tasks_are_tracked_and_pruned() -> None:
+    """Abandoned inflight tasks stay bounded so pools cannot pile up."""
+
+    class SlowClient:
+        def __init__(self) -> None:
+            self.release: asyncio.Event | None = None
+
+        async def query_points(self, **kwargs: object) -> object:
+            await asyncio.sleep(5)
+            raise AssertionError("unreachable")
+
+    class SlowManager:
+        config = QdrantVectorConfig()
+        client = SlowClient()
+
+        async def require_collection(self, corpus_version: str) -> str:
+            del corpus_version
+            return "collection"
+
+    manager = SlowManager()
+    backend = QdrantVectorBackend(manager)  # type: ignore[arg-type]
+
+    for _ in range(3):
+        with pytest.raises(RAGPlanError):
+            await backend.search(_vector(), 1, "corpus-v1", Deadline.start(30))
+
+    assert len(backend._inflight) == 3
+
+    for task in list(backend._inflight):
+        task.cancel()
+    await asyncio.gather(*list(backend._inflight), return_exceptions=True)
+
+    assert all(task.done() for task in backend._inflight)
+
+
+@pytest.mark.asyncio
+async def test_require_collection_caches_validation_round_trips() -> None:
+    """Warm serving path performs zero exists/get metadata round trips."""
+
+    calls: list[str] = []
+
+    class CountingClient:
+        async def collection_exists(self, collection_name: str) -> bool:
+            calls.append(f"exists:{collection_name}")
+            return True
+
+        async def get_collection(self, collection_name: str) -> object:
+            calls.append(f"get:{collection_name}")
+            return SimpleNamespace(
+                config=SimpleNamespace(
+                    params=SimpleNamespace(
+                        vectors=models.VectorParams(
+                            size=VECTOR_SIZE, distance=models.Distance.COSINE
+                        ),
+                    ),
+                    metadata={
+                        "ragplan_schema": "vector-v2",
+                        "corpus_version_sha256": hashlib.sha256(b"corpus-v1").hexdigest(),
+                    },
+                ),
+                payload_schema={},
+            )
+
+    manager = QdrantCollectionManager(
+        CountingClient(),  # type: ignore[arg-type]
+        QdrantVectorConfig(collection_prefix="cache_chunks", require_payload_indexes=False),
+    )
+
+    first = await manager.require_collection("corpus-v1")
+    second = await manager.require_collection("corpus-v1")
+
+    assert first == second == collection_name_for_version("cache_chunks", "corpus-v1")
+    assert len(calls) == 2  # one exists + one get, then cache serves the rest
+
+    manager.invalidate_validation()
+    await manager.require_collection("corpus-v1")
+    assert len(calls) == 4
+
+
+@pytest.mark.asyncio
+async def test_hnsw_ef_is_forwarded_as_search_params() -> None:
+    """Configured HNSW ef reaches query_points as SearchParams."""
+
+    seen_params: list[object] = []
+
+    class ParamsClient:
+        async def query_points(self, **kwargs: object) -> object:
+            seen_params.append(kwargs.get("search_params"))
+            return models.QueryResponse(points=[], scored_points=[])
+
+    class ParamsManager:
+        config = QdrantVectorConfig(hnsw_ef=64)
+        client = ParamsClient()
+
+        async def require_collection(self, corpus_version: str) -> str:
+            del corpus_version
+            return "collection"
+
+        async def recycle_client(self) -> None:
+            return None
+
+    backend = QdrantVectorBackend(ParamsManager())  # type: ignore[arg-type]
+    await backend.search(_vector(), 1, "corpus-v1", Deadline.start(200))
+
+    assert isinstance(seen_params[0], models.SearchParams)
+    assert seen_params[0].hnsw_ef == 64

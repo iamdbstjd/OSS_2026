@@ -1,5 +1,6 @@
 """Deterministic text preparation and token-window chunking for ingestion."""
 
+from ragplan.core.models import ChunkerVersion
 from ragplan.ingestion.audit import load_graph_tier_policy
 from ragplan.ingestion.chunker import (
     ChunkerConfig,
@@ -39,6 +40,7 @@ from ragplan.ingestion.resolver import resolve_entities
 
 __all__ = [
     "ChunkerConfig",
+    "ChunkerVersion",
     "ChunkExtraction",
     "EMBEDDING_DIMENSION",
     "Embedder",

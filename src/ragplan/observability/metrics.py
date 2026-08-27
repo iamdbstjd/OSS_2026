@@ -34,6 +34,8 @@ class MetricsSnapshot(BaseModel):
     fallback_count: Annotated[int, Field(ge=0)]
     budget_violation_count: Annotated[int, Field(ge=0)]
     model_fallback_count: Annotated[int, Field(ge=0)]
+    trace_write_failure_count: Annotated[int, Field(ge=0)]
+    trace_dropped_count: Annotated[int, Field(ge=0)]
     planner_distribution: dict[str, Annotated[int, Field(ge=0)]]
     error_distribution: dict[str, Annotated[int, Field(ge=0)]]
     total_latency: HistogramSnapshot
@@ -76,6 +78,8 @@ class MetricsRegistry:
         self._fallback_count = 0
         self._budget_violation_count = 0
         self._model_fallback_count = 0
+        self._trace_write_failure_count = 0
+        self._trace_dropped_count = 0
         self._planner: Counter[str] = Counter()
         self._errors: Counter[str] = Counter()
         self._total_latency = _Histogram()
@@ -120,6 +124,14 @@ class MetricsRegistry:
             self._errors[code.value] += 1
             self._timeout_count += int(code is ErrorCode.DEADLINE_EXCEEDED)
 
+    def record_trace_write_failure(self) -> None:
+        with self._lock:
+            self._trace_write_failure_count += 1
+
+    def record_trace_drop(self) -> None:
+        with self._lock:
+            self._trace_dropped_count += 1
+
     def snapshot(self) -> MetricsSnapshot:
         with self._lock:
             return MetricsSnapshot(
@@ -131,6 +143,8 @@ class MetricsRegistry:
                 fallback_count=self._fallback_count,
                 budget_violation_count=self._budget_violation_count,
                 model_fallback_count=self._model_fallback_count,
+                trace_write_failure_count=self._trace_write_failure_count,
+                trace_dropped_count=self._trace_dropped_count,
                 planner_distribution=dict(sorted(self._planner.items())),
                 error_distribution=dict(sorted(self._errors.items())),
                 total_latency=self._total_latency.snapshot(),

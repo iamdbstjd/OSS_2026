@@ -218,7 +218,15 @@ class CircuitBreaker:
         async with self._lock:
             if permit.half_open_probe:
                 self._probe_in_flight = False
-            self._state = CircuitState.CLOSED
+                self._state = CircuitState.CLOSED
+                self._failures = 0
+                self._open_until_ns = 0
+                return self._state
+            if self._state is not CircuitState.CLOSED:
+                # Stale success admitted before the breaker tripped: it must
+                # not mask the recent failures that opened the circuit or
+                # preempt the half-open probe verdict.
+                return self._state
             self._failures = 0
             self._open_until_ns = 0
             return self._state
@@ -228,6 +236,11 @@ class CircuitBreaker:
             if permit.half_open_probe:
                 self._probe_in_flight = False
                 self._open()
+                return self._state
+            if self._state is not CircuitState.CLOSED:
+                # Stale failure from a pre-trip permit: the in-flight probe
+                # owns the verdict; counting old failures here would extend
+                # the open window beyond its designed duration.
                 return self._state
             self._failures += 1
             if self._failures >= self._threshold:

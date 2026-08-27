@@ -90,16 +90,15 @@ def test_benchmark_protocol_is_in_wheel_and_results_are_ignored() -> None:
     assert "!benchmark/results/.gitkeep" in ignored
 
 
-def test_korean_and_english_readmes_have_identical_stage9_commands() -> None:
-    korean = (REPOSITORY_ROOT / "README.md").read_text(encoding="utf-8")
-    english = (REPOSITORY_ROOT / "README_EN.md").read_text(encoding="utf-8")
+def test_stage9_commands_are_documented_in_benchmark_operations() -> None:
+    operations = (REPOSITORY_ROOT / "docs/benchmark.md").read_text(encoding="utf-8")
     commands = (
         "ragplan benchmark capture-environment",
         "benchmark run --rm benchmark run",
         "benchmark run --rm benchmark aggregate",
     )
 
-    assert all(command in korean and command in english for command in commands)
+    assert all(command in operations for command in commands)
 
 
 def test_primary_runner_uses_the_local_compose_network() -> None:

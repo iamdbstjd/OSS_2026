@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
-from typing import Protocol
+from typing import Protocol, cast
 
 from ragplan.core.ids import canonical_chunk_id, canonical_document_id
-from ragplan.core.models import Chunk
+from ragplan.core.models import Chunk, ChunkerVersion
 from ragplan.ingestion.normalize import normalize_text
 
 type TokenId = int
@@ -109,12 +109,28 @@ class HuggingFaceTokenizerAdapter:
         return cls(encode=encode, decode=decode, encode_offsets=encode_offsets)
 
     def encode(self, text: str) -> TokenEncoding:
-        if self._encode_offsets is not None:
-            return _SourceOffsetEncoding(
-                source_text=text,
-                offsets=self._encode_offsets(text),
-            )
+        """Encode with the frozen V1 token-ID decode contract."""
+
         return _TokenIdsEncoding(token_ids=tuple(self._encode(text)), decode_ids=self._decode)
+
+    def encode_for_chunker(
+        self,
+        text: str,
+        *,
+        chunker_version: ChunkerVersion,
+    ) -> TokenEncoding:
+        """Select one explicit reconstruction contract without mutating V1."""
+
+        if chunker_version is ChunkerVersion.TOKEN_DECODE_V1:
+            return self.encode(text)
+        if chunker_version is not ChunkerVersion.SOURCE_OFFSETS_V2:
+            raise ValueError("unsupported chunker version")
+        if self._encode_offsets is None:
+            raise ValueError("chunker v2 requires a fast tokenizer with source offsets")
+        return _SourceOffsetEncoding(
+            source_text=text,
+            offsets=self._encode_offsets(text),
+        )
 
 
 @dataclass(frozen=True, slots=True)
@@ -194,6 +210,7 @@ def chunk_document(
     text: str,
     tokenizer: Tokenizer,
     config: ChunkerConfig = ChunkerConfig(),
+    chunker_version: ChunkerVersion = ChunkerVersion.TOKEN_DECODE_V1,
 ) -> tuple[Chunk, ...]:
     """Normalize and divide a document into de-duplicated overlapping token windows.
 
@@ -210,7 +227,11 @@ def chunk_document(
     if not normalized:
         return ()
 
-    encoding = tokenizer.encode(normalized)
+    encoding = _encode_for_chunker(
+        tokenizer,
+        normalized,
+        chunker_version=chunker_version,
+    )
     if encoding.token_count < 0:
         raise ValueError("tokenizer returned a negative token count")
 
@@ -238,3 +259,22 @@ def chunk_document(
         if end == encoding.token_count:
             break
     return tuple(chunks)
+
+
+def _encode_for_chunker(
+    tokenizer: Tokenizer,
+    text: str,
+    *,
+    chunker_version: ChunkerVersion,
+) -> TokenEncoding:
+    if not isinstance(chunker_version, ChunkerVersion):
+        raise TypeError("chunker_version must be a ChunkerVersion")
+    if chunker_version is ChunkerVersion.TOKEN_DECODE_V1:
+        return tokenizer.encode(text)
+    versioned_encode = getattr(tokenizer, "encode_for_chunker", None)
+    if not callable(versioned_encode):
+        raise ValueError("chunker v2 requires a tokenizer with source-offset support")
+    encoding = versioned_encode(text, chunker_version=chunker_version)
+    if not hasattr(encoding, "token_count") or not callable(getattr(encoding, "decode", None)):
+        raise TypeError("versioned tokenizer returned an invalid encoding")
+    return cast(TokenEncoding, encoding)

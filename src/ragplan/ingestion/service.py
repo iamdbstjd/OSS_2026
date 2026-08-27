@@ -22,7 +22,13 @@ from ragplan.backends.vector.qdrant import (
 )
 from ragplan.core.errors import ErrorCode, RAGPlanError
 from ragplan.core.ids import canonical_document_id
-from ragplan.core.models import Chunk, FrozenModel, NonEmptyString, VectorStageManifest
+from ragplan.core.models import (
+    Chunk,
+    ChunkerVersion,
+    FrozenModel,
+    NonEmptyString,
+    VectorStageManifest,
+)
 from ragplan.ingestion.chunker import ChunkerConfig, chunk_document
 from ragplan.ingestion.embedder import Embedder, SentenceTransformerEmbedder
 from ragplan.ingestion.manifest import write_contract_json
@@ -81,6 +87,7 @@ class VectorStageWriter(Protocol):
         corpus_version: str,
         *,
         embedding_artifact_manifest_sha256: str,
+        chunker_version: ChunkerVersion,
     ) -> VectorStageManifest: ...
 
 
@@ -173,6 +180,7 @@ async def ingest_vector_corpus(
     collection_prefix: str = DEFAULT_COLLECTION_PREFIX,
     embedding_batch_size: int = 32,
     qdrant_batch_size: int = DEFAULT_BATCH_SIZE,
+    chunker_version: ChunkerVersion = ChunkerVersion.TOKEN_DECODE_V1,
 ) -> VectorIngestResult:
     if not corpus_version.strip():
         raise RAGPlanError(
@@ -209,6 +217,7 @@ async def ingest_vector_corpus(
             embedder=embedder,
             writer=writer,
             embedding_artifact_manifest_sha256=manifest.sha256,
+            chunker_version=chunker_version,
         )
     finally:
         await writer.close()
@@ -229,14 +238,21 @@ async def stage_corpus(
     embedder: Embedder,
     writer: VectorStageWriter,
     embedding_artifact_manifest_sha256: str,
+    chunker_version: ChunkerVersion = ChunkerVersion.TOKEN_DECODE_V1,
 ) -> tuple[VectorStageManifest, tuple[Chunk, ...]]:
-    chunks = _chunk_corpus(corpus, corpus_version=corpus_version, embedder=embedder)
+    chunks = _chunk_corpus(
+        corpus,
+        corpus_version=corpus_version,
+        embedder=embedder,
+        chunker_version=chunker_version,
+    )
     embeddings = await embedder.embed_documents(tuple(chunk.text for chunk in chunks))
     stage = await writer.stage_chunks(
         chunks,
         embeddings,
         corpus_version,
         embedding_artifact_manifest_sha256=embedding_artifact_manifest_sha256,
+        chunker_version=chunker_version,
     )
     return stage, chunks
 
@@ -246,6 +262,7 @@ def _chunk_corpus(
     *,
     corpus_version: str,
     embedder: Embedder,
+    chunker_version: ChunkerVersion,
 ) -> tuple[Chunk, ...]:
     chunks = tuple(
         chunk
@@ -257,6 +274,7 @@ def _chunk_corpus(
             text=document.text,
             tokenizer=embedder.tokenizer,
             config=ChunkerConfig(window_size=220, overlap=40),
+            chunker_version=chunker_version,
         )
     )
     if not chunks:

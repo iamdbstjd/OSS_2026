@@ -60,8 +60,7 @@ def test_r2_model_evidence_is_honestly_research_only() -> None:
     }
 
 
-def test_stage11_training_command_is_identical_in_both_readmes() -> None:
-    korean = (ROOT / "README.md").read_text(encoding="utf-8")
-    english = (ROOT / "README_EN.md").read_text(encoding="utf-8")
+def test_stage11_training_command_is_documented() -> None:
+    documentation = (ROOT / "docs/model_training.md").read_text(encoding="utf-8")
     marker = "uv run python scripts/train_cost_models.py"
-    assert marker in korean and marker in english
+    assert marker in documentation

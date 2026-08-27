@@ -49,6 +49,12 @@ def reconcile_stage_manifests(
             "vector and graph stages reference different corpus versions",
             retryable=False,
         )
+    if vector.chunker_version.value != source.chunker_version:
+        raise RAGPlanError(
+            ErrorCode.CORPUS_INCONSISTENT,
+            "vector stage and activation source reference different chunker versions",
+            retryable=False,
+        )
     if (
         vector.chunk_count != graph.chunk_count
         or vector.canonical_id_checksum != graph.canonical_id_checksum

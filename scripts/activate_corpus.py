@@ -21,7 +21,7 @@ from ragplan.backends.vector.qdrant import (
     QdrantVectorConfig,
 )
 from ragplan.core.errors import ErrorCode, RAGPlanError
-from ragplan.core.models import GraphStageManifest, VectorStageManifest
+from ragplan.core.models import ChunkerVersion, GraphStageManifest, VectorStageManifest
 from ragplan.ingestion.manifest import ManifestRepository, load_contract_json
 from ragplan.ingestion.reconcile import ActivationCoordinator, IngestionSource
 
@@ -43,7 +43,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--source-sha256", type=_sha256, required=True)
     parser.add_argument(
         "--chunker-version",
-        default="token-window-220-overlap-40-v1",
+        choices=tuple(item.value for item in ChunkerVersion),
+        default=ChunkerVersion.TOKEN_DECODE_V1.value,
     )
     parser.add_argument(
         "--qdrant-url",

@@ -12,6 +12,7 @@ from ragplan.api.server import create_app
 from ragplan.core.errors import ErrorCode, RAGPlanError
 from ragplan.core.models import (
     ActivationStatus,
+    ChunkerVersion,
     GraphStageManifest,
     IngestionManifest,
     IngestionStoreStatus,
@@ -77,7 +78,7 @@ def _active_environment(tmp_path: Path, *, stage_version: str = "active-v1") -> 
             source_dataset="fixture",
             source_version="v1",
             source_sha256="b" * 64,
-            chunker_version="v1",
+            chunker_version=ChunkerVersion.TOKEN_DECODE_V1.value,
             embedding_model_revision=stage.embedding_model_revision,
             extractor_version="graph-v1",
             document_count=1,
@@ -152,7 +153,7 @@ async def test_runtime_bootstrap_verifies_packaged_model_and_vector_stage(
             events.append(f"client:{url}")
 
     class FakeManager:
-        def __init__(self, client: object, config: object) -> None:
+        def __init__(self, client: object, config: object, **kwargs: object) -> None:
             events.append("manager")
 
         async def verify_stage(self, stage: VectorStageManifest) -> VectorStageManifest:
@@ -215,7 +216,7 @@ async def test_runtime_closes_qdrant_backend_when_stage_verification_fails(
         def __init__(self, **kwargs: object) -> None: ...
 
     class FakeManager:
-        def __init__(self, client: object, config: object) -> None: ...
+        def __init__(self, client: object, config: object, **kwargs: object) -> None: ...
 
         async def verify_stage(self, stage: VectorStageManifest) -> VectorStageManifest:
             raise RAGPlanError(ErrorCode.CORPUS_INCONSISTENT, "inconsistent")
@@ -269,7 +270,7 @@ def _stage5_environment(tmp_path: Path) -> dict[str, str]:
             source_dataset="fixture",
             source_version="v1",
             source_sha256="a" * 64,
-            chunker_version="v1",
+            chunker_version=ChunkerVersion.TOKEN_DECODE_V1.value,
             embedding_model_revision="embedding-v1",
             extractor_version=extractor_version,
             document_count=1,
@@ -375,7 +376,7 @@ def _stage6_artifacts(tmp_path: Path) -> runtime.Stage6RuntimeConfig:
             source_dataset="fixture",
             source_version="v1",
             source_sha256="a" * 64,
-            chunker_version="v1",
+            chunker_version=ChunkerVersion.TOKEN_DECODE_V1.value,
             embedding_model_revision=vector_stage.embedding_model_revision,
             extractor_version=extractor_version,
             document_count=1,
@@ -445,7 +446,7 @@ async def test_stage6_runtime_verifies_both_live_stores_before_shared_engine(
             events.append("qdrant-client")
 
     class FakeManager:
-        def __init__(self, client: object, config: object) -> None:
+        def __init__(self, client: object, config: object, **kwargs: object) -> None:
             events.append("qdrant-manager")
 
         async def verify_stage(self, stage: VectorStageManifest) -> VectorStageManifest:

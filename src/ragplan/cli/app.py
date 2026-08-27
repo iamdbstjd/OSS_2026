@@ -12,16 +12,19 @@ import typer
 from ragplan import __version__
 from ragplan.backends.vector.qdrant import DEFAULT_COLLECTION_PREFIX
 from ragplan.cli.services import (
+    QALevel,
+    download_pinned_model,
     explain_plan,
     ingest_result_payload,
     json_line,
     quickstart_vector,
+    run_qa,
     search_configured_runtime,
     search_http_api,
     verify_installation,
 )
 from ragplan.core.errors import ErrorCode, RAGPlanError
-from ragplan.core.models import PlannerMode, SearchRequest
+from ragplan.core.models import ChunkerVersion, PlannerMode, SearchRequest
 from ragplan.ingestion.service import ingest_vector_corpus
 
 app = typer.Typer(add_completion=False, no_args_is_help=True)
@@ -140,6 +143,11 @@ def ingest(
     chunks_output: Path | None = typer.Option(None, "--chunks-output"),
     qdrant_url: str = typer.Option("http://127.0.0.1:6333", "--qdrant-url"),
     collection_prefix: str = typer.Option(DEFAULT_COLLECTION_PREFIX, "--collection-prefix"),
+    chunker_version: ChunkerVersion = typer.Option(
+        ChunkerVersion.TOKEN_DECODE_V1,
+        "--chunker-version",
+        help="Use v1 for frozen evidence or v2 for source-case-preserving graph corpora.",
+    ),
     pretty: bool = typer.Option(False, "--pretty"),
 ) -> None:
     """Chunk, embed, and idempotently stage a strict corpus in Qdrant."""
@@ -157,6 +165,7 @@ def ingest(
                     chunks_output=chunks_output,
                     qdrant_url=qdrant_url,
                     collection_prefix=collection_prefix,
+                    chunker_version=chunker_version,
                 )
             )
         ),
@@ -183,6 +192,47 @@ def verify(
     )
 
 
+@app.command("qa")
+def qa(
+    level: QALevel = typer.Option(QALevel.SMOKE, "--level"),
+    model_cache: Path = typer.Option(Path("models/minilm"), "--model-cache"),
+    qdrant_url: str = typer.Option("http://127.0.0.1:6333", "--qdrant-url"),
+    api_url: str | None = typer.Option(
+        None,
+        "--api-url",
+        help="Required for repository-independent full QA unless a local runtime is configured.",
+    ),
+    pretty: bool = typer.Option(False, "--pretty"),
+) -> None:
+    """Run fixed smoke, vector, or full QA without loading held-out benchmark queries."""
+
+    request_id = f"cli-qa-{uuid4()}"
+    try:
+        result = _run(
+            run_qa(
+                level,
+                model_cache=model_cache,
+                qdrant_url=qdrant_url,
+                api_url=api_url,
+            )
+        )
+    except RAGPlanError as exc:
+        _fail(exc, request_id)
+    except (OSError, TypeError, ValueError) as exc:
+        del exc
+        _fail(
+            RAGPlanError(
+                ErrorCode.INVALID_REQUEST,
+                "QA input is invalid",
+                retryable=False,
+            ),
+            request_id,
+        )
+    _emit_result(result, pretty=pretty)
+    if result.status == "failed":
+        raise typer.Exit(1)
+
+
 @app.command("quickstart-vector")
 def quickstart_vector_command(
     query: str = typer.Option(
@@ -190,11 +240,12 @@ def quickstart_vector_command(
         "--query",
         help="Sample query; only its hash appears in the returned trace.",
     ),
-    input_path: Path = typer.Option(
-        Path("examples/sample_corpus.json"),
+    input_path: Path | None = typer.Option(
+        None,
         "--input",
         exists=True,
         dir_okay=False,
+        help="Optional corpus override; the wheel-packaged sample is used by default.",
     ),
     model_cache: Path = typer.Option(Path("models/minilm"), "--model-cache"),
     stage_manifest: Path = typer.Option(
@@ -219,6 +270,20 @@ def quickstart_vector_command(
             )
         ),
         request_id=f"cli-quickstart-{uuid4()}",
+        pretty=pretty,
+    )
+
+
+@app.command("download-model")
+def download_model(
+    cache_dir: Path = typer.Option(Path("models/minilm"), "--cache-dir"),
+    pretty: bool = typer.Option(False, "--pretty"),
+) -> None:
+    """Download and checksum-verify the one approved MiniLM revision."""
+
+    _command(
+        lambda: download_pinned_model(cache_dir),
+        request_id=f"cli-download-model-{uuid4()}",
         pretty=pretty,
     )
 
@@ -352,6 +417,10 @@ def _command(operation: Callable[[], object], *, request_id: str, pretty: bool) 
             ),
             request_id,
         )
+    _emit_result(result, pretty=pretty)
+
+
+def _emit_result(result: object, *, pretty: bool) -> None:
     payload = result.model_dump(mode="json") if hasattr(result, "model_dump") else result
     if pretty:
         typer.echo(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))

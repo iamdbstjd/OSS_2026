@@ -53,7 +53,7 @@ def test_bilingual_readme_code_blocks_remain_identical() -> None:
                     blocks.append("".join(current))
                     current = []
                 inside = not inside
-            elif inside:
+            elif inside and not line.lstrip().startswith("#"):
                 current.append(line)
         assert inside is False
         return tuple(blocks)

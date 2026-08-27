@@ -42,3 +42,7 @@ graph:
 
 logging:
   mode: redacted
+  path: /tmp/ragplan/ragplan-trace.jsonl
+  max_bytes: 10485760
+  file_count: 5
+  queue_capacity: 1024

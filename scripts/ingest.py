@@ -26,7 +26,7 @@ from ragplan.backends.vector.qdrant import (
 )
 from ragplan.core.errors import ErrorCode, RAGPlanError
 from ragplan.core.ids import canonical_document_id
-from ragplan.core.models import Chunk, VectorStageManifest
+from ragplan.core.models import Chunk, ChunkerVersion, VectorStageManifest
 from ragplan.ingestion.chunker import ChunkerConfig, chunk_document
 from ragplan.ingestion.embedder import Embedder, SentenceTransformerEmbedder
 from ragplan.ingestion.model_manifest import (
@@ -55,6 +55,7 @@ class VectorStageWriter(Protocol):
         corpus_version: str,
         *,
         embedding_artifact_manifest_sha256: str,
+        chunker_version: ChunkerVersion,
     ) -> VectorStageManifest: ...
 
 
@@ -123,6 +124,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--embedding-batch-size", type=_positive_int, default=32)
     parser.add_argument("--qdrant-batch-size", type=_positive_int, default=DEFAULT_BATCH_SIZE)
+    parser.add_argument(
+        "--chunker-version",
+        choices=tuple(item.value for item in ChunkerVersion),
+        default=ChunkerVersion.TOKEN_DECODE_V1.value,
+        help="Frozen v1 token decode or source-offset v2 reconstruction.",
+    )
     return parser
 
 
@@ -227,6 +234,7 @@ async def ingest_corpus(
     writer: VectorStageWriter,
     artifact_manifest_sha256: str,
     chunks_output: Path | None = None,
+    chunker_version: ChunkerVersion = ChunkerVersion.TOKEN_DECODE_V1,
 ) -> VectorStageManifest:
     """Use the canonical chunker, one batched embed call, and the verified stage writer."""
 
@@ -240,6 +248,7 @@ async def ingest_corpus(
             text=document.text,
             tokenizer=embedder.tokenizer,
             config=ChunkerConfig(window_size=220, overlap=40),
+            chunker_version=chunker_version,
         )
     )
     if not chunks:
@@ -254,6 +263,7 @@ async def ingest_corpus(
         embeddings,
         corpus_version,
         embedding_artifact_manifest_sha256=artifact_manifest_sha256,
+        chunker_version=chunker_version,
     )
     if chunks_output is not None:
         write_chunks_jsonl(chunks_output, chunks)
@@ -362,6 +372,7 @@ async def _execute(args: argparse.Namespace) -> VectorStageManifest:
             writer=writer,
             artifact_manifest_sha256=manifest.sha256,
             chunks_output=args.chunks_output,
+            chunker_version=ChunkerVersion(args.chunker_version),
         )
         write_stage_manifest(args.stage_manifest, stage)
         return stage

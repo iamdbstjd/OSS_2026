@@ -65,12 +65,12 @@ def test_runtime_cypher_has_no_variable_length_or_non_relation_traversal() -> No
 def test_stage5_cli_container_and_real_integration_gate_are_delivered() -> None:
     dockerfile = (ROOT / "Dockerfile").read_text(encoding="utf-8")
     workflow = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
-    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    runtime_docs = (ROOT / "docs/runtime.md").read_text(encoding="utf-8")
 
     assert (ROOT / "scripts/search_graph.py").is_file()
     assert "--group graph-extraction" in dockerfile
     assert "tests/integration/test_graph_retrieval.py" in workflow
-    assert "scripts/search_graph.py" in readme
+    assert "scripts/search_graph.py" in runtime_docs
 
 
 def test_explain_profile_artifact_is_bound_to_current_runtime_queries() -> None:

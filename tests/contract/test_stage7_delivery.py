@@ -64,12 +64,12 @@ def test_kill_switches_are_exposed_by_compose_and_example_environment() -> None:
 
 def test_ci_and_bilingual_docs_cover_the_stage7_freeze_gate() -> None:
     workflow = (REPOSITORY_ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+    runtime_docs = (REPOSITORY_ROOT / "docs/runtime.md").read_text(encoding="utf-8")
     korean = (REPOSITORY_ROOT / "README.md").read_text(encoding="utf-8")
     english = (REPOSITORY_ROOT / "README_EN.md").read_text(encoding="utf-8")
 
     assert "tests/integration/test_scheduler_backends.py" in workflow
-    assert "runtime_semantics_version=v1" in korean
-    assert "runtime_semantics_version=v1" in english
+    assert "runtime_semantics_version=v1" in runtime_docs
     assert "RAGPLAN_FORCE_VECTOR_ONLY" in korean
     assert "RAGPLAN_FORCE_VECTOR_ONLY" in english
     assert "Until Stage 7" not in english
