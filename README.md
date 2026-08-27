@@ -418,5 +418,5 @@ Qdrant, Neo4j, Sentence Transformers, MiniLM, spaCy鞕� benchmark dataset鞚� 臧侁
 ---
 
 <p align="center">
-  Built by <strong>ProSheet</strong> 路 Evidence before claims 路 Fail closed, recover gracefully
+  Built by <strong>ProSit</strong> 路 Evidence before claims 路 Fail closed, recover gracefully
 </p>
